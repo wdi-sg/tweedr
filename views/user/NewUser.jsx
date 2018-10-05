@@ -7,12 +7,15 @@ class NewUser extends React.Component {
         <head />
         <body>
           <form className="user-form" method="POST" action="/users">
+            <h1>New User - Registration</h1>
             <div className="user-attribute">
-              name<input name="name" type="text" />
+              Name: <input name="name" type="text" />
             </div>
+            <br/>
             <div className="user-attribute">
-              password:<input name="password" type="text" />
+              Password: <input name="password" type="text" />
             </div>
+            <br/>
             <input name="submit" type="submit" />
           </form>
         </body>

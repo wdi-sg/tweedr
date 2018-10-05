@@ -21,9 +21,9 @@ if( process.env.DATABASE_URL ){
 
 }else{
   configs = {
-    user: 'akira',
+    user: 'jonathanlau',
     host: '127.0.0.1',
-    database: 'pokemons',
+    database: 'tweedr',
     port: 5432
   };
 }
@@ -39,7 +39,7 @@ module.exports = {
   /*
    * ADD APP MODELS HERE
    */
-  user: user(pool),
+  user: user(pool), // this comes from the const user above
 
 
   //make queries directly from here
