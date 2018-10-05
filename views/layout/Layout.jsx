@@ -13,7 +13,7 @@ class Layout extends React.Component {
           <title>Tasks</title>
         </head>
         <body>
-          <Navigation />
+          <Navigation username={this.props.username} />
           <div className="container mt-5 py-5">
             {this.props.children}
           </div>

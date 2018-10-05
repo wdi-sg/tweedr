@@ -17,12 +17,13 @@ module.exports = (db) => {
         console.error('error creating user:', error);
         response.sendStatus(500);
       } else {
-        const hashedUserId = sha256(queryResult.id + 'userId' + SALT);
+        const hashedUsername = sha256(queryResult.name + 'loggedIn' + SALT);
         response.cookie('userId', queryResult.id);
-        response.cookie('loggedIn', hashedUserId);
+        response.cookie('username', queryResult.name);
+        response.cookie('loggedIn', hashedUsername);
       }
 
-      response.redirect('/');
+      response.redirect('/tweets');
     });
   };
 

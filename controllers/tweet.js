@@ -1,3 +1,6 @@
+const sha256 = require('js-sha256');
+const SALT = 'fQdkaUjfieowavwEivorutyFvdaljfLoewKdkfj';
+
 module.exports = (db) => {
   /**
    * ===========================================
@@ -23,10 +26,17 @@ module.exports = (db) => {
     db.tweet.index((error, queryResult) => {
       if (error) {
         response.sendStatus(500);
-      } else if (queryResult === null) {
-        response.send('No tweet');
       } else {
-        response.render('tweet/Index', { tweets: queryResult });
+        const username = request.cookies.username;
+        const hashedUsername = sha256(username + 'loggedIn' + SALT);
+        let data = { tweets: queryResult };
+
+        if (hashedUsername === request.cookies.loggedIn) {
+          const userId = request.cookies.userId;
+          data.username = { id: userId, name: username };
+        }
+
+        response.render('tweet/Index', data);
       }
     });
   }
