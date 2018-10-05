@@ -8,15 +8,19 @@ class Login extends React.Component {
       return (
 				<div className="navbar-nav ml-auto">
 					<form method="POST" action="/users/logout" className="form-inline nav-item nav-link">
-							<input type="submit" className="btn btn-link p-0" value="Logout" />
+							<input type="submit" className="btn btn-link p-0 text-light" value="Logout" />
 					</form>
 				</div>
       )
     } else {
 			return (
 				<div className="navbar-nav ml-auto">
-					<a className="nav-item nav-link" href="/">Login</a>
-					<a className="nav-item nav-link" href="/users/new">Register</a>
+					<form method="GET" action="/" className="form-inline nav-item nav-link">
+						<input type="submit" className="btn btn-link p-0 text-light" value="Login" />
+					</form>
+					<form method="GET" action="/users/new" className="form-inline nav-item nav-link">
+						<input type="submit" className="btn btn-link p-0 text-light" value="Register" />
+					</form>
 				</div>
 			)			
 		} 
@@ -35,7 +39,7 @@ class Layout extends React.Component {
           <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
         </head>
         <body>
-				<nav className="navbar navbar-expand-md navbar-light bg-light">
+				<nav className="navbar navbar-expand-md navbar-dark bg-dark">
           <div className="container">
 						<a className="navbar-brand mb-0 h1" href="#">Tweedr</a>
 						<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
