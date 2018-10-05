@@ -1,6 +1,3 @@
-const sha256 = require('js-sha256');
-const SALT = 'fQdkaUjfieowavwEivorutyFvdaljfLoewKdkfj';
-
 module.exports = (db) => {
   /**
    * ===========================================
@@ -8,21 +5,18 @@ module.exports = (db) => {
    * ===========================================
    */
   const newForm = (request, response) => {
-    response.render('user/NewUser');
+    response.render('tweet/NewTweet');
   };
 
   const create = (request, response) => {
-    db.user.create(request.body, (error, queryResult) => {
+    const tweet = { ...request.body, userId: request.cookies.userId };
+    db.tweet.create(tweet, (error, queryResult) => {
       if (error) {
-        console.error('error creating user:', error);
+        console.log('error creating tweet:', error);
         response.sendStatus(500);
       } else {
-        const hashedUserId = sha256(queryResult.id + 'userId' + SALT);
-        response.cookie('userId', queryResult.id);
-        response.cookie('loggedIn', hashedUserId);
+        response.redirect('/');
       }
-
-      response.redirect('/');
     });
   };
 

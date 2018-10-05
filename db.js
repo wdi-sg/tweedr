@@ -1,7 +1,7 @@
 const pg = require('pg');
-const user = require('./models/user');
 const url = require('url');
-
+const user = require('./models/user');
+const tweet = require('./models/tweet');
 
 var configs;
 
@@ -36,11 +36,8 @@ pool.on('error', function (err) {
 });
 
 module.exports = {
-  /*
-   * ADD APP MODELS HERE
-   */
   user: user(pool),
+  tweet: tweet(pool),
 
-  // get a reference to end the connection pool at server end
   pool: pool
 };
