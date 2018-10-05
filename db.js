@@ -1,7 +1,8 @@
 const pg = require('pg');
-const user = require('./models/user');
 const url = require('url');
 
+const user = require('./models/user');
+const tweed = require('./models/tweed');
 
 var configs = {
   user: 'chanleyou',
@@ -21,6 +22,7 @@ module.exports = {
    * ADD APP MODELS HERE
    */
   user: user(pool),
+  tweed: tweed(pool),
 
 
   //make queries directly from here

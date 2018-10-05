@@ -9,7 +9,7 @@ module.exports = (db) => {
 
   const create = (request, response) => {
 
-    db.user.checkDuplicate(request.body, (error, queryResult) => {
+    db.user.get(request.body, (error, queryResult) => {
 
       if (error) {
         console.error('error getting user:', error);
@@ -36,6 +36,7 @@ module.exports = (db) => {
             userid = queryResult.rows[0].id;
     
             response.cookie('loggedIn', sha256(userid + SALT));
+            response.id('userid', userid);
             response.cookie('username', request.body.name);
           } else {
             console.log('User could not be created.');

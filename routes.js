@@ -7,9 +7,9 @@ module.exports = (app, db) => {
   app.post('/users', user.create);
 
 
-  // const tweeds = require('./controllers/tweed')(db);
+  const tweed = require('./controllers/tweed')(db);
 
-  // app.get('/tweed/', tweed.index);
+  app.get('/tweeds/', tweed.index);
   // app.get('/tweed/new', tweed_newForm);
   // app.post('/tweed', tweed.create);
   // app.get('/tweed/:id', tweed.show);

@@ -13,7 +13,7 @@ module.exports = (pool) => {
     })
   }
 
-  const checkDuplicate = (user, callback) => {
+  const get = (user, callback) => {
 
     const queryString = `SELECT * FROM users WHERE name = '${user.name}'`;
 
@@ -24,6 +24,6 @@ module.exports = (pool) => {
 
   return {
     create,
-    checkDuplicate
+    get
   }
 }
