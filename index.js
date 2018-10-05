@@ -39,6 +39,17 @@ app.get('/', (request, response) => {
   response.redirect('/tweets');
 });
 
+app.get('/login', (request, response) => {
+  response.render('Login');
+});
+
+app.get('/logout', (request, response) => {
+  response.clearCookie('userId');
+  response.clearCookie('username');
+  response.clearCookie('loggedIn');
+  response.redirect('/');
+});
+
 /**
  * ===================================
  * Listen to requests on port 3000
