@@ -10,6 +10,7 @@ module.exports = (pool) => {
 
     pool.query(queryString, values, (error, queryResult) => {
       if (error) {
+        console.log('error creating tweet:', error);
         callback(error, null);
       } else {
         callback(null, queryResult.rows[0]);
@@ -17,7 +18,22 @@ module.exports = (pool) => {
     });
   };
 
+  const index = (callback) => {
+    const queryString = 'SELECT * FROM tweets';
+    pool.query(queryString, (error, queryResult) => {
+      if (error) {
+        console.log('error showing tweet:', error);
+        callback(error, null);
+      } else if (queryResult.rows.length === 0) {
+        callback(null, null);
+      } else {
+        callback(null, queryResult.rows);
+      }
+    });
+  };
+
   return {
-    create
+    create,
+    index
   };
 };

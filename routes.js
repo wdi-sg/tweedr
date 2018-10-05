@@ -19,5 +19,6 @@ module.exports = (app, db) => {
    */
 
   app.get('/tweets/new', tweets.newForm);
+  app.get('/tweets', tweets.index);
   app.post('/tweets', tweets.create);
 };
