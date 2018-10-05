@@ -19,7 +19,7 @@ module.exports = (pool) => {
   };
 
   const index = (callback) => {
-    const queryString = 'SELECT * FROM tweets';
+    const queryString = 'SELECT * FROM tweets ORDER BY time_created DESC';
     pool.query(queryString, (error, queryResult) => {
       if (error) {
         console.log('error showing tweet:', error);
