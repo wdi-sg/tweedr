@@ -32,8 +32,7 @@ module.exports = (db) => {
         let data = { tweets: queryResult };
 
         if (hashedUsername === request.cookies.loggedIn) {
-          const userId = request.cookies.userId;
-          data.username = { id: userId, name: username };
+          data.username = username;
         }
 
         response.render('tweet/Index', data);

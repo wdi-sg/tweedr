@@ -7,7 +7,7 @@ class NewUser extends React.Component {
       <Layout>
         <form action="/users" method="POST">
           <div className="form-group">
-            <label htmlFor="name">name</label>
+            <label htmlFor="name">Name</label>
             <input
               className="form-control"
               type="text"

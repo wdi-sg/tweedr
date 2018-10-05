@@ -17,6 +17,19 @@ module.exports = (pool) => {
 
     pool.query(queryString, values, (error, queryResult) => {
       if (error) {
+        console.log('error creating user:', error);
+        callback(error, null);
+      } else {
+        callback(null, queryResult.rows[0]);
+      }
+    });
+  };
+
+  const get = (username, callback) => {
+    const queryString = `SELECT * FROM users WHERE name = '${username}'`;
+    pool.query(queryString, (error, queryResult) => {
+      if (error) {
+        console.log('error getting user:', error);
         callback(error, null);
       } else {
         callback(null, queryResult.rows[0]);
@@ -25,6 +38,7 @@ module.exports = (pool) => {
   };
 
   return {
-    create
+    create,
+    get
   };
 };

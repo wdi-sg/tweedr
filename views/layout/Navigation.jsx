@@ -4,10 +4,10 @@ class Navigation extends React.Component {
   render() {
     let navItem;
     if (this.props.username) {
-      const userUrl = `/users/${this.props.username.id}`;
+      const userUrl = `/users/${this.props.username}`;
       navItem = (
         <div>
-          <a href={userUrl} className="btn">{this.props.username.name}</a>
+          <a href={userUrl} className="btn">{this.props.username}</a>
           <a href="/logout" className="btn btn-outline-primary ml-2">Logout</a>
         </div>
       );
