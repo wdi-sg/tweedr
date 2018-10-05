@@ -26,9 +26,7 @@ module.exports = (db) => {
         if (queryResult.rowCount >= 1) {
           console.log('User created successfully');
 
-          // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
-          response.cookie('username', request.body.name);
+          //response.cookie('username', request.body.name);
         } else {
           console.log('User could not be created');
         }
@@ -63,6 +61,8 @@ module.exports = (db) => {
                 let user_id = queryResult.rows[0].id;
                 if(hashedValue === queryResult.rows[0].password){
                     response.cookie('ID cookie ', user_id);
+                     // drop cookies to indicate user's logged in status and username
+                    response.cookie('loggedIn', hashedValue);
                     response.send("Successfully logged in!");
                 }
 
