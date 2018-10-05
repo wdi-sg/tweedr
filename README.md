@@ -4,7 +4,7 @@ Let's make a cool new app called TWEEDR!! Not Twitter, geez...
 
 ### Wireframe!
 
-![tweedr](./assets/tweedr.png)
+![tweedr](https://git.generalassemb.ly/wdi-nyc-goat/LAB_Tweedr/raw/master/assets/tweedr.png)
 
 ### Description
 If a user goes to the root route `/` they see all the tweets.
