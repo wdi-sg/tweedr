@@ -6,7 +6,7 @@ class NewUser extends React.Component {
     return (
       <Layout title="Login" cookies={this.props.cookies}>
         <div className="col">
-          <h1 className="my-4">Create User</h1> 
+          <h1 className="my-4">Register</h1> 
           <form method="POST" action="/users">
             <div className="form-group">
               <label>Sign Up:</label>
@@ -16,7 +16,7 @@ class NewUser extends React.Component {
               <label>Password:</label>
               <input type="password" name="password" className="form-control" required/>
             </div>
-            <input type="submit" value="Submit" className="btn"/>
+            <input type="submit" value="Submit" className="btn btn-primary"/>
           </form>
         </div>        
       </Layout>

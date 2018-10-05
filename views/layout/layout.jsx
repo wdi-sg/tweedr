@@ -3,6 +3,8 @@ var React = require('react');
 class Login extends React.Component {
 
   render () {
+
+		console.log(this.props.cookies);
     
     if (this.props.cookies.loggedin) {
       return (
@@ -15,7 +17,7 @@ class Login extends React.Component {
     } else {
 			return (
 				<div className="navbar-nav ml-auto">
-					<form method="GET" action="/" className="form-inline nav-item nav-link">
+					<form method="GET" action="/users/login" className="form-inline nav-item nav-link">
 						<input type="submit" className="btn btn-link p-0 text-light" value="Login" />
 					</form>
 					<form method="GET" action="/users/new" className="form-inline nav-item nav-link">

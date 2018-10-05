@@ -6,6 +6,11 @@ module.exports = (app, db) => {
   app.get('/users/new', user.newForm);
   app.post('/users', user.create);
 
+  
+  app.post('/users/logout', user.logout);
+  app.post('/users/login', user.loginPost);
+  app.get('/users/login', user.loginForm);
+
 
   const tweed = require('./controllers/tweed')(db);
 

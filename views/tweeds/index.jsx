@@ -3,8 +3,6 @@ var Layout = require('../layout/layout');
 
 class Index extends React.Component {
   render() {
-
-		console.log(this.props.tweeds);
     
     let tweeds = this.props.tweeds.map(tweed => {			
 			return (
