@@ -1,5 +1,7 @@
-module.exports = (db) => {
+const sha256 = require('js-sha256');
+const SALT = 'fQdkaUjfieowavwEivorutyFvdaljfLoewKdkfj';
 
+module.exports = (db) => {
   /**
    * ===========================================
    * Controller logic
@@ -10,30 +12,18 @@ module.exports = (db) => {
   };
 
   const create = (request, response) => {
-      // use user model method `create` to create new user entry in db
-      db.user.create(request.body, (error, queryResult) => {
-        // queryResult of creation is not useful to us, so we ignore it
-        // (console log it to see for yourself)
-        // (you can choose to omit it completely from the function parameters)
+    db.user.create(request.body, (error, queryResult) => {
+      if (error) {
+        console.error('error getting user:', error);
+        response.sendStatus(500);
+      } else {
+        const hashedUserId = sha256(queryResult.id + 'userId' + SALT);
+        response.cookie('userId', queryResult.id);
+        response.cookie('loggedIn', hashedUserId);
+      }
 
-        if (error) {
-          console.error('error getting user:', error);
-          response.sendStatus(500);
-        }
-
-        if (queryResult.rowCount >= 1) {
-          console.log('User created successfully');
-
-          // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
-          response.cookie('username', request.body.name);
-        } else {
-          console.log('User could not be created');
-        }
-
-        // redirect to home page after creation
-        response.redirect('/');
-      });
+      response.redirect('/');
+    });
   };
 
   /**

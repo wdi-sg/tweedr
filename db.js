@@ -5,7 +5,7 @@ const url = require('url');
 
 var configs;
 
-if( process.env.DATABASE_URL ){
+if (process.env.DATABASE_URL) {
 
   const params = url.parse(process.env.DATABASE_URL);
   const auth = params.auth.split(':');
@@ -19,11 +19,11 @@ if( process.env.DATABASE_URL ){
     ssl: true
   };
 
-}else{
+} else {
   configs = {
-    user: 'akira',
+    user: 'liangxin',
     host: '127.0.0.1',
-    database: 'pokemons',
+    database: 'tweedr',
     port: 5432
   };
 }
@@ -41,12 +41,6 @@ module.exports = {
    */
   user: user(pool),
 
-
-  //make queries directly from here
-  queryInterface: (text, params, callback) => {
-    return pool.query(text, params, callback);
-  },
-
   // get a reference to end the connection pool at server end
-  pool:pool
+  pool: pool
 };
