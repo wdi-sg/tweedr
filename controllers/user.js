@@ -1,3 +1,5 @@
+const sha256 = require('js-sha256')
+
 module.exports = (db) => {
 
   /**
@@ -5,36 +7,63 @@ module.exports = (db) => {
    * Controller logic
    * ===========================================
    */
-  const newForm = (request, response) => {
-    response.render('user/NewUser');
+ // Controllers for Creating New Users
+  const newForm = (req, res) => {
+    res.render('user/NewUser');
   };
 
-  const create = (request, response) => {
+  const create = (req, res) => {
       // use user model method `create` to create new user entry in db
-      db.user.create(request.body, (error, queryResult) => {
+      db.user.create(req.body, (err, queryResult) => {
         // queryResult of creation is not useful to us, so we ignore it
         // (console log it to see for yourself)
         // (you can choose to omit it completely from the function parameters)
 
-        if (error) {
-          console.error('error getting user:', error);
-          response.sendStatus(500);
+        if (err) {
+          console.err('Errror getting user:', err);
+          res.sendStatus(500);
         }
-
         if (queryResult.rowCount >= 1) {
           console.log('User created successfully');
 
           // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
-          response.cookie('username', request.body.name);
+          res.cookie('loggedIn', true);
+          res.cookie('username', req.body.name);
         } else {
           console.log('User could not be created');
         }
 
         // redirect to home page after creation
-        response.redirect('/');
+        res.redirect('/');
       });
   };
+
+// Controllers for Logging in Users
+const loginForm = (req, res) => {
+    res.render('user/LoginUser')
+}
+
+const loginUser = (req, res) => {
+    db.user.login(req.body, (err, queryResult) => {
+        if (err) {
+            console.err('Error Logging User In:', err)
+            res.sendStatus(500)
+        }
+
+        let hashedPass = sha256(req.body.password)
+
+        if (queryResult.rows[0] !== undefined && queryResult.rows[0].password === hashedPass) {
+            res.cookie('loggedIn', true);
+            res.cookie('username', req.body.name);
+
+            console.log('User successfully logged in');
+            res.redirect('/')
+        } else {
+            console.log('User could not be logged in')
+        }
+    });
+}
+
 
   /**
    * ===========================================
@@ -43,6 +72,8 @@ module.exports = (db) => {
    */
   return {
     newForm,
-    create
+    create,
+    loginForm,
+    loginUser
   };
 };

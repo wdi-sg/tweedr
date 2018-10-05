@@ -1,0 +1,22 @@
+var React = require("react");
+
+class Index extends React.Component {
+  render() {
+    return (
+      <html>
+        <head />
+        <body>
+        <div>Welcome to Tweeder</div>
+        <div>
+          <span><a href="/users/new">Create a new user</a></span>
+          </div>
+          <div>
+          <span><a href="/users/login">Log In</a></span>
+        </div>
+        </body>
+      </html>
+    );
+  }
+}
+
+module.exports = Index;
