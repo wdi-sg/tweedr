@@ -1,5 +1,4 @@
 const pg = require('pg');
-const pokemon = require('./models/pokemon');
 const user = require('./models/user');
 const url = require('url');
 
@@ -40,7 +39,6 @@ module.exports = {
   /*
    * ADD APP MODELS HERE
    */
-  pokemon: pokemon(pool),
   user: user(pool),
 
 
