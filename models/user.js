@@ -27,7 +27,21 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
+    const login = (user, callback) => {
+      let trimName = user.name.trim(); //trim name so that whitespace doesnt matter for name
+      //Set Up query!
+      let queryString = "SELECT * from users WHERE name = '" + trimName + "';";
+
+      // execute query
+      dbPoolInstance.query(queryString, (error, queryResult) => {
+        // invoke callback function with results after query has executed
+        callback(error, queryResult);
+      });
+    };
+
+
     return {
-      create
+      create,
+      login
     };
 };
