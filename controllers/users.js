@@ -14,7 +14,7 @@ module.exports = (db) => {
 
   const create = (req, res) => {
       // use user model method `create` to create new user entry in db
-      db.user.create(req.body, (err, queryResult) => {
+      db.users.create(req.body, (err, queryResult) => {
         // queryResult of creation is not useful to us, so we ignore it
         // (console log it to see for yourself)
         // (you can choose to omit it completely from the function parameters)
@@ -44,7 +44,7 @@ const loginForm = (req, res) => {
 }
 
 const loginUser = (req, res) => {
-    db.user.login(req.body, (err, queryResult) => {
+    db.users.login(req.body, (err, queryResult) => {
         if (err) {
             console.err('Error Logging User In:', err)
             res.sendStatus(500)

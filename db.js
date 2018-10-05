@@ -1,5 +1,6 @@
 const pg = require('pg');
-const user = require('./models/user');
+const user = require('./models/users');
+const tweets  = require('./models/tweets')
 const url = require('url');
 
 
@@ -39,7 +40,8 @@ module.exports = {
   /*
    * ADD APP MODELS HERE
    */
-  user: user(pool),
+  users: user(pool),
+  tweets: tweets(pool),
 
 
   //make queries directly from here

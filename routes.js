@@ -1,6 +1,7 @@
 module.exports = (app, db) => {
 
-  const users = require('./controllers/user')(db);
+  const users = require('./controllers/users')(db);
+  const tweets = require('./controllers/tweets')(db);
 
   /*
    *  =========================================
@@ -13,4 +14,7 @@ module.exports = (app, db) => {
   app.post('/users', users.create);
   app.post('/users/login', users.loginUser);
 
+  // CRUD tweets
+  app.get('/tweets/new', tweets.newTweetForm);
+  app.post('/tweets', tweets.newTweetPost)
 };
