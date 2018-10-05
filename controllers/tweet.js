@@ -12,12 +12,12 @@ module.exports = (db) => {
   };
 
   const create = (request, response) => {
-    const tweet = { ...request.body, userId: request.cookies.userId };
+    const tweet = { ...request.body, author: request.cookies.username };
     db.tweet.create(tweet, (error, queryResult) => {
       if (error) {
         response.sendStatus(500);
       } else {
-        response.redirect('/');
+        response.redirect('back');
       }
     });
   };

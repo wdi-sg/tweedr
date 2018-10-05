@@ -5,8 +5,8 @@
  */
 module.exports = (pool) => {
   const create = (tweet, callback) => {
-    const queryString = 'INSERT INTO tweets (tweet, user_id) VALUES ($1, $2) RETURNING *';
-    const values = [tweet.tweet, tweet.userId];
+    const queryString = 'INSERT INTO tweets (tweet, author) VALUES ($1, $2) RETURNING *';
+    const values = [tweet.tweet, tweet.author];
 
     pool.query(queryString, values, (error, queryResult) => {
       if (error) {

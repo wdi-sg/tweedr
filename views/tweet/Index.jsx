@@ -1,17 +1,26 @@
 const React = require('react');
 const Layout = require('../layout/Layout');
+const NewTweet = require('./NewTweet');
 
 class Index extends React.Component {
   render() {
     let tweets;
 
-    if (this.props.tweets) {
+    if (this.props.tweets && this.props.username) {
       tweets = this.props.tweets.map(tweet => {
+        const date = tweet.time_created.getDate();
+        const month = tweet.time_created.getMonth();
+        const year = tweet.time_created.getFullYear();
+        const hours = tweet.time_created.getHours();
+        const minutes = tweet.time_created.getMinutes();
+        const seconds = tweet.time_created.getSeconds();
+        const time = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+
         return (
           <div key={tweet.id} className="card">
             <div className="card-body">
-              <h5 className="card-title">Username</h5>
-              <h6 className="card-subtitle mb-2 text-muted">Date time</h6>
+              <h5 className="card-title">{tweet.author}</h5>
+              <h6 className="card-subtitle mb-2 text-muted">{time}</h6>
               <p className="card-text">{tweet.tweet}</p>
             </div>
           </div>
@@ -23,7 +32,8 @@ class Index extends React.Component {
 
     return (
       <Layout username={this.props.username}>
-        <div className="container">
+        <NewTweet />
+        <div className="container my-5">
           {tweets}
         </div>
       </Layout>

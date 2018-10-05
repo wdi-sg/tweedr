@@ -3,22 +3,22 @@ const React = require("react");
 class NewTweet extends React.Component {
   render() {
     return (
-      <html>
-        <head />
-        <body>
-          <form method="POST" action="/tweets">
-            <div>
-              <input
-                name="tweet"
-                type="text"
-                placeholder="What's happening?"
-                required
-              />
-            </div>
-            <input type="submit" value="Tweet" />
-          </form>
-        </body>
-      </html>
+      <form method="POST" action="/tweets">
+        <div className="row justify-content-md-center">
+          <div className="col-md-10">
+            <textarea
+              className="form-control"
+              name="tweet"
+              placeholder="What's happening?"
+              rows="3"
+              required
+            />
+          </div>
+          <div className="col-md-1">
+            <input className="btn btn-primary" type="submit" value="Tweet" />
+          </div>
+        </div>
+      </form>
     );
   }
 }
