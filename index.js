@@ -3,40 +3,24 @@ const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const db = require('./db');
 
-/**
- * ===================================
- * Configurations and set up
- * ===================================
- */
-
-// Init express app
 const app = express();
 
-// Set up middleware
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 app.use(express.urlencoded({
   extended: true
 }));
 
-// Set react-views to be the default view engine
 const reactEngine = require('express-react-views').createEngine();
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', reactEngine);
 
-/**
- * ===================================
- * Routes
- * ===================================
- */
-
-// Import routes to match incoming requests
 require('./routes')(app, db);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.render('user/login', {cookies:request.cookies});
+  response.redirect('/tweeds/');
 });
 
 /**

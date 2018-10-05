@@ -1,48 +1,55 @@
+const sha256 = require('js-sha256');
+const SALT = "tweedr";
+
 module.exports = (db) => {
 
-  /**
-   * ===========================================
-   * Controller logic
-   * ===========================================
-   */
   const newForm = (request, response) => {
-    response.render('user/NewUser');
-  };
+    response.render('user/new', {cookies: request.cookies});
+  }
 
   const create = (request, response) => {
-      // use user model method `create` to create new user entry in db
-      db.user.create(request.body, (error, queryResult) => {
-        // queryResult of creation is not useful to us, so we ignore it
-        // (console log it to see for yourself)
-        // (you can choose to omit it completely from the function parameters)
 
-        if (error) {
-          console.error('error getting user:', error);
-          response.sendStatus(500);
-        }
+    db.user.checkDuplicate(request.body, (error, queryResult) => {
 
-        if (queryResult.rowCount >= 1) {
-          console.log('User created successfully');
+      if (error) {
+        console.error('error getting user:', error);
+        response.sendStatus(500);
+      }
+      
+      if (queryResult.rowCount >= 1) {
+        console.log('Username already exists!');
 
-          // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
-          response.cookie('username', request.body.name);
-        } else {
-          console.log('User could not be created');
-        }
+        response.send("A user with this name already exists.");
 
-        // redirect to home page after creation
-        response.redirect('/');
-      });
-  };
+      } else {
+        
+        db.user.create(request.body, (error, queryResult) => {
+        
+          if (error) {
+            console.error('error getting user:', error);
+            response.sendStatus(500);
+          }
+    
+          if (queryResult.rowCount >= 1) {
+            console.log('User created!');
+    
+            userid = queryResult.rows[0].id;
+    
+            response.cookie('loggedIn', sha256(userid + SALT));
+            response.cookie('username', request.body.name);
+          } else {
+            console.log('User could not be created.');
+          }
+    
+          // redirect to home page after creation
+          response.redirect('/');
+        })
+      }
+    })
+  }
 
-  /**
-   * ===========================================
-   * Export controller functions as a module
-   * ===========================================
-   */
   return {
     newForm,
     create
-  };
-};
+  }
+}
