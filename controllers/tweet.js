@@ -23,11 +23,11 @@ module.exports = (db) => {
   };
 
   const index = (request, response) => {
-    db.tweet.index((error, queryResult) => {
+    const username = request.cookies.username;
+    db.tweet.index(username, (error, queryResult) => {
       if (error) {
         response.sendStatus(500);
       } else {
-        const username = request.cookies.username;
         const hashedUsername = sha256(username + 'loggedIn' + SALT);
         let data = { tweets: queryResult };
 

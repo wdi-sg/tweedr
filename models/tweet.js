@@ -18,8 +18,8 @@ module.exports = (pool) => {
     });
   };
 
-  const index = (callback) => {
-    const queryString = 'SELECT * FROM tweets ORDER BY time_created DESC';
+  const index = (user, callback) => {
+    const queryString = `SELECT * FROM tweets INNER JOIN followers ON tweets.author = followers.user_name WHERE follower_name = '${user}' OR author = '${user}'`;
     pool.query(queryString, (error, queryResult) => {
       if (error) {
         console.log('error showing tweet:', error);
