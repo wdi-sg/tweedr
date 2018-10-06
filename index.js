@@ -34,10 +34,6 @@ app.engine('jsx', reactEngine);
 // Import routes to match incoming requests
 require('./routes')(app, db);
 
-// Root GET request (it doesn't belong in any controller file)
-app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
-});
 
 /**
  * ===================================

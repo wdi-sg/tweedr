@@ -1,22 +1,30 @@
 var React = require("react");
+const Default = require('../layout/Default')
 
 class NewUser extends React.Component {
   render() {
+
+    let taken;
+    if(this.props.cookie === 'true') {
+
+        taken = <header><p>The Username Is Already Taken</p></header>
+    }
+
     return (
-      <html>
-        <head />
-        <body>
-          <form className="user-form" method="POST" action="/users">
+
+        <Default title="Register">
+          {taken}
+          <h1>REGISTER</h1>
+          <form className="user-form" method="POST" action="/register">
             <div className="user-attribute">
-              name<input name="name" type="text" />
+              Username<input name="username" type="text" autoComplete="off"/>
             </div>
             <div className="user-attribute">
-              password:<input name="password" type="text" />
+              Password:<input name="password" type="text" autoComplete="off" />
             </div>
-            <input name="submit" type="submit" />
+            <input value="Register" type="submit" />
           </form>
-        </body>
-      </html>
+        </Default>
     );
   }
 }
