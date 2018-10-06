@@ -11,7 +11,7 @@ module.exports = db => {
    */
   // Controllers for Creating New Users
   const newForm = (req, res) => {
-    res.render("user/NewUser");
+    res.render("user/NewUser", {cookies: req.cookies});
   };
 
   const create = (req, res) => {
@@ -77,6 +77,12 @@ module.exports = db => {
     });
   };
 
+  const logoutUser = (req, res) => {
+      res.clearCookie('loggedIn');
+      res.clearCookie('user_id')
+      res.redirect('/')
+  }
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -86,6 +92,7 @@ module.exports = db => {
     newForm,
     create,
     loginForm,
-    loginUser
+    loginUser,
+    logoutUser
   };
 };

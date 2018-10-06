@@ -14,7 +14,7 @@ module.exports = db => {
       req.cookies.user_id + "logged_id" + SALT
     );
     if (req.cookies.loggedIn === checkSessionCookieHash) {
-      res.render("tweets/NewTweet", {user_id: req.cookies.user_id});
+      res.render("tweets/NewTweet", {cookies: req.cookies});
     } else {
       res.send("You must be logged in to post a tweet!");
     }

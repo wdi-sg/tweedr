@@ -1,10 +1,11 @@
 var React = require("react");
+const Header = require('../layout/Header')
 
 class NewUser extends React.Component {
   render() {
     return (
       <html>
-        <head />
+        <Header cookies={this.props.cookies}/>
         <body>
           <form className="user-form" method="POST" action="/users">
             <div className="user-attribute">
