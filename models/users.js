@@ -12,7 +12,7 @@ module.exports = dbPoolInstance => {
     var hashedValue = sha256(user.password);
 
     // set up query
-    const queryString = "INSERT INTO users (name, password) VALUES ($1, $2)";
+    const queryString = "INSERT INTO users (name, password) VALUES ($1, $2) RETURNING *";
     const values = [user.name, hashedValue];
 
     // execute query
@@ -23,8 +23,6 @@ module.exports = dbPoolInstance => {
   };
 
   const login = (user, callback) => {
-      var hashedValue = sha256(user.password);
-
       const queryString = "SELECT * FROM users WHERE name = '"+user.name+"'";
       dbPoolInstance.query(queryString, (err, queryResult) => {
           callback(err, queryResult)

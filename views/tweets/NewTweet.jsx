@@ -8,7 +8,7 @@ class NewTweet extends React.Component {
         <body>
           <form className="user-form" method="POST" action="/tweets">
             <div className="user-attribute">
-              name<input name="name" type="text" />
+              ID:<input name="userid" type="text" value={this.props.user_id}/>
             </div>
             <div className="user-attribute">
               tweet:<input name="tweet" type="text" />

@@ -7,7 +7,7 @@ module.exports = dbPoolInstance => {
   const newTweet = (tweet, callback) => {
     // set up query
     const queryString = "INSERT INTO tweets (user_id, content) VALUES ($1, $2)";
-    const values = [tweet.name, tweet.tweet];
+    const values = [tweet.userid, tweet.tweet];
 
     // execute query
     dbPoolInstance.query(queryString, values, (error, queryResult) => {
