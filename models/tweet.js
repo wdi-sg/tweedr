@@ -7,11 +7,12 @@ var sha256 = require('js-sha256');
  * ===========================================
  */
 module.exports = (dbPoolInstance) => {
-    const createTweet = (user, callback) => {
-        const queryString = 'INSERT INTO tweets (content) VALUES ($1)';
-
+    const createTweet = (user, cookie, callback) => {
+        const queryString = 'INSERT INTO tweets (content, user_id) VALUES ($1, $2)';
+        const parseCookie = parseInt(cookie['ID cookie']);
         const values = [
-            user.tweet
+            user.tweet,
+            parseCookie
         ];
 
         //execute query

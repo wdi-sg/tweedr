@@ -12,7 +12,7 @@ module.exports = (db) => {
   };
 
   const createTweet = (request, response) => {
-      db.tweet.createTweet(request.body, (err, queryResult)=>{
+      db.tweet.createTweet(request.body, request.cookies, (err, queryResult)=>{
         if (err) {
           console.error('error getting user:', err);
           response.sendStatus(500);
