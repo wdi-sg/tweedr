@@ -18,7 +18,7 @@ Create each part of your app step by step.
 
   1.5 The basic tables.sql will have a users table and a tweets table- notice that the starter code provided wants a name and password column in the database.
 
-  1.6 The app provides a basic user creation, so the basic app doesn't nee d anything more for users.
+  1.6 The app provides a basic user creation, so the basic app doesn't need anything more for users.
 
 2. Implement login of the user. ( change the code to a hashed session cookie, instead of just `loggedin=true`.
 

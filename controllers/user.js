@@ -5,6 +5,14 @@ module.exports = (db) => {
    * Controller logic
    * ===========================================
    */
+  const loginPost = (request, response) => {
+    console.log("check if user login in progress")
+  };
+
+  const login = (request, response) => {
+    response.render('user/UserLogin');
+  };
+
   const newForm = (request, response) => {
     response.render('user/NewUser');
   };
@@ -14,6 +22,7 @@ module.exports = (db) => {
       db.user.create(request.body, (error, queryResult) => {
         // queryResult of creation is not useful to us, so we ignore it
         // (console log it to see for yourself)
+        //console.log("queryResult", queryResult);
         // (you can choose to omit it completely from the function parameters)
 
         if (error) {
@@ -42,6 +51,8 @@ module.exports = (db) => {
    * ===========================================
    */
   return {
+    loginPost,
+    login,
     newForm,
     create
   };

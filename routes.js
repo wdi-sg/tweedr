@@ -8,6 +8,9 @@ module.exports = (app, db) => {
    *  =========================================
    */
   // CRUD users
+  app.get('/login', users.login);
+  app.post('/login', users.loginPost);
+
   app.get('/users/new', users.newForm);
   app.post('/users', users.create);
 };
