@@ -7,6 +7,7 @@ class Navigation extends React.Component {
       const userUrl = `/users/${this.props.username}`;
       navItem = (
         <div>
+          <a href="/users" className="btn text-secondary mr-3">Users</a>
           <a href={userUrl} className="btn">{this.props.username}</a>
           <a href="/logout" className="btn btn-outline-primary ml-2">Logout</a>
         </div>

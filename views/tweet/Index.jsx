@@ -20,7 +20,7 @@ class Index extends React.Component {
         const time = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
 
         return (
-          <div key={tweet.id} className="card my-3">
+          <div key={tweet.id} className="card border-secondary my-3">
             <div className="card-body">
               <h5 className="card-title">{tweet.author}</h5>
               <h6 className="card-subtitle mb-2 text-muted">{time}</h6>

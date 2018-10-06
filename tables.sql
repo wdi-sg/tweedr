@@ -10,3 +10,9 @@ CREATE TABLE IF NOT EXISTS tweets (
   author TEXT,
   time_created TIMESTAMP DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS followers (
+  id SERIAL PRIMARY KEY,
+  user_name TEXT,
+  follower_name TEXT
+);

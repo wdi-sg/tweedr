@@ -40,6 +40,30 @@ module.exports = (db) => {
     response.render('user/NewUser');
   };
 
+  const index = (request, response) => {
+    const username = request.cookies.username;
+    db.user.index(username, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        const hashedUsername = sha256(username + 'loggedIn' + SALT);
+        let data = { users: queryResult };
+        if (hashedUsername === request.cookies.loggedIn) {
+          data.username = username;
+        }
+
+        db.user.following(username, (error, queryResult) => {
+          if (error) {
+            response.sendStatus(500);
+          } else {
+            data.following = queryResult.map(user => user.user_name);
+            response.render('user/Index', data);
+          }
+        });
+      }
+    });
+  };
+
   const create = (request, response) => {
     db.user.create(request.body, (error, queryResult) => {
       if (error) {
@@ -54,6 +78,30 @@ module.exports = (db) => {
     });
   };
 
+  const follow = (request, response) => {
+    const user = request.body.user_name;
+    const follower = request.body.follower_name;
+    db.user.follow(user, follower, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        response.redirect('back');
+      }
+    });
+  };
+
+  const unfollow = (request, response) => {
+    const user = request.body.user_name;
+    const follower = request.body.follower_name;
+    db.user.unfollow(user, follower, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        response.redirect('back');
+      }
+    });
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -64,6 +112,9 @@ module.exports = (db) => {
     login,
     logout,
     newForm,
-    create
+    index,
+    create,
+    follow,
+    unfollow
   };
 };
