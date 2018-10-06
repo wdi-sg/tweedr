@@ -19,10 +19,14 @@ class Tweets extends React.Component {
         seconds = seconds < 10 ? '0' + seconds : seconds;
         const time = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
 
+        const authorUrl = `/users/${tweet.author}`;
+
         return (
           <div key={tweet.id} className="card border-secondary my-3">
             <div className="card-body">
-              <h5 className="card-title">{tweet.author}</h5>
+              <h5 className="card-title">
+                <a href={authorUrl}>{tweet.author}</a>
+              </h5>
               <h6 className="card-subtitle mb-2 text-muted">{time}</h6>
               <p className="card-text">{tweet.tweet}</p>
             </div>
