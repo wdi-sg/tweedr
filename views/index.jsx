@@ -1,4 +1,5 @@
 var React = require("react");
+const ShowTweets = require('./tweets/ShowTweets.jsx')
 
 class Index extends React.Component {
   render() {
@@ -7,6 +8,7 @@ class Index extends React.Component {
         <head />
         <body>
           <div>Welcome to Tweeder</div>
+          <ShowTweets tweets = {this.props.tweets} />
           <div>
             <span>
               <a href="/users/new">Create a new user</a>

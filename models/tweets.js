@@ -16,7 +16,16 @@ module.exports = dbPoolInstance => {
     });
   };
 
+  const showAllTweets = (tweet, callback) => {
+      const queryString = "SELECT * from tweets";
+
+      dbPoolInstance.query(queryString, (err, queryResult) => {
+          callback(err, queryResult);
+      });
+  };
+
   return {
-    newTweet
+    newTweet,
+    showAllTweets
   };
 };

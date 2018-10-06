@@ -31,6 +31,16 @@ module.exports = (db) => {
       });
   };
 
+  const showAllTweetsForm = (req, res) => {
+
+      db.tweets.showAllTweets(req.body, (err, queryResult) => {
+          if (err) {
+              console.err('Error getting Tweets: ', err);
+          }
+          res.render('index', {tweets: queryResult})
+      })
+  }
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -38,6 +48,7 @@ module.exports = (db) => {
    */
   return {
     newTweetForm,
-    newTweetPost
+    newTweetPost,
+    showAllTweetsForm
   };
 };

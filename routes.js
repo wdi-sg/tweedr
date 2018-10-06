@@ -14,6 +14,8 @@ module.exports = (app, db) => {
   app.post('/users', users.create);
   app.post('/users/login', users.loginUser);
 
+  app.get('/', tweets.showAllTweetsForm);
+
   // CRUD tweets
   app.get('/tweets/new', tweets.newTweetForm);
   app.post('/tweets', tweets.newTweetPost)
