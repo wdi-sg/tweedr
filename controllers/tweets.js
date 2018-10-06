@@ -51,6 +51,26 @@ module.exports = db => {
     });
   };
 
+  const showFollowingTweetsForm = (req, res) => {
+      db.tweets.showFollowingTweets(req.cookies, (err, queryResult) => {
+          if(err) {
+              console.err("Error Showing Following Tweets: ", err);
+          }
+
+          res.render("index", {tweets: queryResult, cookies: req.cookies})
+      })
+  }
+
+  const showFollowerTweetsForm = (req, res) => {
+      db.tweets.showFollowerTweets(req.cookies, (err, queryResult) => {
+          if(err) {
+              console.err("Error Showing Following Tweets: ", err);
+          }
+
+          res.render("index", {tweets: queryResult, cookies: req.cookies})
+      })
+  }
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -59,6 +79,8 @@ module.exports = db => {
   return {
     newTweetForm,
     newTweetPost,
-    showAllTweetsForm
+    showAllTweetsForm,
+    showFollowingTweetsForm,
+    showFollowerTweetsForm
   };
 };

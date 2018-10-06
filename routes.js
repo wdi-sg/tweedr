@@ -28,5 +28,7 @@ module.exports = (app, db) => {
 
   // CRUD tweets
   app.get('/tweets/new', tweets.newTweetForm);
+  app.get('/tweets/following', tweets.showFollowingTweetsForm)
+  app.get('/tweets/followers', tweets.showFollowerTweetsForm)
   app.post('/tweets', tweets.newTweetPost)
 };

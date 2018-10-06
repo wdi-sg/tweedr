@@ -7,7 +7,7 @@ class showTweets extends React.Component {
     const mapTweets = tweets.map(tweet => {
       return (
         <div>
-          <li>
+          <li key={tweet.tweet_id}>
             Tweet ID : {tweet.tweet_id} Content : {tweet.content} Posted By : {tweet.user_id}
           </li>
         </div>

@@ -24,8 +24,26 @@ module.exports = dbPoolInstance => {
       });
   };
 
+  const showFollowingTweets = (tweet, callback) => {
+      const queryString = "SELECT * FROM tweets INNER JOIN followers ON (followers.user_id = tweets.user_id) WHERE followers.follower_user_id='"+tweet.user_id+"'";
+
+      dbPoolInstance.query(queryString, (err, queryResult) => {
+          callback(err, queryResult);
+      })
+  }
+
+  const showFollowerTweets = (tweet, callback) => {
+      const queryString = "SELECT * FROM tweets INNER JOIN followers ON (followers.follower_user_id = tweets.user_id) WHERE followers.user_id='"+tweet.user_id+"'";
+
+      dbPoolInstance.query(queryString, (err, queryResult) => {
+          callback(err, queryResult);
+      })
+  }
+
   return {
     newTweet,
-    showAllTweets
+    showAllTweets,
+    showFollowingTweets,
+    showFollowerTweets
   };
 };

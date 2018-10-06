@@ -45,6 +45,12 @@ class Header extends React.Component {
               <a className="nav-item nav-link" href="/">
                 Home
               </a>
+							<a className="nav-item nav-link" href="/tweets/following">
+								See Following Users Tweets
+							</a>
+							<a className="nav-item nav-link" href="/tweets/followers">
+								See Followers Tweets
+							</a>
               <a className="nav-item nav-link" href="/tweets/new">
                 Create a New Tweet
               </a>
