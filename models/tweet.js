@@ -71,11 +71,24 @@ module.exports = (pool) => {
     });
   };
 
+  const destroy = (id, callback) => {
+    const queryString = `DELETE from tweets WHERE id = ${id}`;
+    pool.query(queryString, (error, queryResult) => {
+      if (error) {
+        console.log('error deleting tweet:', error);
+        callback(error, null);
+      } else {
+        callback(null, queryResult);
+      }
+    });
+  };
+
   return {
     create,
     index,
     get,
     getFromId,
-    update
+    update,
+    destroy
   };
 };

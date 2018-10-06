@@ -69,6 +69,16 @@ module.exports = (db) => {
     });
   };
 
+  const destroy = (request, response) => {
+    db.tweet.destroy(request.params.id, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        response.redirect('back');
+      }
+    });
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -79,6 +89,7 @@ module.exports = (db) => {
     create,
     index,
     edit,
-    update
+    update,
+    destroy
   };
 };
