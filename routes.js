@@ -13,4 +13,8 @@ module.exports = (app, db) => {
 
   app.get('/users/new', users.newForm);
   app.post('/users', users.create);
+  
+  app.get('/', (request, response) => {
+    response.send('Welcome To Tweedr.');
+  });
 };

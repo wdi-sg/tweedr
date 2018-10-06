@@ -1,12 +1,47 @@
-module.exports = (db) => {
+const sha256 = require('js-sha256');
 
+module.exports = (db) => {
+const SALT = "Climbing is fun";
   /**
    * ===========================================
    * Controller logic
    * ===========================================
    */
   const loginPost = (request, response) => {
-    console.log("check if user login in progress")
+    db.user.getUser(request.body.name, (error, modelResultUser) => {
+      console.log('callback: ', modelResultUser);
+
+      if(error){
+        console.log('error');
+        response.status(500).send('It didnt work!');
+      }
+      else if(modelResultUser === null){
+          response.status(403).send('Cannot login!');
+      }
+      else{
+        console.log( modelResultUser);
+        //Hash password
+        let hashedValue = sha256(request.body.password);
+        //Hash current cookie
+        let currentSessionCookie = sha256(SALT + request.cookies['username']);
+
+        console.log('database: ', modelResultUser.password);
+        console.log('input: ', hashedValue);
+
+        if(modelResultUser.password === hashedValue){
+          //authenticate & set cookie
+          response.cookie('loggedIn', currentSessionCookie);
+          response.cookie('username', request.body.name);
+          //response.cookie("username", queryResult.rows[0].nane);
+          console.log('User successfully logged in');
+          response.redirect('/')
+
+        }
+        else{
+          response.status(403).send('NOPE, CANT SEEM TO LOG YOU IN');
+        }
+      }
+    });
   };
 
   const login = (request, response) => {
@@ -31,10 +66,12 @@ module.exports = (db) => {
         }
 
         if (queryResult.rowCount >= 1) {
-          console.log('User created successfully');
 
+          console.log('User created successfully');
+          //Hash current cookie
+          let currentSessionCookie = sha256(SALT + request.cookies['username']);
           // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
+          response.cookie('loggedIn', currentSessionCookie);
           response.cookie('username', request.body.name);
         } else {
           console.log('User could not be created');
