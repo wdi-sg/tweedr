@@ -12,8 +12,9 @@ module.exports = dbPoolInstance => {
     var hashedValue = sha256(user.password);
 
     // set up query
-    const queryString = "INSERT INTO users (name, password) VALUES ($1, $2) RETURNING *";
-    const values = [user.name, hashedValue];
+    // UPDATING QUERYSTRING to reject duplicate name entries
+    const queryString = "INSERT INTO users (name, password) SELECT ($1), ($2) WHERE NOT EXISTS ( SELECT * FROM users WHERE name=($3)) RETURNING *";
+    const values = [user.name, hashedValue, user.name];
 
     // execute query
     dbPoolInstance.query(queryString, values, (error, queryResult) => {

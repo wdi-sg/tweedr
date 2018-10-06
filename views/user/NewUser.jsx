@@ -8,6 +8,7 @@ class NewUser extends React.Component {
         <Header cookies={this.props.cookies}/>
         <body>
           <form className="user-form" method="POST" action="/users">
+              {this.props.message}
             <div className="user-attribute">
               name<input name="name" type="text" />
             </div>

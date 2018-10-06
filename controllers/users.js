@@ -22,7 +22,7 @@ module.exports = db => {
       // (you can choose to omit it completely from the function parameters)
 
       if (err) {
-        console.err("Errror getting user:", err);
+        console.log("Errror getting user:", err);
         res.sendStatus(500);
       }
       if (queryResult.rowCount >= 1) {
@@ -31,16 +31,16 @@ module.exports = db => {
         let currentSessionCookie = sha256(
           queryResult.rows[0].user_id + "logged_id" + SALT
         );
-
         // drop cookies to indicate user's logged in status and username
         res.cookie("loggedIn", currentSessionCookie);
         res.cookie("user_id", queryResult.rows[0].user_id);
+        // redirect to home page after creation
+        res.redirect("/");
       } else {
         console.log("User could not be created");
+// Adding a prop to display a message when User ID is same
+        res.render("user/NewUser", {message: "this userid has been taken", cookies: req.cookies})
       }
-
-      // redirect to home page after creation
-      res.redirect("/");
     });
   };
 
