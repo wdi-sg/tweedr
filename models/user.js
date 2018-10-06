@@ -51,6 +51,19 @@ module.exports = (pool) => {
     });
   };
 
+  const update = (username, bio, callback) => {
+    const queryString = `UPDATE users SET bio = ($1) WHERE name = '${username}' RETURNING *`;
+    const values = [bio];
+    pool.query(queryString, values, (error, queryResult) => {
+      if (error) {
+        console.log('error updating user bio:', error);
+        callback(error, null);
+      } else {
+        callback(null, queryResult.rows[0]);
+      }
+    });
+  };
+
   const follow = (user, follower, callback) => {
     const queryString = 'INSERT INTO followers (user_name, follower_name) VALUES ($1, $2) RETURNING *';
     const values = [user, follower];
@@ -92,6 +105,7 @@ module.exports = (pool) => {
     create,
     get,
     index,
+    update,
     follow,
     unfollow,
     following

@@ -108,6 +108,33 @@ module.exports = (db) => {
     });
   };
 
+  const edit = (request, response) => {
+    db.user.get(request.params.name, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        const username = request.cookies.username;
+        const hashedUsername = sha256(queryResult.name + 'loggedIn' + SALT);
+        const data = { user: queryResult };
+        if (hashedUsername === request.cookies.loggedIn) {
+          data.username = username;
+        }
+
+        response.render('user/Edit', data);
+      }
+    });
+  };
+
+  const update = (request, response) => {
+    db.user.update(request.params.name, request.body.bio, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        response.redirect(`/users/${queryResult.name}`);
+      }
+    });
+  };
+
   const follow = (request, response) => {
     const user = request.body.user_name;
     const follower = request.body.follower_name;
@@ -145,6 +172,8 @@ module.exports = (db) => {
     index,
     create,
     get,
+    edit,
+    update,
     follow,
     unfollow
   };

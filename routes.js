@@ -14,10 +14,12 @@ module.exports = (app, db) => {
   app.post('/login', users.login);
 
   app.get('/users/new', users.newForm);
+  app.get('/users/:name/edit', users.edit);
   app.get('/users/:name', users.get);
   app.get('/users', users.index);
   app.post('/users/followers', users.follow);
   app.post('/users', users.create);
+  app.put('/users/:name', users.update);
   app.delete('/users/followers', users.unfollow);
 
   /*
