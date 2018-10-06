@@ -15,7 +15,7 @@ module.exports = (app, db) => {
   //login form
   app.get('/users/login', users.loginForm);
   app.post('/users/status', users.loginStatus);
-  app.get('/users/status', users.userPage)
+  app.get('/users/:id', users.userPage);
 
   //follow user
   app.get('/users/follow', users.followPage);

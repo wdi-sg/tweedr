@@ -40,9 +40,9 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
-    const userDisplay = (callback) => {
+    const userDisplay = (user, callback) => {
       //Set Up query!
-      let queryString = "SELECT * from users";
+      let queryString = "SELECT tweets.id, users.name, tweets.content from users, tweets where users.id = '" + user.id + "' AND users.id = tweets.user_id;";
 
       // execute query
       dbPoolInstance.query(queryString, (error, queryResult) => {

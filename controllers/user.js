@@ -65,7 +65,8 @@ module.exports = (db) => {
                      // drop cookies to indicate user's logged in status and username
                     response.cookie('loggedIn', hashedValue);
                     response.cookie('Username', request.body.name);
-                    response.redirect('/users/status');
+                    //response.render('user/Index', {user:queryResult.rows});
+                    response.redirect('/');
                 }
 
                 else{
@@ -80,7 +81,7 @@ module.exports = (db) => {
   //Displaying user index page
   const userPage = (request, response) => {
         //console.log("Rest cookies: ", request.cookies)
-     db.user.userDisplay((err, queryResult) => {
+     db.user.userDisplay(request.params, (err, queryResult) => {
           if (err) {
             console.error('error getting user:', err);
             response.sendStatus(500);
