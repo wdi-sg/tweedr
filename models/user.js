@@ -40,9 +40,21 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
+    const userDisplay = (callback) => {
+      //Set Up query!
+      let queryString = "SELECT * from users";
+
+      // execute query
+      dbPoolInstance.query(queryString, (error, queryResult) => {
+        // invoke callback function with results after query has executed
+        callback(error, queryResult);
+      });
+    };
+
 
     return {
       create,
-      login
+      login,
+      userDisplay
     };
 };

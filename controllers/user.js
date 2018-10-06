@@ -64,7 +64,7 @@ module.exports = (db) => {
                     response.cookie('ID cookie ', user_id);
                      // drop cookies to indicate user's logged in status and username
                     response.cookie('loggedIn', hashedValue);
-                    response.render('user/Index', {users: queryResult.rows});
+                    response.redirect('/users/status');
                 }
 
                 else{
@@ -73,6 +73,20 @@ module.exports = (db) => {
                 }
             }
         }
+      })
+  }
+
+  //Displaying user index page
+  const userPage = (request, response) => {
+     db.user.userDisplay((err, queryResult) => {
+          if (err) {
+            console.error('error getting user:', err);
+            response.sendStatus(500);
+          }
+          else {
+            console.log("QUERY RESULTS.ROWS: ", queryResult.rows);
+            response.render('user/Index', {users: queryResult.rows})
+          }
       })
   }
 
@@ -85,6 +99,7 @@ module.exports = (db) => {
     newForm,
     create,
     loginForm,
-    loginStatus
+    loginStatus,
+    userPage
   };
 };
