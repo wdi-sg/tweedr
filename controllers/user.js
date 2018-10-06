@@ -65,16 +65,22 @@ module.exports = (db) => {
   };
 
   const create = (request, response) => {
-    db.user.create(request.body, (error, queryResult) => {
-      if (error) {
-        response.sendStatus(500);
+    db.user.get(request.body.name, (error, queryResult) => {
+      if (!error) {
+        response.render('user/NewUser', { error: 'Name already exists.' });
       } else {
-        const hashedUsername = sha256(queryResult.name + 'loggedIn' + SALT);
-        response.cookie('username', queryResult.name);
-        response.cookie('loggedIn', hashedUsername);
-      }
+        db.user.create(request.body, (error, queryResult) => {
+          if (error) {
+            response.sendStatus(500);
+          } else {
+            const hashedUsername = sha256(queryResult.name + 'loggedIn' + SALT);
+            response.cookie('username', queryResult.name);
+            response.cookie('loggedIn', hashedUsername);
+          }
 
-      response.redirect('/tweets');
+          response.redirect('/tweets');
+        });
+      }
     });
   };
 

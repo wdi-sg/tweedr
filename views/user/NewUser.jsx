@@ -3,8 +3,19 @@ const Layout = require('../layout/Layout');
 
 class NewUser extends React.Component {
   render() {
+    let error;
+
+    if (this.props.error) {
+      error = (
+        <div className="alert alert-danger" role="alert">
+          {this.props.error}
+        </div>
+      );
+    }
+
     return (
       <Layout>
+        {error}
         <form action="/users" method="POST">
           <div className="form-group">
             <label htmlFor="name">Name</label>
