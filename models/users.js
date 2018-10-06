@@ -30,7 +30,7 @@ module.exports = dbPoolInstance => {
   }
 
   const showUser = (user, callback) => {
-      const queryString = "SELECT user_id, name FROM users WHERE user_id='"+user.id+"'";
+      const queryString = "SELECT users.user_id, users.name, tweets.content FROM users, tweets WHERE users.user_id='"+user.id+"'";
       dbPoolInstance.query(queryString, (err, queryResult) => {
           callback(err, queryResult)
       })

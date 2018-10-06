@@ -24,9 +24,6 @@ module.exports = db => {
   const newTweetPost = (req, res) => {
     // use user model method `create` to create new user entry in db
     db.tweets.newTweet(req.body, (err, queryResult) => {
-      // queryResult of creation is not useful to us, so we ignore it
-      // (console log it to see for yourself)
-      // (you can choose to omit it completely from the function parameters)
       if (err) {
         console.err("Errror creating tweet:", err);
         res.sendStatus(500);

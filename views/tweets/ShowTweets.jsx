@@ -8,7 +8,7 @@ class showTweets extends React.Component {
       return (
         <div>
           <li key={tweet.tweet_id}>
-            Tweet ID : {tweet.tweet_id} Content : {tweet.content} Posted By : {tweet.user_id}
+            Tweet ID : {tweet.tweet_id} Content : {tweet.content} Posted By : <a href={"/users/" + tweet.user_id + "/show"}> User ID {tweet.user_id}</a>
           </li>
         </div>
       );

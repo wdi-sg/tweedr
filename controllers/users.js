@@ -82,7 +82,7 @@ const showUser = (req, res) => {
         if (err) {
             console.error("Error Showing User: ",err)
         }
-        res.render("user/ShowUser", {user : queryResult.rows[0], cookies: req.cookies})
+        res.render("user/ShowUser", {userInfo : queryResult.rows, cookies: req.cookies})
     })
 }
 
