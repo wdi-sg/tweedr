@@ -38,8 +38,8 @@ module.exports = dbPoolInstance => {
   }
 
   const followUser = (user, followedUser, callback) => {
-      const queryString = "INSERT INTO followers (user_id, follower_user_id) VALUES ($1, $2)"
-      const values = [followedUser.id, user.user_id]
+      const queryString = "INSERT INTO followers (user_id, follower_user_id) SELECT ($1), ($2) WHERE NOT EXISTS (SELECT * FROM followers WHERE followers.follower_user_id=($3))";
+      const values = [followedUser.id, user.user_id, user.user_id]
       dbPoolInstance.query(queryString, values, (err, queryResult)=> {
           callback(err, queryResult)
       })
