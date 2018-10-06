@@ -4,11 +4,12 @@ class UserIndex extends React.Component {
   render() {
         console.log("this.props is: ", this.props);
         const link = '/tweets/new';
+        const followLink = '/users/follow';
         const userMapping = this.props.users.map(user => { //rmb to enclose the h1 and p tag into a div tag as you can only return one tag and not 2 tags simultanously
           return (
             <div>
               <p> {user.name}
-              <input type="button" value="Follow" />
+              <a href={followLink}><input type="button" value="Follow"></input></a>
               </p>
               <p>
                 <input type="button" value="Edit" />
