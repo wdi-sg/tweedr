@@ -57,13 +57,14 @@ module.exports = (db) => {
             }
             else {
                 // run user input password through bcrypt to obtain hashed password
+                console.log('QUERYRESULTS LOGINSTATUS: ', queryResult.rows);
                 var hashedValue = sha256(request.body.password);
                 let user_id = queryResult.rows[0].id;
-                if(hashedValue === queryResult.rows[0].password){
+                if(hashedValue === queryResult.rows[0].hashedpassword){
                     response.cookie('ID cookie ', user_id);
                      // drop cookies to indicate user's logged in status and username
                     response.cookie('loggedIn', hashedValue);
-                    response.send("Successfully logged in!");
+                    response.render('user/Index', {users: queryResult.rows});
                 }
 
                 else{
