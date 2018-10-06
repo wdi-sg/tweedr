@@ -12,12 +12,17 @@ class Index extends React.Component {
 
       if (this.props.tweets) {
         tweets = this.props.tweets.map(tweet => {
-          const date = tweet.time_created.getDate();
-          const month = tweet.time_created.getMonth();
+          let date = tweet.time_created.getDate();
+          date = date < 10 ? '0' + date : date;
+          let month = tweet.time_created.getMonth();
+          month = month < 10 ? '0' + month : month;
           const year = tweet.time_created.getFullYear();
-          const hours = tweet.time_created.getHours();
-          const minutes = tweet.time_created.getMinutes();
-          const seconds = tweet.time_created.getSeconds();
+          let hours = tweet.time_created.getHours();
+          hours = hours < 10 ? '0' + hours : hours;
+          let minutes = tweet.time_created.getMinutes();
+          minutes = minutes < 10 ? '0' + minutes : minutes;
+          let seconds = tweet.time_created.getSeconds();
+          seconds = seconds < 10 ? '0' + seconds : seconds;
           const time = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
 
           return (
