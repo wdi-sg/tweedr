@@ -21,6 +21,14 @@ module.exports = (dbPoolInstance) => {
         })
     }
 
+    const displayTweets = (callback) => {
+        const queryString = 'SELECT * FROM tweets';
+        dbPoolInstance.query(queryString, (error, queryResult) => {
+            //invoke callback function with results after query has executed
+            callback(error, queryResult);
+        })
+    }
+
 
 
 
@@ -38,6 +46,7 @@ module.exports = (dbPoolInstance) => {
 
 
     return {
-      createTweet
+      createTweet,
+      displayTweets
     };
 };

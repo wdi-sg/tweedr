@@ -24,6 +24,7 @@ module.exports = (app, db) => {
 
    app.get('/tweets/new', tweets.tweetBox);
    app.post('/tweets', tweets.createTweet);
+   app.get('/tweets', tweets.displayAllTweets);
 
 
 

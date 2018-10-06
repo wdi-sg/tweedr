@@ -31,6 +31,19 @@ module.exports = (db) => {
       });
   };
 
+  const displayAllTweets = (request, response) => {
+      db.tweet.displayTweets((err, queryResult) => {
+          if (err) {
+            console.error('error getting user:', err);
+            response.sendStatus(500);
+          }
+          else {
+            console.log("QUERY RESULTS.ROWS: ", queryResult.rows);
+            response.render('tweet/Index', {tweets: queryResult.rows})
+          }
+      })
+  }
+
 
   // const create = (request, response) => {
   //     // use user model method `create` to create new user entry in db
@@ -103,6 +116,7 @@ module.exports = (db) => {
    */
   return {
       tweetBox,
-      createTweet
+      createTweet,
+      displayAllTweets
   };
 };
