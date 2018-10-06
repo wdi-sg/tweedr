@@ -20,12 +20,27 @@ class Tweets extends React.Component {
         const time = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
 
         const authorUrl = `/users/${tweet.author}`;
+        let buttons;
+
+        if (this.props.username === tweet.author) {
+          const editUrl = `/tweets/${tweet.id}`;
+          const deleteUrl = `/tweets/${tweet.id}?_method=DELETE`;
+          buttons = (
+            <div>
+              <a className="btn btn-sm btn-outline-secondary" href={editUrl}>Edit</a>
+              <form className="d-inline" action={deleteUrl} method="POST">
+                <input className="btn btn-sm btn-outline-danger ml-2" type="submit" value="Delete" />
+              </form>
+            </div>
+          );
+        }
 
         return (
           <div key={tweet.id} className="card border-secondary my-3">
             <div className="card-body">
-              <h5 className="card-title">
+              <h5 className="card-title d-flex justify-content-between">
                 <a href={authorUrl}>{tweet.author}</a>
+                {buttons}
               </h5>
               <h6 className="card-subtitle mb-2 text-muted">{time}</h6>
               <p className="card-text">{tweet.tweet}</p>

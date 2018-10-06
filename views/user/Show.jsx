@@ -20,7 +20,10 @@ class Show extends React.Component {
             </div>
           </div>
           <div className="col-md-8">
-            <Tweets tweets={this.props.tweets} />
+            <Tweets
+              username={this.props.username}
+              tweets={this.props.tweets}
+            />
           </div>
         </div>
       </Layout>

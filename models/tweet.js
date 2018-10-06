@@ -19,7 +19,7 @@ module.exports = (pool) => {
   };
 
   const index = (user, callback) => {
-    const queryString = `SELECT * FROM tweets INNER JOIN followers ON tweets.author = followers.user_name WHERE follower_name = '${user}' OR author = '${user}' ORDER BY time_created DESC`;
+    const queryString = `SELECT tweets.id, tweets.tweet, tweets.author, tweets.time_created FROM tweets LEFT JOIN followers ON tweets.author = followers.user_name WHERE follower_name = '${user}' OR author = '${user}' ORDER BY time_created DESC`;
     pool.query(queryString, (error, queryResult) => {
       if (error) {
         console.log('error showing tweet:', error);
@@ -46,9 +46,36 @@ module.exports = (pool) => {
     });
   };
 
+  const getFromId = (id, callback) => {
+    const queryString = `SELECT * FROM tweets WHERE id = ${id}`;
+    pool.query(queryString, (error, queryResult) => {
+      if (error) {
+        console.log('error getting a tweet:', error);
+        callback(error, null);
+      } else {
+        callback(null, queryResult.rows[0]);
+      }
+    });
+  };
+
+  const update = (id, tweet, callback) => {
+    const queryString = `UPDATE tweets SET tweet = ($1) WHERE id = ${id} RETURNING *`;
+    const values = [tweet];
+    pool.query(queryString, values, (error, queryResult) => {
+      if (error) {
+        console.log('error updating tweet:', error);
+        callback(error, null);
+      } else {
+        callback(null, queryResult.rows[0]);
+      }
+    });
+  };
+
   return {
     create,
     index,
-    get
+    get,
+    getFromId,
+    update
   };
 };

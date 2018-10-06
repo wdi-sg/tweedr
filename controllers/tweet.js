@@ -38,7 +38,36 @@ module.exports = (db) => {
         response.render('tweet/Index', data);
       }
     });
-  }
+  };
+
+  const edit = (request, response) => {
+    db.tweet.getFromId(request.params.id, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        const username = request.cookies.username;
+        const hashedUsername = sha256(queryResult.author + 'loggedIn' + SALT);
+
+        // Make sure only the aurthor can edit the tweet
+        if (hashedUsername === request.cookies.loggedIn) {
+          const data = { username, tweet: queryResult };
+          response.render('tweet/Edit', data);
+        } else {
+          response.redirect('/');
+        }
+      }
+    });
+  };
+
+  const update = (request, response) => {
+    db.tweet.update(request.params.id, request.body.tweet, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        response.redirect(`/users/${queryResult.author}`);
+      }
+    });
+  };
 
   /**
    * ===========================================
@@ -48,6 +77,8 @@ module.exports = (db) => {
   return {
     newForm,
     create,
-    index
+    index,
+    edit,
+    update
   };
 };

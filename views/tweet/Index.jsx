@@ -10,7 +10,9 @@ class Index extends React.Component {
 
     if (this.props.username) {
       newTweet = <NewTweet />;
-      feed = <Tweets tweets={this.props.tweets} />;
+      feed = (
+        <Tweets username={this.props.username} tweets={this.props.tweets} />
+      );
     }
 
     return (
