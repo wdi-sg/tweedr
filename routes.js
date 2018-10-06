@@ -17,6 +17,10 @@ module.exports = (app, db) => {
   app.post('/users/status', users.loginStatus);
   app.get('/users/status', users.userPage)
 
+  //follow user
+  app.get('/users/follow', users.followPage);
+  app.post('/users/followed', users.follow);
+
   /*
    *  =========================================
    *  Tweets

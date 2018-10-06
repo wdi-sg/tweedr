@@ -64,6 +64,7 @@ module.exports = (db) => {
                     response.cookie('ID cookie ', user_id);
                      // drop cookies to indicate user's logged in status and username
                     response.cookie('loggedIn', hashedValue);
+                    response.cookie('Username', request.body.name);
                     response.redirect('/users/status');
                 }
 
@@ -78,6 +79,7 @@ module.exports = (db) => {
 
   //Displaying user index page
   const userPage = (request, response) => {
+        //console.log("Rest cookies: ", request.cookies)
      db.user.userDisplay((err, queryResult) => {
           if (err) {
             console.error('error getting user:', err);
@@ -85,10 +87,36 @@ module.exports = (db) => {
           }
           else {
             console.log("QUERY RESULTS.ROWS: ", queryResult.rows);
-            response.render('user/Index', {users: queryResult.rows})
+            response.render('user/Index', {users: queryResult.rows, cookies:request.cookies})
           }
       })
   }
+
+  /**
+   * ===========================================
+   * Following other users
+   * ===========================================
+   */
+
+   const followPage = (request, response) => {
+      response.render('user/Follow');
+   }
+
+
+   const follow = (request, response) => {
+    db.user.followUser(request.body, request.cookies, (err, queryResult) => {
+          if (err) {
+            console.error('error getting user:', err);
+            response.sendStatus(500);
+          }
+          else {
+            console.log("QUERY RESULTS.ROWS: ", queryResult.rows);
+            response.send("FOLLOW SUCCESSFULLY!");
+          }
+      })
+   }
+
+
 
   /**
    * ===========================================
@@ -100,6 +128,8 @@ module.exports = (db) => {
     create,
     loginForm,
     loginStatus,
-    userPage
+    userPage,
+    followPage,
+    follow
   };
 };
