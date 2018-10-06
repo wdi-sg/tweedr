@@ -29,8 +29,25 @@ module.exports = dbPoolInstance => {
       })
   }
 
+  const showUser = (user, callback) => {
+      const queryString = "SELECT user_id, name FROM users WHERE user_id='"+user.id+"'";
+      dbPoolInstance.query(queryString, (err, queryResult) => {
+          callback(err, queryResult)
+      })
+  }
+
+  const followUser = (user, followedUser, callback) => {
+      const queryString = "INSERT INTO followers (user_id, follower_user_id) VALUES ($1, $2)"
+      const values = [followedUser.id, user.user_id]
+      dbPoolInstance.query(queryString, values, (err, queryResult)=> {
+          callback(err, queryResult)
+      })
+  }
+
   return {
     create,
-    login
+    login,
+    showUser,
+    followUser
   };
 };

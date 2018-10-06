@@ -76,7 +76,28 @@ module.exports = db => {
       }
     });
   };
+// Show Individual User Page
+const showUser = (req, res) => {
+    db.users.showUser(req.params, (err, queryResult)=> {
+        if (err) {
+            console.error("Error Showing User: ",err)
+        }
+        res.render("user/ShowUser", {user : queryResult.rows[0], cookies: req.cookies})
+    })
+}
 
+// Follow users
+const followUser = (req, res) => {
+    db.users.followUser(req.cookies, req.params, (err, queryResult) => {
+        if (err) {
+            console.error("Error Following User:", err);
+        }
+        console.log(queryResult)
+        res.redirect("/")
+    })
+}
+
+// Logging Out User by Clearing Cookies
   const logoutUser = (req, res) => {
       res.clearCookie('loggedIn');
       res.clearCookie('user_id')
@@ -93,6 +114,8 @@ module.exports = db => {
     create,
     loginForm,
     loginUser,
+    showUser,
+    followUser,
     logoutUser
   };
 };
