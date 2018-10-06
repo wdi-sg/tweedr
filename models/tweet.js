@@ -32,8 +32,23 @@ module.exports = (pool) => {
     });
   };
 
+  const get = (user, callback) => {
+    const queryString = `SELECT * FROM tweets WHERE author = '${user}'`;
+    pool.query(queryString, (error, queryResult) => {
+      if (error) {
+        console.log('error getting user tweets:', error);
+        callback(error, null);
+      } else if (queryResult.rows.length === 0) {
+        callback(null, null);
+      } else {
+        callback(null, queryResult.rows);
+      }
+    });
+  };
+
   return {
     create,
-    index
+    index,
+    get
   };
 };

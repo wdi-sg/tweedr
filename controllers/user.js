@@ -78,6 +78,30 @@ module.exports = (db) => {
     });
   };
 
+  const get = (request, response) => {
+    db.user.get(request.params.name, (error, queryResult) => {
+      if (error) {
+        response.sendStatus(500);
+      } else {
+        const username = request.cookies.username;
+        const hashedUsername = sha256(queryResult.name + 'loggedIn' + SALT);
+        const data = { user: queryResult };
+        if (hashedUsername === request.cookies.loggedIn) {
+          data.username = username;
+        }
+
+        db.tweet.get(request.params.name, (error, queryResult) => {
+          if (error) {
+            response.sendStatus(500);
+          } else {
+            data.tweets = queryResult;
+            response.render('user/Show', data);
+          }
+        });
+      }
+    });
+  };
+
   const follow = (request, response) => {
     const user = request.body.user_name;
     const follower = request.body.follower_name;
@@ -114,6 +138,7 @@ module.exports = (db) => {
     newForm,
     index,
     create,
+    get,
     follow,
     unfollow
   };

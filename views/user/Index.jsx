@@ -42,7 +42,7 @@ class Index extends React.Component {
                       {user.name}
                     </a>
                   </h5>
-                  <p className="card-text">Description</p>
+                  <p className="card-text">{user.bio}</p>
                   <form action={followUrl} method="POST">
                     <input type="hidden" name="user_name" value={user.name} />
                     <input type="hidden" name="follower_name" value={userLoggedIn} />
