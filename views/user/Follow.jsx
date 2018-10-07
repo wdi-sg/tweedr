@@ -4,11 +4,11 @@ class Follow extends React.Component {
   render() {
         console.log("this.props is: ", this.props.cookie['Username']);
         //const value = this.props.cookie['Username'];
+        var DefaultLayout = require('../layout/Default');
+
 
     return (
-      <html>
-        <head />
-        <body>
+        <DefaultLayout>
             <h1>Who would you like to follow?</h1>
             <div className="user-attribute">
             <p>Follower's ID:</p>
@@ -18,8 +18,7 @@ class Follow extends React.Component {
                 <input name="submit" type="submit" />
             </form>
             </div>
-        </body>
-      </html>
+        </DefaultLayout>
     );
   }
 }

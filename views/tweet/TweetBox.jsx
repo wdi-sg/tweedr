@@ -1,11 +1,10 @@
 var React = require("react");
+var DefaultLayout = require('../layout/Default');
 
 class TweetBox extends React.Component {
   render() {
     return (
-      <html>
-        <head />
-        <body>
+        <DefaultLayout title="create tweets">
           <form className="tweet-box" method="POST" action="/tweets">
             <h1>Insert your tweet</h1>
             <br/>
@@ -15,8 +14,7 @@ class TweetBox extends React.Component {
             <br/>
             <input name="submit" type="submit" />
           </form>
-        </body>
-      </html>
+        </DefaultLayout>
     );
   }
 }

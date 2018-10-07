@@ -1,4 +1,5 @@
 var React = require("react");
+var DefaultLayout = require('../layout/Default');
 
 class UserIndex extends React.Component {
   render() {
@@ -13,9 +14,7 @@ class UserIndex extends React.Component {
             )
         })
     return (
-      <html>
-        <head />
-        <body>
+        <DefaultLayout title="user profile">
             <h1>Profile Setting of {this.props.users[0].name} </h1>
             <h2>List of tweets: </h2>
             <ol>
@@ -24,8 +23,7 @@ class UserIndex extends React.Component {
             <hr/>
             <h3>What would you like to do currently?</h3>
             <a href={link}>Create Tweets</a>
-        </body>
-      </html>
+        </DefaultLayout>
     );
   }
 }

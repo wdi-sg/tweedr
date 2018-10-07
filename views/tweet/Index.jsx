@@ -1,4 +1,5 @@
 var React = require("react");
+var DefaultLayout = require('../layout/Default');
 
 class TweetBox extends React.Component {
   render() {
@@ -7,15 +8,12 @@ class TweetBox extends React.Component {
             return <li>{tweet.content}</li>
         })
     return (
-      <html>
-        <head />
-        <body>
+        <DefaultLayout>
             <h1>Displaying all tweets!</h1>
             <ol>
                 {tweetContents}
             </ol>
-        </body>
-      </html>
+        </DefaultLayout>
     );
   }
 }

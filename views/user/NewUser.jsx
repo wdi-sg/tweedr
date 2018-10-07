@@ -1,11 +1,10 @@
 var React = require("react");
+var DefaultLayout = require('../layout/Default');
 
 class NewUser extends React.Component {
   render() {
     return (
-      <html>
-        <head />
-        <body>
+        <DefaultLayout title="new user">
           <form className="user-form" method="POST" action="/users">
             <h1>New User - Registration</h1>
             <div className="user-attribute">
@@ -18,8 +17,7 @@ class NewUser extends React.Component {
             <br/>
             <input name="submit" type="submit" />
           </form>
-        </body>
-      </html>
+        </DefaultLayout>
     );
   }
 }
