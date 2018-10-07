@@ -1,6 +1,5 @@
-const sha256 = require('js-sha256')
+const sha256 = require("js-sha256");
 module.exports = db => {
-
   // Salt for Hash
   const SALT = "aKiRa is a PokeMON";
   /**
@@ -14,11 +13,10 @@ module.exports = db => {
       req.cookies.user_id + "logged_id" + SALT
     );
     if (req.cookies.loggedIn === checkSessionCookieHash) {
-      res.render("tweets/NewTweet", {cookies: req.cookies});
+      res.render("tweets/NewTweet", { cookies: req.cookies });
     } else {
       res.send("You must be logged in to post a tweet!");
     }
-
   };
 
   const newTweetPost = (req, res) => {
@@ -49,24 +47,37 @@ module.exports = db => {
   };
 
   const showFollowingTweetsForm = (req, res) => {
-      db.tweets.showFollowingTweets(req.cookies, (err, queryResult) => {
-          if(err) {
-              console.err("Error Showing Following Tweets: ", err);
-          }
+    db.tweets.showFollowingTweets(req.cookies, (err, queryResult) => {
+      if (err) {
+        console.err("Error Showing Following Tweets: ", err);
+      }
 
-          res.render("index", {tweets: queryResult, cookies: req.cookies})
-      })
-  }
+      res.render("index", { tweets: queryResult, cookies: req.cookies });
+    });
+  };
 
   const showFollowerTweetsForm = (req, res) => {
-      db.tweets.showFollowerTweets(req.cookies, (err, queryResult) => {
-          if(err) {
-              console.err("Error Showing Following Tweets: ", err);
-          }
+    db.tweets.showFollowerTweets(req.cookies, (err, queryResult) => {
+      if (err) {
+        console.err("Error Showing Following Tweets: ", err);
+      }
 
-          res.render("index", {tweets: queryResult, cookies: req.cookies})
-      })
-  }
+      res.render("index", { tweets: queryResult, cookies: req.cookies });
+    });
+  };
+
+  const showSingleTweetForm = (req, res) => {
+    db.tweets.showSingleTweetForm(req.params, (err, queryResult) => {
+      if (err) {
+        console.log("Error showing Single Tweet:", err);
+      }
+
+      res.render("tweets/SingleTweetForm", {
+        tweets: queryResult,
+        cookies: req.cookies
+      });
+    });
+  };
 
   /**
    * ===========================================
@@ -78,6 +89,7 @@ module.exports = db => {
     newTweetPost,
     showAllTweetsForm,
     showFollowingTweetsForm,
-    showFollowerTweetsForm
+    showFollowerTweetsForm,
+    showSingleTweetForm
   };
 };

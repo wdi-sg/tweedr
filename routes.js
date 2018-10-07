@@ -30,5 +30,6 @@ module.exports = (app, db) => {
   app.get('/tweets/new', tweets.newTweetForm);
   app.get('/tweets/following', tweets.showFollowingTweetsForm)
   app.get('/tweets/followers', tweets.showFollowerTweetsForm)
+  app.get('/tweets/:id/show', tweets.showSingleTweetForm)
   app.post('/tweets', tweets.newTweetPost)
 };
