@@ -27,6 +27,7 @@ module.exports = (db) => {
           // drop cookies to indicate user's logged in status and username
           response.cookie('loggedIn', true);
           response.cookie('username', request.body.name);
+          response.cookie('user_id', request.body.id)
         } else {
           console.log('User could not be created');
         }

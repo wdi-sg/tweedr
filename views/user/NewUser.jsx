@@ -2,22 +2,27 @@ var React = require("react");
 
 class NewUser extends React.Component {
   render() {
-    return (
+    return ( 
       <html>
-        <head />
+        <head>
+          <link rel = "stylesheet" type = "text/css" href = "/style.css" />
+        </head>
         <body>
-          <form className="user-form" method="POST" action="/users">
-            <div className="user-attribute">
-              name<input name="name" type="text" />
-            </div>
-            <div className="user-attribute">
-              password:<input name="password" type="text" />
-            </div>
-            <input name="submit" type="submit" />
-          </form>
+          <div>
+            <h2>New User</h2>
+            <form className="user-form" method="POST" action="/users">
+              <div className="user-attribute">
+                name: <input name="name" type="text" placeholder = "Name" />
+              </div>
+              <div className="user-attribute">
+                password: <input name="password" type="text" placeholder = "Password" />
+              </div>
+              <input name="submit" type="submit" />
+            </form>
+          </div>
         </body>
       </html>
-    );
+    )
   }
 }
 
