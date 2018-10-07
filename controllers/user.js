@@ -127,9 +127,7 @@ module.exports = (db) => {
 
   const profile = (request, response) => {
 
-    let id = request.params.id;
-
-    db.user.getById(id, (error, queryResult) => {
+    db.user.getById(request.params, (error, queryResult) => {
 
       if (error) {
         console.error('error getting users:', error);
@@ -138,11 +136,37 @@ module.exports = (db) => {
 			} else if (queryResult.rowCount === 0) {
         
         console.log('User not found!');
-        response.redirect('/users/');
+        response.send("User not found!");
 
       } else {
 
-				response.render('user/profile', {user:queryResult.rows[0], cookies: request.cookies});
+        let user = queryResult.rows[0];
+        
+        db.follow.getFollowers(request.params, (error, queryResult) => {
+
+          if (error) {
+            console.error('error getting followers:', error);
+            response.sendStatus(500);
+          
+          } else {
+
+            let followers = queryResult.rows;
+
+            db.follow.getFollows(request.params, (error, queryResult) => {
+
+              if (error) {
+                console.error('error getting follow:', error);
+                response.sendStatus(500);
+              
+              } else {
+    
+                let follows = queryResult.rows;
+    
+                response.render('user/profile', {user: user, followers: followers, follows: follows, cookies: request.cookies});
+              }
+            })
+          }
+        })
 			}
 		})
   }

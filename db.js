@@ -3,6 +3,7 @@ const url = require('url');
 
 const user = require('./models/user');
 const tweed = require('./models/tweed');
+const follow = require('./models/follow');
 
 var configs = {
   user: 'chanleyou',
@@ -23,6 +24,7 @@ module.exports = {
    */
   user: user(pool),
   tweed: tweed(pool),
+  follow: follow(pool),
 
 
   //make queries directly from here

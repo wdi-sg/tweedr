@@ -15,7 +15,7 @@ class NewTweed extends React.Component {
 				<form method="POST" action="/tweed" className="form-inline my-3">
 					<input type="text" name="content" className="form-control mr-2 col-9 col-sm-10 col-lg-11 mb-1" placeholder="What ya thinking?" required autoComplete="off"/>
 					<input type="hidden" name="userid" value={cookies.userid} />
-					<input type="submit" value="Submit" className="btn btn-sm btn-success col"/>
+					<input type="submit" value="Submit" className="btn btn-sm btn-primary col"/>
 				</form>
 			)
 

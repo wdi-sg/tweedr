@@ -22,9 +22,9 @@ module.exports = (pool) => {
     })
   }
 
-  const getById = (id, callback) => {
+  const getById = (user, callback) => {
 
-    const queryString = `SELECT * FROM users WHERE id = '${id}'`;
+    const queryString = `SELECT * FROM users WHERE id = '${user.id}'`;
 
     pool.query(queryString, (error, queryResult) => {
       callback(error, queryResult);

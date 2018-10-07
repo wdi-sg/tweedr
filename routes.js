@@ -1,6 +1,8 @@
 module.exports = (app, db) => {
 
   const user = require('./controllers/user')(db);
+  const tweed = require('./controllers/tweed')(db);
+  const follow = require('./controllers/follow')(db);
 
   app.get('/users/', user.index);
   app.get('/users/new', user.newForm);
@@ -13,7 +15,6 @@ module.exports = (app, db) => {
   
   app.get('/users/:id', user.profile);
 
-  const tweed = require('./controllers/tweed')(db);
 
   app.get('/tweeds/', tweed.index);
   // app.get('/tweed/new', tweed_newForm); // form is in index
@@ -23,7 +24,6 @@ module.exports = (app, db) => {
   // app.put('tweed/:id/', tweed.update);
   // app.delete('/tweed/:id', tweed.delete);
 
-  const follow = require('./controllers/follow')(db);
 
   app.post('/follow', follow.create);
 
