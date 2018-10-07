@@ -17,9 +17,7 @@ class showTweets extends React.Component {
               {" "}
               User ID {tweet.user_id}
             </a>{" "}
-            Posted At : {
-  moment(tweet.created_at).format("YYYY-MM-DD HH:mm");
-}
+            Posted At : {moment(tweet.created_at).format("YYYY-MM-DD HH:mm")}
 
           </li>
         </div>
