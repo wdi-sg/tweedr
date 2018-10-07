@@ -8,8 +8,9 @@ class All extends React.Component {
       return (
         <li className="list-group-item clearfix">
           <span className="lead">{tweed.content}</span>
-          <br />
-          <span className="float-right">{tweed.created.toString()}</span>
+          <span className="float-right">
+            {tweed.created.toString().substring(0, 25)}
+          </span>
         </li>
       );
     });

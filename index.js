@@ -38,7 +38,7 @@ require('./routes')(app, db);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  const queryText = 'SELECT * FROM tweeds';
+  const queryText = 'SELECT * FROM tweeds ORDER BY id DESC';
   db.queryInterface(queryText, null, (error, queryResult) => {
     if (error) console.error(error);
     response.render('tweeds/All', { tweeds: queryResult.rows });
