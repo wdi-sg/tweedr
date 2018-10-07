@@ -1,5 +1,6 @@
 module.exports = (app, db) => {
   const users = require('./controllers/user')(db);
+  const tweed = require('./controllers/tweed')(db);
 
   /*
    *  =========================================
@@ -11,4 +12,13 @@ module.exports = (app, db) => {
   app.get('/users/login', users.loginForm);
   app.post('/users/login', users.login);
   app.post('/users', users.create);
+
+  /*
+   *  =========================================
+   *  Tweeds
+   *  =========================================
+   */
+  // CRUD Tweeds
+  app.get('/tweeds/new', tweed.newForm);
+  app.post('/tweeds', tweed.create);
 };

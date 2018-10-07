@@ -15,9 +15,11 @@ const app = express();
 // Set up middleware
 app.use(methodOverride('_method'));
 app.use(cookieParser());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
 // Set react-views to be the default view engine
 const reactEngine = require('express-react-views').createEngine();
@@ -46,7 +48,9 @@ app.get('/', (request, response) => {
  */
 const PORT = process.env.PORT || 3000;
 
-const server = app.listen(PORT, () => console.log('~~~ Tuning in to the waves of port '+PORT+' ~~~'));
+const server = app.listen(PORT, () =>
+  console.log('~~~ Tuning in to the waves of port ' + PORT + ' ~~~')
+);
 
 // Run clean up actions when server shuts down
 server.on('close', () => {
