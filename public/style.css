@@ -1,14 +1,100 @@
-h1{
-	font-weight: 300;
-	font-size:25px;
-	line-height:40px;
-}
-
-h3{
-  font-size: 20px;
+html{
+	background-color: lightBlue;
+	height: 100%;
 }
 
 form{
   text-align: center;
-  line-height: 20px;
+}
+
+/* User Homepage */
+.home h1{
+	font-family: 'Abril Fatface', cursive;
+	font-size: 50px;
+	color: #000;
+}
+
+.home h2{
+	margin: 10px auto;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 40px;
+	color: #000;
+}
+
+div.home{
+	text-align: center;
+	margin: 20px auto 30px;
+}
+
+.home input{
+	height: 40px;
+	font-size: 30px;
+}
+
+form.tweet-form{
+	position: relative;
+}
+
+#tweetMsg{
+	height: 5vh;
+	width: 40%;
+}
+
+#tweetBtn{
+	position: absolute;
+	height: 6vh;
+	border-radius: 20%;
+	margin: 0 0 0 10px;
+	padding: auto 10px;
+}
+
+/* Create New User */
+.user-form{
+	width: 30vw;
+	border: 2px solid #14436B;
+	padding: 30px;
+	margin: 30vh auto;
+}
+.user-form h1{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 25px;
+	color: #000;
+}
+.user-form h2{
+	padding: 10px 0;
+	font-family: serif;
+	font-size: 18px;
+}
+.user-attribute input{
+	font-size: 16px;
+	height: 5vh;
+	width: 40%;
+}
+.user-submit{
+	font-size: 16px;
+	height: 6vh;
+	border-radius: 20%;
+	padding: 10px 10px;
+	margin: 20px auto 10px;
+}
+
+/* Website Homepage */
+/* How to use bootstrap on reactjs */
+.websiteWrapper{
+	position: relative;
+	margin: 80px 20px;
+}
+
+.website h1{
+	font-family: 'Abril Fatface', cursive;
+	font-size: 60px;
+	text-align: center;
+}
+
+.website img{
+	margin: 20px auto;
+	position: relative;
+	top: 40%;
+	left: 33%;
+	padding: 10px;
 }
