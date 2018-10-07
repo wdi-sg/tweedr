@@ -1,0 +1,27 @@
+body{
+	margin: 10px 80px;
+}
+
+.name-header {
+	float:right;
+	position: relative;
+}
+
+
+
+.post-title, .post-content {
+	margin: 20px;
+}
+
+.title {
+	width: 750px;
+}
+
+.content {
+	width: 800px;
+}
+
+.has-posts {
+	margin: 30px;
+}
+

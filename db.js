@@ -21,9 +21,9 @@ if( process.env.DATABASE_URL ){
 
 }else{
   configs = {
-    user: 'akira',
+    user: 'audreykow',
     host: '127.0.0.1',
-    database: 'pokemons',
+    database: 'tweedr_db',
     port: 5432
   };
 }

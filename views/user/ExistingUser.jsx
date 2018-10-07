@@ -1,27 +1,26 @@
 var React = require("react");
 
-class NewUser extends React.Component {
+class ExistingUser extends React.Component {
   render() {
     return (
       <html>
         <head />
         <body>
-        <h1>Sign up for a new account!</h1>
-        <div className="form-div">
-          <form className="user-form" method="POST" action="/users/int">
+        <h1>Login</h1>
+        <h2>Login to view your tweeds!</h2>
+          <form className="user-form" method="POST" action="/users/account">
             <div className="user-attribute">
-              Name<input name="name" type="text" />
+              Username<input name="name" type="text" />
             </div>
             <div className="user-attribute">
               Password:<input name="password" type="text" />
             </div>
             <input name="submit" type="submit" />
           </form>
-        </div>
         </body>
       </html>
     );
   }
 }
 
-module.exports = NewUser;
+module.exports = ExistingUser;

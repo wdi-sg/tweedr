@@ -18,6 +18,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({
   extended: true
 }));
+app.use(express.static(__dirname + '/public'));
 
 // Set react-views to be the default view engine
 const reactEngine = require('express-react-views').createEngine();
@@ -36,8 +37,9 @@ require('./routes')(app, db);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+  response.render('home');
 });
+
 
 /**
  * ===================================
