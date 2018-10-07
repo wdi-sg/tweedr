@@ -19,7 +19,17 @@ class DefaultLayout extends React.Component {
           <title>{this.props.title}</title>
         </head>
         <body>
-          <div className="container-fluid">{this.props.children}</div>
+          <header>
+            <nav
+              className="navbar navbar-light"
+              style={{ backgroundColor: '#e3f2fd' }}
+            >
+              <a class="navbar-brand font-weight-bold" href="/">
+                Tweedr
+              </a>
+            </nav>
+          </header>
+          <div className="container">{this.props.children}</div>
         </body>
       </html>
     );
