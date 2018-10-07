@@ -1,3 +1,5 @@
+var sha256 = require("js-sha256");
+
 module.exports = (db) => {
 
   /**
@@ -23,11 +25,10 @@ module.exports = (db) => {
 
         if (queryResult.rowCount >= 1) {
           console.log('User created successfully');
-
+          console.log("CONTROLLER: ", request.body)
           // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
+          response.cookie('logged_in', true);
           response.cookie('username', request.body.name);
-          response.cookie('user_id', request.body.id)
         } else {
           console.log('User could not be created');
         }
@@ -37,6 +38,30 @@ module.exports = (db) => {
       });
   };
 
+  const loginForm = (request, response) => {
+    response.render('user/LoginUser');
+  };
+
+  const loggedIn = (request, response) => {
+    db.user.loggedIn(request.body, (error, queryResult) => {
+      if (error) {
+        console.error('error logging in user:', error);
+        response.sendStatus(500);
+      }
+      let passwordHash = sha256(request.body.password);
+      // console.log("CONTROLLER QUERY: ", queryResult.rows[0]);
+      // console.log("CONTROLLER REQUEST: ", request.body)
+      if (queryResult.rows[0] !== undefined && passwordHash === queryResult.rows[0].password){
+        response.cookie('logged_in', true);
+        response.cookie('username', request.body.name);
+        response.cookie('user_id', queryResult.rows[0].id);
+        response.redirect('/');
+      } else {
+          response.redirect('/users/login');
+      }
+    });
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -44,6 +69,8 @@ module.exports = (db) => {
    */
   return {
     newForm,
-    create
+    create,
+    loginForm,
+    loggedIn
   };
 };

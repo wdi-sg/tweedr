@@ -56,12 +56,21 @@ require('./routes')(app, db);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
+  // let loggedIn = request.cookies.logged_in;
+  // let currentUserId = request.cookies.user_id;
+  // if (loggedIn === 'true'){
+
+
+  // }
+
   response.render('Home');
+  
 });
 
 app.post('/logout', (request, response) => {
     response.clearCookie('user_id');
     response.clearCookie('logged_in');
+    response.clearCookie('user_id');
     response.redirect('/');
 });
 

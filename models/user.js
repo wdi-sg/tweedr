@@ -26,9 +26,20 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
+    const loggedIn = (user, callback) =>{
+      
+      // set up query
+      const queryString = 'SELECT * FROM users WHERE name = ($1)';
+      const values = [user.name];
 
+      // execute query
+      dbPoolInstance.query(queryString, values, (error, queryResult) => {
+        callback (error, queryResult);
+      });
+    };
 
     return {
-      create
+      create,
+      loggedIn
     };
 };

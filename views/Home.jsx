@@ -10,8 +10,11 @@ class Home extends React.Component {
                 <body>
                     <div>
                         <h2>Welcome to Tweedr</h2>
-                        
+
                         <a href = "/users/new">Create New User</a>
+                        <br/>
+                        <a href="/users/login">Login User</a>
+                        
                     </div>
                 </body>
             </html>
