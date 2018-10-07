@@ -1,5 +1,6 @@
 const pg = require('pg');
 const user = require('./models/user');
+const tweed = require('./models/tweed');
 const url = require('url');
 
 
@@ -40,7 +41,7 @@ module.exports = {
    * ADD APP MODELS HERE
    */
   user: user(pool),
-
+  tweed: tweed(pool),
 
   //make queries directly from here
   queryInterface: (text, params, callback) => {

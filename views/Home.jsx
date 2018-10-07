@@ -13,8 +13,9 @@ class Home extends React.Component {
 
                         <a href = "/users/new">Create New User</a>
                         <br/>
-                        <a href="/users/login">Login User</a>
-                        
+                        <a href = "/users/login">Login User</a>
+                        <br/>
+                        <a href = "/tweeds/new">New Tweed</a>
                     </div>
                 </body>
             </html>
