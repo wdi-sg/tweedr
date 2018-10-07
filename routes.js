@@ -10,4 +10,5 @@ module.exports = (app, db) => {
   // CRUD users
   app.get('/users/new', users.newForm);
   app.post('/users', users.create);
+    app.post('/index/twits', users.createPost);
 };

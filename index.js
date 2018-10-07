@@ -39,6 +39,12 @@ app.get('/', (request, response) => {
   response.send('Welcome To Tweedr.');
 });
 
+app.get('/index', (request, response) => {
+    response.render('index');
+});
+
+
+
 /**
  * ===================================
  * Listen to requests on port 3000

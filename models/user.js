@@ -13,7 +13,7 @@ module.exports = (dbPoolInstance) => {
       var hashedValue = sha256(user.password);
 
       // set up query
-      const queryString = 'INSERT INTO users (name, password) VALUES ($1, $3)';
+      const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
       const values = [
         user.name,
         hashedValue
@@ -26,7 +26,17 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
+    const createPost = (post, callback) => {
+    const queryString = 'INSERT INTO tweets (tweetText, user_id) VALUES ($1, $2)';
+    const values = [request.body.twit, request.body.user_id];
+
+    dbPoolInstance.query(queryString, (err, result) => {
+    callback(error, queryResult);
+})
+    }
+
     return {
-      create
+      create,
+      createPost
     };
 };

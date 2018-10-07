@@ -1,4 +1,4 @@
-module.exports = (db) => {
+ module.exports = (db) => {
 
   /**
    * ===========================================
@@ -15,7 +15,7 @@ module.exports = (db) => {
         // queryResult of creation is not useful to us, so we ignore it
         // (console log it to see for yourself)
         // (you can choose to omit it completely from the function parameters)
-
+        console.log(queryResult)
         if (error) {
           console.error('error getting user:', error);
           response.sendStatus(500);
@@ -26,7 +26,7 @@ module.exports = (db) => {
 
           // drop cookies to indicate user's logged in status and username
           response.cookie('loggedIn', true);
-          response.cookie('username', request.body.name);
+          response.cookie('username', sha256(request.body.name));
         } else {
           console.log('User could not be created');
         }
@@ -34,6 +34,10 @@ module.exports = (db) => {
         // redirect to home page after creation
         response.redirect('/');
       });
+
+    const createPost = (request, response) => {
+        response.render('twits/twits');
+    }
   };
 
   /**
