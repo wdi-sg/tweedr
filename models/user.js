@@ -1,6 +1,4 @@
 var sha256 = require('js-sha256');
-
-
 /**
  * ===========================================
  * Export model functions as a module
@@ -13,11 +11,8 @@ module.exports = (dbPoolInstance) => {
       var hashedValue = sha256(user.password);
 
       // set up query
-      const queryString = 'INSERT INTO users (name, password) VALUES ($1, $3)';
-      const values = [
-        user.name,
-        hashedValue
-      ];
+      const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+      const values = [user.name, hashedValue];
 
       // execute query
       dbPoolInstance.query(queryString, values, (error, queryResult) => {
@@ -27,6 +22,7 @@ module.exports = (dbPoolInstance) => {
     };
 
     return {
-      create
+      create,
+      // logIn
     };
 };
