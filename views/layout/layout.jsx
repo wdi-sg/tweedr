@@ -1,5 +1,22 @@
 var React = require('react');
 
+const sha256 = require('js-sha256');
+const SALT = "tweedr";
+
+class ProfileLink extends React.Component {
+
+	render () {
+
+		let cookies = this.props.cookies;
+
+		if (cookies.loggedin === sha256(cookies.userid + SALT)) {
+			return <a className="nav-item nav-link" href={"/users/" + cookies.userid}>Profile ({cookies.username})</a>
+		} else {
+			return <span />
+		}
+	}
+}
+
 class Login extends React.Component {
 
   render () {
@@ -15,6 +32,7 @@ class Login extends React.Component {
     } else {
 			return (
 				<div className="navbar-nav ml-auto">
+					
 					<form method="GET" action="/users/login" className="form-inline nav-item nav-link">
 						<input type="submit" className="btn btn-link p-0 text-light" value="Login" />
 					</form>
@@ -47,8 +65,8 @@ class Layout extends React.Component {
 						</button>
 						<div className="collapse navbar-collapse" id="navbarSupportedContent">
 							<div className="navbar-nav mr-auto">
-								<a className="nav-item nav-link" href="/tweeds/">Tweeds</a>
 								<a className="nav-item nav-link" href="/users/">Users</a>
+								<ProfileLink cookies={this.props.cookies} />
 							</div>
 							<Login cookies={this.props.cookies}/>
 						</div>

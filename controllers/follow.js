@@ -25,7 +25,7 @@ module.exports = (db) => {
           if (queryResult.rowCount >= 1) {
             console.log('Follow relationship created!');
     
-            response.redirect(`/user/${request.body.followerid}`);
+            response.redirect(`/users/${request.body.userid}`);
 
           } else {
             console.log('User could not be created.');
@@ -33,13 +33,26 @@ module.exports = (db) => {
           }
 				})
 			}
+		})
+	}
 
-				response.redirect('/'); // replace with below line
-				// response.redirect(`/users/${request.body.userid}`);
+	const unfollow = (request, response) => {
+
+		db.follow.unfollow(request.body, (error, queryResult) => {
+
+			if (error) {
+        console.error('error getting tweeds:', error);
+        response.sendStatus(500);
+			
+			} else {
+
+				response.redirect(`/users/${request.body.userid}`)
+			}
 		})
 	}
 
 	return {
-		create
+		create,
+		unfollow
   }
 }

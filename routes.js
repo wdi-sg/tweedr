@@ -26,5 +26,6 @@ module.exports = (app, db) => {
 
 
   app.post('/follow', follow.create);
+  app.delete('/follow', follow.unfollow);
 
 };

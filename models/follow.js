@@ -36,14 +36,25 @@ module.exports = (pool) => {
 		pool.query(queryString, (error, queryResult) => {
 			callback(error, queryResult);
 		})
-
 	}
+
+	const unfollow = (query, callback) => {
+
+		const queryString = `DELETE FROM follows WHERE user_id = ${query.userid} AND follower_id = ${query.followerid};`;
+
+		pool.query(queryString, (error, queryResult) => {
+			callback(error, queryResult);
+		})
+	}
+
+
 
   return {
 		create,
 		get,
 		getFollowers,
 		getFollows,
+		unfollow
 
   }
 }
