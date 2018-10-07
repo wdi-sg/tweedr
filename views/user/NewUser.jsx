@@ -1,24 +1,26 @@
-var React = require("react");
+const React = require('react');
+const Header = require('../layouts/Header');
 
 class NewUser extends React.Component {
-  render() {
-    return (
-      <html>
-        <head />
-        <body>
-          <form className="user-form" method="POST" action="/users">
-            <div className="user-attribute">
-              name<input name="name" type="text" />
-            </div>
-            <div className="user-attribute">
-              password:<input name="password" type="text" />
-            </div>
-            <input name="submit" type="submit" />
-          </form>
-        </body>
-      </html>
-    );
-  }
+    render() {
+        return(
+            <html>
+            <Header/>
+                <body>
+                    <form className='user-form' method='POST' action='/users'>
+                        <div>New User</div>
+                        <div className='user-attribute'>
+                            <input name='name' type='text' placeholder='Username'/>
+                        </div>
+                        <div className='user-attribute'>
+                            <input name='password' type='text' placeholder='Password'/>
+                        </div>
+                        <input name='submit' type='submit'/>
+                    </form>
+                </body>
+            </html>
+        )
+    }
 }
 
 module.exports = NewUser;

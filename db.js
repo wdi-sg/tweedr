@@ -1,5 +1,6 @@
 const pg = require('pg');
 const user = require('./models/user');
+const tweet = require('./models/tweets');
 const url = require('url');
 
 
@@ -21,9 +22,9 @@ if( process.env.DATABASE_URL ){
 
 }else{
   configs = {
-    user: 'akira',
+    user: 'chrisssy',
     host: '127.0.0.1',
-    database: 'pokemons',
+    database: 'tweedr',
     port: 5432
   };
 }
@@ -40,6 +41,7 @@ module.exports = {
    * ADD APP MODELS HERE
    */
   user: user(pool),
+  tweet: tweet(pool),
 
 
   //make queries directly from here
