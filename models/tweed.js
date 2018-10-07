@@ -37,21 +37,42 @@ module.exports = (pool) => {
     pool.query(queryString, values, (error, queryResult) => {
       callback(error, queryResult);
     })
-  }
+	}
+	
+	const get = (query, callback) => {
 
-  // const get = (user, callback) => {
+		const queryString = `SELECT * FROM tweeds WHERE id = ${query.id};`;
 
-  //   const queryString = `SELECT * FROM users WHERE name = '${user.name}'`;
+		pool.query(queryString, (error, queryResult) => {
+      callback(error, queryResult);
+    })
+	}
 
-  //   pool.query(queryString, (error, queryResult) => {
-  //     callback(error, queryResult);
-  //   })
-  // }
+	const update = (query, callback) => {
+
+		const queryString = `UPDATE tweeds SET content='${query.content}' where id = ${query.id}`;
+
+		pool.query(queryString, (error, queryResult) => {
+      callback(error, queryResult);
+    })
+	}
+
+	const deleteTweed = (query, callback) => {
+
+		const queryString = `DELETE FROM tweeds WHERE id = ${query.id}`;
+
+		pool.query(queryString, (error, queryResult) => {
+      callback(error, queryResult);
+    })
+	}
 
   return {
 		index,
 		indexFollowers,
 		indexFollowing,
-		create
+		create,
+		get,
+		update,
+		deleteTweed
   }
 }

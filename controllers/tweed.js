@@ -61,8 +61,56 @@ module.exports = (db) => {
 		})
 	}
 
+	const editForm = (request, response) => {
+
+		db.tweed.get(request.params, (error, queryResult) => {
+
+			if (error) {
+        console.error('error getting tweeds:', error);
+        response.sendStatus(500);
+			
+			} else {
+
+				response.render('tweeds/edit', {cookies: request.cookies, tweed: queryResult.rows[0]});
+			}
+		})
+	}
+
+	const update = (request, response) => {
+
+		db.tweed.update(request.body, (error, queryResult) => {
+
+			if (error) {
+        console.error('error getting tweed:', error);
+        response.sendStatus(500);
+			
+			} else {
+
+				response.redirect('/');
+			}
+		})
+	}
+
+	const deleteTweed = (request, response) => {
+
+		db.tweed.deleteTweed(request.body, (error, queryResult) => {
+
+			if (error) {
+        console.error('error getting tweed:', error);
+        response.sendStatus(500);
+			
+			} else {
+
+				response.redirect('/');
+			}
+		})
+	}
+
 	return {
 		index,
-		create
+		create,
+		editForm,
+		update,
+		deleteTweed
   }
 }

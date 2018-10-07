@@ -33,16 +33,38 @@ class LoggedIn extends React.Component {
 	}
 }
 
+class EditButton extends React.Component {
+	render () {
+
+		let tweed = this.props.tweed;
+
+		if (parseInt(this.props.cookies.userid) === tweed.userid) {
+
+			return (
+				<form method="GET" action={"/tweed/" + tweed.id + "/edit"} className="form-inline ml-auto btn-group">
+					<input type="submit" value="Edit" className="btn btn-sm btn-outline-secondary" />
+				</form>
+			)
+
+		} else {
+			return <span />
+		}
+	}
+}
+
 
 class Index extends React.Component {
   render() {
+
+		console.log (this.props.tweeds);
     
     let tweeds = this.props.tweeds.map(tweed => {			
 			return (
         <div key={tweed.id} className="col-12">
           <div className="card p-3 my-2 shadow-sm">
 						<p className="my-1"><strong><a href={"/users/" + tweed.userid} className="text-secondary">{tweed.username}</a></strong> <span className="small ml-1"> {tweed.created_at}</span></p>
-            <p className="mb-2">{tweed.content} </p>  
+            <p className="mb-2">{tweed.content} </p>
+						<EditButton tweed={tweed} cookies={this.props.cookies} />  
           </div>
         </div>
       )

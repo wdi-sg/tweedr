@@ -15,13 +15,13 @@ module.exports = (app, db) => {
   
   app.get('/users/:id', user.profile);
 
+  app.get('/tweed/:id/edit', tweed.editForm);
   app.get('/tweeds/', tweed.index);
   // app.get('/tweed/new', tweed_newForm); // form is in index
   app.post('/tweed', tweed.create);
   // app.get('/tweed/:id', tweed.show);
-  // app.get('/tweed/:id/edit', tweed.editForm);
-  // app.put('tweed/:id/', tweed.update);
-  // app.delete('/tweed/:id', tweed.delete);
+  app.put('/tweed/:id', tweed.update);
+  app.delete('/tweed/:id', tweed.deleteTweed);
 
 
   app.post('/follow', follow.create);
