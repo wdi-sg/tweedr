@@ -15,7 +15,6 @@ module.exports = (app, db) => {
   
   app.get('/users/:id', user.profile);
 
-
   app.get('/tweeds/', tweed.index);
   // app.get('/tweed/new', tweed_newForm); // form is in index
   app.post('/tweed', tweed.create);

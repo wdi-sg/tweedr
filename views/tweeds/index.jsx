@@ -4,7 +4,8 @@ var Layout = require('../layout/layout');
 const sha256 = require('js-sha256');
 const SALT = "tweedr";
 
-class NewTweed extends React.Component {
+
+class LoggedIn extends React.Component {
 	render () {
 
 		let cookies = this.props.cookies;
@@ -12,11 +13,18 @@ class NewTweed extends React.Component {
 		if (cookies.loggedin === sha256(cookies.userid + SALT)) {
 			
 			return (
-				<form method="POST" action="/tweed" className="form-inline my-3">
-					<input type="text" name="content" className="form-control mr-2 col-9 col-sm-10 col-lg-11 mb-1" placeholder="What ya thinking?" required autoComplete="off"/>
-					<input type="hidden" name="userid" value={cookies.userid} />
-					<input type="submit" value="Submit" className="btn btn-sm btn-primary col"/>
-				</form>
+				<div className="col-12">
+					<form method="POST" action="/tweed" className="form-inline my-3">
+						<input type="text" name="content" className="form-control mr-2 col-9 col-sm-10 col-lg-11 mb-1" placeholder="What ya thinking?" required autoComplete="off"/>
+						<input type="hidden" name="userid" value={cookies.userid} />
+						<input type="submit" value="Submit" className="btn btn-sm btn-primary col"/>
+					</form>
+					<div className="btn-group">
+						<a className="btn btn-outline-secondary px-3" href="/tweeds/">All Tweeds</a> 
+						<a className="btn btn-outline-secondary px-3" href="/tweeds/?only=following">Following</a> 
+						<a className="btn btn-outline-secondary px-3" href="/tweeds/?only=followers"> Followers</a> 				
+					</div>
+				</div>
 			)
 
 		} else {
@@ -24,6 +32,7 @@ class NewTweed extends React.Component {
 		}
 	}
 }
+
 
 class Index extends React.Component {
   render() {
@@ -44,8 +53,8 @@ class Index extends React.Component {
       <Layout title="Tweedr" cookies={this.props.cookies}>
         <div className="col-12">
           <h1 className="my-4">Tweedr</h1>
-					<NewTweed cookies={this.props.cookies} />
 				</div>
+					<LoggedIn cookies={this.props.cookies} />
           {tweeds}
       </Layout>
     )

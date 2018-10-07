@@ -2,17 +2,48 @@ module.exports = (db) => {
 
 	const index = (request, response) => {
 
-		db.tweed.index((error, queryResult) => {
+		if (request.query.only === "followers") {
 
-			if (error) {
-        console.error('error getting tweeds:', error);
-        response.sendStatus(500);
+			db.tweed.indexFollowers(request.cookies, (error, queryResult) => {
+	
+				if (error) {
+					console.error('error getting tweeds:', error);
+					response.sendStatus(500);
+				
+				} else {
+	
+					response.render('tweeds/index', {tweeds:queryResult.rows, cookies: request.cookies});
+				}
+			})
+
+		} else if (request.query.only === "following") {
 			
-			} else {
+			db.tweed.indexFollowing(request.cookies, (error, queryResult) => {
+	
+				if (error) {
+					console.error('error getting tweeds:', error);
+					response.sendStatus(500);
+				
+				} else {
+	
+					response.render('tweeds/index', {tweeds:queryResult.rows, cookies: request.cookies});
+				}
+			})
 
-				response.render('tweeds/index', {tweeds:queryResult.rows, cookies: request.cookies});
-			}
-		})
+		} else {
+
+			db.tweed.index((error, queryResult) => {
+	
+				if (error) {
+					console.error('error getting tweeds:', error);
+					response.sendStatus(500);
+				
+				} else {
+	
+					response.render('tweeds/index', {tweeds:queryResult.rows, cookies: request.cookies});
+				}
+			})
+		}
 	}
 
 	const create = (request, response) => {
