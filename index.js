@@ -1,6 +1,7 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 const db = require('./db');
 
 /**
@@ -18,6 +19,11 @@ app.use(cookieParser());
 app.use(express.urlencoded({
   extended: true
 }));
+
+// Set up file-upload
+app.use(fileUpload());
+//To allow to link to public
+app.use(express.static('public'));
 
 // Set react-views to be the default view engine
 const reactEngine = require('express-react-views').createEngine();

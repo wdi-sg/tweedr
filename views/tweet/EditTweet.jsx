@@ -8,7 +8,7 @@ class EditTweet extends React.Component {
         let actionUrl = '/tweet/' + this.props.tweet.id + '?_method=PUT';
 
         let date = new Date();
-        date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}  ${date.getHours()}:${date.getMinutes()}`;
+        date = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}  ${date.getHours()}:${date.getMinutes()}`;
 
         return(
 

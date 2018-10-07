@@ -5,11 +5,14 @@ class Profile extends React.Component {
 
     render() {
 
-        console.log(this.props.user.followed);
-        let editUrl = '/users/' + this.props.user.id + '/edit';
-        let deleteUrl = '/users/' + this.props.user.id + '?_method=delete';
-        let followUrl = '/follow/' + this.props.user.id;
-        let unfollowUrl = '/unfollow/' + this.props.user.id + '?_method=delete';
+        const editUrl = '/users/' + this.props.user.id + '/edit';
+        const deleteUrl = '/users/' + this.props.user.id + '?_method=delete';
+        const followUrl = '/follow/' + this.props.user.id;
+        const unfollowUrl = '/unfollow/' + this.props.user.id + '?_method=delete';
+        const uploadActionLink = '/users/' + this.props.user.id + '/upload?_method=PUT';
+        const name = this.props.user.username;
+        var imageLink = this.props.user.image ;
+
 
         if (this.props.cookie.loginStatus !== this.props.cookie.check) {
 
@@ -18,6 +21,7 @@ class Profile extends React.Component {
             var priviledges;
             var actions;
             var follow;
+            var uploadImage;
 
         } else {
 
@@ -29,8 +33,8 @@ class Profile extends React.Component {
                 </form>
                 </div>
             var otherInputs = <div>
-                <input type="checkbox" name="follower" value="true" /> Search for your followers <br/>
-                <input type="checkbox" name="following" value="true" /> Search for users you following<br/>
+                <input type="radio" name="users" value="followers" /> Followers <br/>
+                <input type="radio" name="users" value="following" /> Following<br/>
                 </div>
 
             if (this.props.user.id == this.props.cookie.userId){
@@ -38,8 +42,14 @@ class Profile extends React.Component {
                     <form method="POST" action={deleteUrl}><input type="submit" value="Delete" /></form>
                     </span>
                 var follow;
+                var uploadImage = <form method="POST" action={uploadActionLink} encType="multipart/form-data">
+                        <h3>Change Profile Picture:</h3>
+                        <input type="file" name="profilePic" /><br/>
+                        <input type="submit" value="Submit" />
+                    </form>
             } else {
                 var actions;
+                var uploadImage;
                 if(this.props.user.followed === false) {
                     var follow = <form method="POST" action={followUrl}><input type="submit" value="Follow" /></form>
                 } else {
@@ -62,6 +72,24 @@ class Profile extends React.Component {
             var description = this.props.user.description;
         }
 
+        let followers = <li>No Followers</li>;
+
+        if (this.props.user.followers.length !== 0) {
+
+            followers = this.props.user.followers.map((element) => {
+                return <li key={element.username}>{element.username}</li>
+            });
+        }
+
+        let following = <li>Not Following Anyone</li>;
+
+        if (this.props.user.following.length !== 0) {
+
+            following = this.props.user.following.map((element) => {
+                return <li key={element.username}>{element.username}</li>
+            });
+        }
+
         return(
 
             <Default title="Profile">
@@ -71,21 +99,29 @@ class Profile extends React.Component {
                 </header>
                 <aside>
                     <form className="search" method="GET" action="/search">
-                        <input type="text" name="user" placeholder="Search a user" autoComplete="off" />
-                        <input type="submit" value="Search" />
+                        <input type="radio" name="users" value="all" /> All
                         {otherInputs}
+                        <input type="submit" value="Search" />
                     </form>
                     {priviledges}
                 </aside>
                 <div>
+                    <img height="250px" width="250px" src={imageLink} />
+                    {uploadImage}
                     <h1>Username</h1>
                     <h2>{this.props.user.username}</h2>
                     <h1>Age</h1>
                     <h2>{age}</h2>
                     <h1>Description</h1>
                     <h2>{description}</h2>
+                    <h1>People Who Follow {name}</h1>
+                    {followers}
+                    <h1> People Who {name} Follow</h1>
+                    {following}
+                    <br/>
                     {actions}
                     {follow}
+                    <a href='/'><button>Home</button></a>
                 </div>
             </Default>
     )};

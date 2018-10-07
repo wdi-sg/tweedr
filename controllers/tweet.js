@@ -98,6 +98,44 @@ module.exports = (db) => {
         });
     };
 
+    const uploadImageForm = (request, response) => {
+
+        response.render('tweet/CreateImageTweet');
+    };
+
+    const tweetImage = (request, response) => {
+
+        let date = new Date();
+        date = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}  ${date.getHours()}:${date.getMinutes()}`;
+        // User did not upload file
+        if(!request.files) {
+            console.log("No image was uploaded.");
+            response.sendStatus(400);
+        }
+
+        const uploadedFile = request.files.imageTweet;
+
+        uploadedFile.mv('public/tweet/'+ uploadedFile.name, (error) => {
+
+            if (error) {
+                console.log("fail to move file");
+                response.sendStatus(500);
+            }
+
+            let path = '/tweet/' + uploadedFile.name;
+
+            db.tweet.createImageTweet(path, date, request.cookies['userId'], (error, queryResult) => {
+
+                if(error) {
+                    console.log("error tweeting image: ", error.message);
+                    response.sendStatus(500);
+                }
+
+                response.redirect('/tweet/' + queryResult);
+            });
+        });
+    };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -109,6 +147,8 @@ module.exports = (db) => {
         showTweet,
         editTweetForm,
         editTweet,
-        deleteTweet
+        deleteTweet,
+        uploadImageForm,
+        tweetImage
     };
 };

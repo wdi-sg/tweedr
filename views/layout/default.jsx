@@ -8,6 +8,7 @@ class Default extends React.Component {
 
             <html>
             <head>
+                <link rel="stylesheet" type="text/css" href="/style.css"/>
                 <title>{this.props.title}</title>
             </head>
             <body>

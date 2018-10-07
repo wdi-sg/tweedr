@@ -120,6 +120,99 @@ module.exports = (db) => {
     });
   };
 
+  const unfollow = (request, response) => {
+
+    db.user.unfollow(request.params.id, request.cookies['userId'], (error) => {
+
+        if(error) {
+            console.log("error unfollowing: ", error.message);
+            response.sendStatus(500)
+        }
+
+        response.redirect('/users/' + request.params.id);
+    });
+  };
+
+  const uploadImage = (request, response) => {
+
+    // User did not upload file
+    if(!request.files) {
+        console.log("No image was uploaded.");
+        response.sendStatus(400);
+    }
+
+    const uploadedFile = request.files.profilePic;
+
+    uploadedFile.mv('public/media/'+ uploadedFile.name, (error) => {
+
+        if (error) {
+            console.log("fail to move file");
+            response.sendStatus(500);
+        }
+
+        let path = '/media/' + uploadedFile.name;
+
+        db.user.uploadImage(request.cookies['userId'], path, (error) => {
+
+            if(error) {
+                console.log("error inserting path into db: ", error.message);
+                response.sendStatus(500);
+            }
+
+            response.redirect('/users/' + request.params.id);
+        });
+    });
+  };
+
+  const search = (request, response) => {
+
+    let cookies = {
+
+        check: sha256(SALT + "logged in"),
+        loginStatus: request.cookies['loginStatus'],
+        username: request.cookies['username'],
+        userId: request.cookies['userId']
+    };
+
+    if (request.query.users === 'followers') {
+
+        db.user.searchFollowers(request.cookies['userId'], (error, queryResult) => {
+
+            if(error) {
+                console.log("error looking for followers: ", error.message);
+                response.sendStatus(500);
+            }
+
+            response.render('user/search', {users: queryResult, cookie: cookies});
+        });
+
+    } else if (request.query.users === 'following') {
+
+        db.user.searchFollowing(request.cookies['userId'], (error, queryResult) => {
+
+            if(error) {
+                console.log("error looking for following: ", error.message);
+                response.sendStatus(500);
+            }
+
+            response.render('user/search', {users: queryResult, cookie: cookies});
+        });
+
+    } else {
+
+        db.user.searchAll(request.cookies['userId'], (error, queryResult) => {
+
+            if(error) {
+                console.log("error looking for all users: ", error.message);
+                response.sendStatus(500);
+            }
+
+            response.render('user/search', {users: queryResult, cookie: cookies});
+        });
+    }
+
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -132,6 +225,9 @@ module.exports = (db) => {
     editProfileForm,
     editProfile,
     deleteProfile,
-    follow
+    follow,
+    unfollow,
+    uploadImage,
+    search
   };
 };

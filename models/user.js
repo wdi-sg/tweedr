@@ -26,10 +26,13 @@ module.exports = (dbPoolInstance) => {
               var hashedValue = sha256(user.password);
 
               // set up query
-              const queryString = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+              const queryString = 'INSERT INTO users (username, password, age, description, image) VALUES ($1, $2, $3, $4, $5)';
               const values = [
                 user.username,
-                hashedValue
+                hashedValue,
+                undefined,
+                '',
+                '/media/image.png'
               ];
 
               dbPoolInstance.query(queryString, values, (error, result) => {
@@ -45,28 +48,45 @@ module.exports = (dbPoolInstance) => {
 
         const queryString = "SELECT * FROM users WHERE id='" + id + "';";
         const queryString2 = "SELECT * FROM follow WHERE username_id='" + id + "' AND follower='" + currentUser + "';";
+        const queryString3 = "SELECT users.username FROM users INNER JOIN follow ON (follow.follower = users.id) WHERE follow.username_id='" + id + "';";
+        const queryString4 = "SELECT users.username FROM users INNER JOIN follow ON (follow.username_id = users.id) WHERE follow.follower='" + id + "';";
 
         dbPoolInstance.query(queryString, (error, result) => {
+
+            if (error) {
+                console.log("query error message: ",error.message);
+            }
 
             var endResult = result.rows[0];
 
             dbPoolInstance.query(queryString2, (error, result) =>{
 
-                if (result.rows.length === 0) {
+                if (result === undefined || result.rows.length === 0) {
                     endResult['followed'] = false;
                 } else {
                     endResult['followed'] = true;
                 }
-                callback(error, endResult);
+
+                dbPoolInstance.query(queryString3, (error, result) => {
+
+                    endResult['followers'] = result.rows;
+
+                    dbPoolInstance.query(queryString4, (error, result) => {
+
+                        endResult['following'] = result.rows;
+
+                        callback(error, endResult);
+                    });
+                });
             });
         });
     };
 
     const editProfile = (input, id, callback) => {
 
-        let queryString = "UPDATE users SET age=($1), description=($2) WHERE id=($3);"
+        let queryString = "UPDATE users SET age=($1), description=($2), image=($3) WHERE id=($4);"
 
-        let values = [input.age, input.description, id];
+        let values = [input.age, input.description, input.profilePic ,id];
 
         dbPoolInstance.query(queryString, values, (error, result) => {
 
@@ -105,11 +125,66 @@ module.exports = (dbPoolInstance) => {
         });
     };
 
+    const unfollow = (id, currentUser, callback) => {
+
+        let queryString = "DELETE FROM follow WHERE username_id='" + id + "' AND follower='" + currentUser + "';";
+
+        dbPoolInstance.query(queryString, (error, result) => {
+            callback(error);
+        });
+    };
+
+    const uploadImage = (currentUser, path, callback) => {
+
+        const queryString = "UPDATE users SET image=($1) WHERE id=($2);"
+
+        const values = [path, currentUser];
+
+        dbPoolInstance.query(queryString, values, (error, result) => {
+            callback(error);
+        });
+    };
+
+    const searchAll = (currentUser, callback) => {
+
+        const queryString = "SELECT * FROM users WHERE id!='" + currentUser + "';";
+
+        dbPoolInstance.query(queryString, (error, result) => {
+
+            callback(error, result.rows)
+        });
+    };
+
+    const searchFollowing = (currentUser, callback) => {
+
+        let queryString = "SELECT users.* FROM users INNER JOIN follow ON (follow.username_id = users.id) WHERE follow.follower='" + currentUser + "';";
+
+        dbPoolInstance.query(queryString, (error, result) => {
+
+            callback(error, result.rows);
+        });
+    };
+
+    const searchFollowers = (currentUser, callback) => {
+
+        let queryString = "SELECT users.* FROM users INNER JOIN follow ON (follow.follower = users.id) WHERE follow.username_id='" + currentUser + "';";
+
+        dbPoolInstance.query(queryString, (error, result) => {
+
+            callback(error, result.rows);
+        });
+    };
+
     return {
       create,
       showProfile,
       editProfile,
       deleteProfile,
-      follow
+      follow,
+      unfollow,
+      uploadImage,
+      searchAll,
+      searchFollowers,
+      searchFollowing
     };
 };

@@ -19,10 +19,16 @@ class Home extends React.Component {
                 <div><input type="radio" name="show" value="all" defaultChecked/> All</div>
                 <div><input type="radio" name="show" value="followers" /> Followers</div>
                 <div><input type="radio" name="show" value="following" /> Following</div>
+                <select name="sortby">
+                    <option value="ASC">Ascending Order</option>
+                    <option value="DESC">Descending Order</option>
+                </select>
+                <br/>
                 <input type="submit" value="Sort" />
                 </form> <br/>
                 <a href={profileUrl}><button>Profile</button></a><br/>
-                <a href="/tweet/new"><button>Create Tweet</button></a>
+                <a href="/tweet/new"><button>Create Text Tweet</button></a><br/>
+                <a href="/tweet/new/image"><button>Create Image Tweet</button></a>
                 </div>
             var login = <div>
                 <form method="POST" action="/">
@@ -31,8 +37,8 @@ class Home extends React.Component {
                 </form>
                 </div>
             var otherInputs = <div>
-                <input type="checkbox" name="follower" value="true" /> Search for your followers <br/>
-                <input type="checkbox" name="following" value="true" /> Search for users you following<br/>
+                <input type="radio" name="users" value="followers" /> Followers <br/>
+                <input type="radio" name="users" value="following" /> Following<br/>
                 </div>
 
         }
@@ -46,7 +52,11 @@ class Home extends React.Component {
                 let tweetUrl = "/tweet/" + element.id;
                 let authorUrl = "/users/" + element.user_id;
 
-                return <a key={element.id} href={tweetUrl}><div><h3>{element.title}</h3><p className="message">{element.message}</p><p>Created by: <a href={authorUrl}>{element.username}</a> {element.dateandtime}</p></div></a>
+                if(element.image === '') {
+                    return <a key={element.id} href={tweetUrl}><div><h3>{element.title}</h3><p className="message">{element.message}</p><p>Created by: <a href={authorUrl}>{element.username}</a> {element.dateandtime}</p></div></a>
+                } else {
+                    return <a key={element.id} href={tweetUrl}><div><img height="220px" width="220px" src={element.image} /><p>Created by: <a href={authorUrl}>{element.username}</a> {element.dateandtime}</p></div></a>
+                }
 
             });
 
@@ -62,9 +72,9 @@ class Home extends React.Component {
                 <aside>
                     <h2>Find Users:</h2>
                     <form className="search" method="GET" action="/search">
-                        <input type="text" name="user" placeholder="Search a user" autoComplete="off" />
-                        <input type="submit" value="Search" />
+                        <input type="radio" name="users" value="all" /> All
                         {otherInputs}
+                        <input type="submit" value="Search" />
                     </form>
                     {priviledges}
                 </aside>

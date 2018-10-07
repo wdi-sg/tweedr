@@ -14,9 +14,9 @@ class EditProfile extends React.Component {
                     <h1>Username</h1>
                     <input type="text" name="username" defaultValue={this.props.user.username} readOnly />
                     <h1>Age</h1>
-                    <input type="text" name="age" defaultValue={this.props.user.age} />
+                    <input type="number" name="age" defaultValue={this.props.user.age} />
                     <h1>Description</h1>
-                    <input type="text" name="description" defaultValue={this.props.user.description} />
+                    <textarea name="description" defaultValue={this.props.user.description}></textarea>
                     <br/><br/>
                     <input type="submit" value="Submit" />
                 </form>

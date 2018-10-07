@@ -20,7 +20,8 @@ class Tweet extends React.Component {
         } else {
 
             var priviledges = <div><a href={profileUrl}><button>Profile</button></a><br/>
-                <a href="/tweet/new"><button>Create Tweet</button></a></div>
+                <a href="/tweet/new"><button>Create Text Tweet</button></a><br/>
+                <a href="/tweet/new/image"><button>Create Image Tweet</button></a></div>
             var login = <div>
                 <form method="POST" action="/">
                     <span>{this.props.cookie.username} </span>
@@ -28,18 +29,34 @@ class Tweet extends React.Component {
                 </form>
                 </div>
             var otherInputs = <div>
-                <input type="checkbox" name="follower" value="true" /> Search for your followers <br/>
-                <input type="checkbox" name="following" value="true" /> Search for users you following<br/>
+                <input type="radio" name="users" value="followers" /> Followers <br/>
+                <input type="radio" name="users" value="following" /> Following<br/>
                 </div>
 
             if (this.props.tweet.user_id == this.props.cookie.userId){
-                var actions = <span><a href={editUrl}><button>Edit</button></a>
-                    <form method="POST" action={deleteUrl}><input type="submit" value="Delete" /></form>
-                    </span>
+
+                if(this.props.tweet.image === '') {
+                    var actions = <span><a href={editUrl}><button>Edit</button></a>
+                        <form method="POST" action={deleteUrl}><input type="submit" value="Delete" /></form>
+                        </span>
+                } else {
+                    var actions = <span><form method="POST" action={deleteUrl}><input type="submit" value="Delete" /></form></span>
+                }
+
             } else {
                 var actions;
             }
 
+        }
+
+        if(this.props.tweet.image === '') {
+
+            var showContent = <div><h1>{this.props.tweet.title}</h1>
+                    <h3>{this.props.tweet.message}</h3>
+                    </div>
+        } else {
+
+            var showContent = <img height="500px" width="500px" src={this.props.tweet.image} />
         }
 
         return(
@@ -52,15 +69,14 @@ class Tweet extends React.Component {
                 <aside>
                     <h2>Find Users:</h2>
                     <form className="search" method="GET" action="/search">
-                        <input type="text" name="user" placeholder="Search a user" autoComplete="off" />
-                        <input type="submit" value="Search" />
+                        <input type="radio" name="users" value="all" /> All
                         {otherInputs}
+                        <input type="submit" value="Search" />
                     </form>
                     {priviledges}
                 </aside>
                 <main>
-                    <h1>{this.props.tweet.title}</h1>
-                    <h3>{this.props.tweet.message}</h3>
+                    {showContent}
                     <p>Created By: <a href={authorUrl}>{this.props.tweet.username}</a> <span>{this.props.tweet.dateandtime}</span></p>
                     {actions}
                     <a href="/"><button>Home</button></a>

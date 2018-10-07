@@ -12,16 +12,21 @@ module.exports = (app, db) => {
   app.get('/register', users.newForm);
   app.post('/register', users.create);
   app.post('/follow/:id', users.follow);
+  app.delete('/unfollow/:id', users.unfollow);
+  app.get('/search', users.search);
   app.get('/users/:id', users.profilePage);
   app.get('/users/:id/edit', users.editProfileForm);
   app.put('/users/:id', users.editProfile);
   app.delete('/users/:id', users.deleteProfile);
+  app.put('/users/:id/upload', users.uploadImage);
 
     /*
    *  =========================================
    *  Tweet
    *  =========================================
    */
+   app.get('/tweet/new/image', tweet.uploadImageForm)
+   app.post('/tweet/image', tweet.tweetImage)
    app.get('/tweet/new', tweet.newTweetForm);
    app.post('/tweet', tweet.createTweet);
    app.get('/tweet/:id/edit', tweet.editTweetForm);

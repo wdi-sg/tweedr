@@ -1,6 +1,25 @@
 var sha256 = require('js-sha256');
 const SALT = "MVC is so confusing";
 
+const sorting = (tweet, request) => {
+
+    if(request.query.sortby === 'DESC') {
+
+        tweet.sort(function(a, b) {
+            a = new Date(a.dateandtime);
+            b = new Date(b.dateandtime);
+            return a>b ? -1 : a<b ? 1 : 0;
+        });
+    } else if (request.query.sortby === 'ASC') {
+
+        tweet.sort(function(a, b) {
+            a = new Date(a.dateandtime);
+            b = new Date(b.dateandtime);
+            return a>b ? 1 : a<b ? -1 : 0;
+        });
+    }
+};
+
 module.exports = (db) => {
 
   /**
@@ -21,22 +40,69 @@ module.exports = (db) => {
 
         var tweet;
 
-        db.home.displayTweets((error, queryResult) => {
+        if (request.query.show === 'followers') {
 
-            if(error) {
 
-                console.log('error showing tweet: ', error.message);
-                response.sendStatus(500);
-            }
+            db.home.displayFollowerTweets(request.cookies['userId'], (error, queryResult) => {
 
-            if(queryResult.length !== 0) {
+                if(error) {
 
-                tweet = queryResult;
-            }
+                    console.log('error showing tweet: ', error.message);
+                    response.sendStatus(500);
+                }
 
-            response.render('home/home', {cookie: cookies, tweet: tweet});
+                if(queryResult.length !== 0) {
 
-        });
+                    tweet = queryResult;
+                    sorting(tweet, request);
+                }
+
+                response.render('home/home', {cookie: cookies, tweet: tweet});
+
+            });
+
+        } else if (request.query.show === "following") {
+
+            db.home.displayFollowingTweets(request.cookies['userId'], (error, queryResult) => {
+
+                if(error) {
+
+                    console.log('error showing tweet: ', error.message);
+                    response.sendStatus(500);
+                }
+
+                if(queryResult.length !== 0) {
+
+                    tweet = queryResult;
+                    sorting(tweet, request);
+                }
+
+                response.render('home/home', {cookie: cookies, tweet: tweet});
+
+            });
+
+        } else {
+
+            db.home.displayAllTweets((error, queryResult) => {
+
+                if(error) {
+
+                    console.log('error showing tweet: ', error.message);
+                    response.sendStatus(500);
+                }
+
+                if(queryResult.length !== 0) {
+
+                    tweet = queryResult;
+                    sorting(tweet, request);
+                }
+
+                response.render('home/home', {cookie: cookies, tweet: tweet});
+
+            });
+        }
+
+
     };
 
     const loginForm = (request, response) => {

@@ -6,19 +6,20 @@
 -- 	username TEXT,
 -- 	password TEXT,
 -- 	age INTEGER,
--- 	description TEXT
+-- 	description TEXT,
+-- 	image TEXT
 
 -- );
 
-DROP TABLE IF EXISTS follow;
+-- DROP TABLE IF EXISTS follow;
 
-CREATE TABLE IF NOT EXISTS follow (
+-- CREATE TABLE IF NOT EXISTS follow (
 
-	id SERIAL PRIMARY KEY,
-	username_id INTEGER,
-	follower INTEGER
+-- 	id SERIAL PRIMARY KEY,
+-- 	username_id INTEGER,
+-- 	follower INTEGER
 
-);
+-- );
 
 DROP TABLE IF EXISTS tweet;
 
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS tweet (
 	title TEXT,
 	message TEXT,
 	user_id INTEGER,
-	dateandtime TEXT
+	dateandtime TEXT,
+	image TEXT
 
 );

@@ -2,9 +2,9 @@ module.exports = (dbPoolInstance) => {
 
     const createTweet = (tweet, userId, callback) => {
 
-        let queryText = "INSERT INTO tweet (title,message,user_id,dateandtime) VALUES ($1,$2,$3,$4) RETURNING id;";
+        let queryText = "INSERT INTO tweet (title,message,user_id,dateandtime, image) VALUES ($1,$2,$3,$4,$5) RETURNING id;";
 
-        let values = [tweet.title, tweet.message, userId, tweet.date]
+        let values = [tweet.title, tweet.message, userId, tweet.date, ''];
 
         dbPoolInstance.query(queryText, values, (error, result) => {
 
@@ -36,7 +36,7 @@ module.exports = (dbPoolInstance) => {
 
     const deleteTweet = (id, callback) => {
 
-        let queryText = "DELETE FROM tweet WHERE id='" + id + "';";
+        const queryText = "DELETE FROM tweet WHERE id='" + id + "';";
 
         dbPoolInstance.query(queryText, (error, result) => {
 
@@ -44,10 +44,23 @@ module.exports = (dbPoolInstance) => {
         });
     };
 
+    const createImageTweet = (path, date, currentUser, callback) => {
+
+        const queryText = "INSERT INTO tweet (title, message, user_id, dateandtime, image) VALUES ($1, $2, $3, $4, $5) RETURNING id;";
+
+        const values = ['', '', currentUser, date, path];
+
+        dbPoolInstance.query(queryText, values, (error, result) => {
+
+            callback(error, result.rows[0].id);
+        });
+    };
+
     return {
         createTweet,
         showTweet,
         editTweet,
-        deleteTweet
+        deleteTweet,
+        createImageTweet
     };
 };
