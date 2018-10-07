@@ -1,4 +1,5 @@
 var React = require("react");
+const moment = require('moment');
 
 class showTweets extends React.Component {
   render() {
@@ -8,7 +9,7 @@ class showTweets extends React.Component {
       return (
         <div>
           <li key={tweet.tweet_id}>
-            Tweet ID : {tweet.tweet_id} Content : {tweet.content} Posted By : <a href={"/users/" + tweet.user_id + "/show"}> User ID {tweet.user_id}</a>
+            Tweet ID : {tweet.tweet_id} Content : {tweet.content} Posted By : <a href={"/users/" + tweet.user_id + "/show"}> User ID {tweet.user_id}</a> Posted At : {moment(tweet.created_at).format("YYYY-MM-DD HH:mm")}
           </li>
         </div>
       );

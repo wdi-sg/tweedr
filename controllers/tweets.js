@@ -25,7 +25,7 @@ module.exports = db => {
     // use user model method `create` to create new user entry in db
     db.tweets.newTweet(req.body, (err, queryResult) => {
       if (err) {
-        console.err("Errror creating tweet:", err);
+        console.log("Errror creating tweet:", err);
         res.sendStatus(500);
       }
       if (queryResult.rowCount >= 1) {

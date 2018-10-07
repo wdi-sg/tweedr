@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS tweets(
 	tweet_id SERIAL PRIMARY KEY,
 	user_id INTEGER REFERENCES users(user_id),
-	content TEXT
+	content TEXT,
+	created_at timestamptz,
 );
 
 CREATE TABLE IF NOT EXISTS followers(

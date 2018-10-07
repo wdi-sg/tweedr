@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 /**
  * ===========================================
  * Export model functions as a module
@@ -6,8 +8,8 @@
 module.exports = dbPoolInstance => {
   const newTweet = (tweet, callback) => {
     // set up query
-    const queryString = "INSERT INTO tweets (user_id, content) VALUES ($1, $2)";
-    const values = [tweet.userid, tweet.tweet];
+    const queryString = "INSERT INTO tweets (user_id, content, created_at) VALUES ($1, $2, $3)";
+    const values = [tweet.userid, tweet.tweet, moment.utc()];
 
     // execute query
     dbPoolInstance.query(queryString, values, (error, queryResult) => {
