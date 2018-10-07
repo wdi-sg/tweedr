@@ -13,5 +13,5 @@ module.exports = (app, db) => {
   //sign in
   //route path
   app.get('/user/login',users.logInForm);
-  //app.post('/users/login',users.logIn);
+  app.post('/user/login',users.logIn);
 };

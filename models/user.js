@@ -21,8 +21,31 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
+    const logIn = (user, callback)=>{
+        console.log("Model user name", user);
+        //set up query
+        const queryString = "SELECT * from users WHERE name ='"+ user + "';";
+        console.log("model queryResult", queryString);
+
+        dbPoolInstance.query(queryString,(error, queryResult) => {
+
+            if(error){
+                console.log(error, null);
+            } else {
+                    if (queryResult.rows[0] === undefined){
+                        callback(null,null);
+                    }else {
+                            console.log("Signin Query Works",queryResult.rows[0]);
+                            callback(null,queryResult.rows[0]);
+                        }
+                }
+
+      });
+
+    }
+
     return {
       create,
-      // logIn
+      logIn
     };
 };

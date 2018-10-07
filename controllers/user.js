@@ -45,6 +45,36 @@ module.exports = (db) => {
     //response.send('I am link to signin');
   }
 
+  const logIn = (request, response)=> {
+
+    db.user.logIn(request.body.name,(error, queryResult)=>{
+
+        console.log("controller signin", queryResult);
+
+        if(error){
+            console.log("error", error);
+            reponse.status(505).send("controllerGG");
+        } else if (queryResult === null){
+            response.status(404).send("User Not found");
+        } else {
+            console.log("else controller",queryResult);
+
+            var hashValue = sha256(request.body.password);
+            console.log("db sent", queryResult.password);
+            console.log("input pass", hashValue);
+
+            if(queryResult.password === hashValue){
+                var hashCookie = sha256('true')
+                response.cookie('loggedin', hashCookie)
+                response.send('login success');
+            } else {
+                response.status(403).send('Invalid password');
+            }
+        }
+    });
+    console.log("=====", request.body);
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -53,6 +83,7 @@ module.exports = (db) => {
   return {
     newForm,
     create,
-    logInForm
+    logInForm,
+    logIn
   };
 };
