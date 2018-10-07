@@ -8,6 +8,10 @@ module.exports = db => {
     response.render('user/NewUser');
   };
 
+  const loginForm = (request, response) => {
+    response.render('user/Login');
+  };
+
   const create = (request, response) => {
     // use user model method `create` to create new user entry in db
     db.user.create(request.body, (error, queryResult) => {
@@ -34,6 +38,27 @@ module.exports = db => {
     });
   };
 
+  const login = (request, response) => {
+    db.user.login(request.body, (error, queryResult) => {
+      if (error) {
+        console.error('error getting user:', error);
+        response.sendStatus(500);
+      }
+
+      if (queryResult.rowCount >= 1) {
+        const dbUsername = queryResult.rows[0].username;
+        const dbHashedPassword = queryResult.rows[0].password;
+        const enteredPassword = db.user.encrypt(request.body.password);
+
+        if (dbHashedPassword === enteredPassword) {
+          let sessionCookie = db.user.encrypt(dbUsername);
+          response.cookie('logged_in', sessionCookie);
+          response.send(`${dbUsername} logged in.`);
+        }
+      }
+    });
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -41,6 +66,8 @@ module.exports = db => {
    */
   return {
     newForm,
-    create
+    create,
+    loginForm,
+    login
   };
 };
