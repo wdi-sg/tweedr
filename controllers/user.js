@@ -28,8 +28,8 @@ module.exports = db => {
         console.log('User created successfully');
 
         // drop cookies to indicate user's logged in status and username
-        response.cookie('loggedIn', db.user.encrypt(request.body.name));
-        response.cookie('username', request.body.name);
+        response.cookie('logged_in', db.user.encrypt(request.body.name));
+        response.cookie('id', queryResult.rows[0].id);
       } else {
         console.log('User could not be created');
       }
@@ -47,6 +47,7 @@ module.exports = db => {
       }
 
       if (queryResult.rowCount >= 1) {
+        const dbId = queryResult.rows[0].id;
         const dbUsername = queryResult.rows[0].username;
         const dbHashedPassword = queryResult.rows[0].password;
         const enteredPassword = db.user.encrypt(request.body.password);
@@ -54,11 +55,17 @@ module.exports = db => {
         if (dbHashedPassword === enteredPassword) {
           let sessionCookie = db.user.encrypt(dbUsername);
           response.cookie('logged_in', sessionCookie);
-          response.cookie('username', dbUsername);
+          response.cookie('id', dbId);
           response.send(`${dbUsername} logged in.`);
         }
       }
     });
+  };
+
+  const logout = (request, response) => {
+    response.clearCookie('logged_in');
+    response.clearCookie('id');
+    response.redirect('/');
   };
 
   /**
@@ -70,6 +77,7 @@ module.exports = db => {
     newForm,
     create,
     loginForm,
-    login
+    login,
+    logout
   };
 };

@@ -4,11 +4,11 @@ module.exports = db => {
   };
 
   const create = (request, response) => {
-    const sampleData = {
+    const params = {
       content: request.body.content,
-      id: 1
+      id: request.cookies.id
     };
-    db.tweed.create(sampleData, (error, queryResult) => {
+    db.tweed.create(params, (error, queryResult) => {
       if (error) {
         console.error('error tweeding', error);
         response.sendStatus(500);

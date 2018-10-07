@@ -18,7 +18,7 @@ module.exports = dbPool => {
 
     // set up query
     const queryString =
-      'INSERT INTO users (username, password) VALUES ($1, $2)';
+      'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id';
     const values = [params.name, hashedPassword];
 
     // execute query
