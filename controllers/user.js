@@ -23,7 +23,7 @@ module.exports = (db) => {
       } else if (queryResult.rowCount >= 1) {
 
         console.log('Username already exists!');
-        response.send("A user with this name already exists.");
+        response.render('user/new', {cookies: request.cookies, errorMessage: "A user with this name already exists!"});
 
       } else {
         
@@ -152,7 +152,7 @@ module.exports = (db) => {
 
             let followers = queryResult.rows;
 
-            db.follow.getFollows(request.params, (error, queryResult) => {
+            db.follow.getFollowing(request.params, (error, queryResult) => {
 
               if (error) {
                 console.error('error getting follow:', error);

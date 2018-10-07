@@ -19,7 +19,7 @@ class Index extends React.Component {
       
       <Layout title="Users" cookies={this.props.cookies}>
         <div className="col-12">
-          <h1 className="my-4">Users</h1>
+          <h1 className="mt-4 mb-2">Users</h1>
           <ErrorMessage errorMessage={this.props.errorMessage}/>
         </div>
           {users}

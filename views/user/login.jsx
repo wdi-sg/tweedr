@@ -11,7 +11,7 @@ class NewUser extends React.Component {
 					<ErrorMessage errorMessage={this.props.errorMessage}/>
           <form method="POST" action="/users/login">
             <div className="form-group">
-              <label>Username:</label>
+              <label >Username:</label>
               <input type="text" name="name" className="form-control" placeholder="Username" required autoComplete="off"/>
             </div>
             <div className="form-group">

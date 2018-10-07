@@ -4,7 +4,6 @@ var Layout = require('../layout/layout');
 const sha256 = require('js-sha256');
 const SALT = "tweedr";
 
-
 class LoggedIn extends React.Component {
 	render () {
 
@@ -15,11 +14,11 @@ class LoggedIn extends React.Component {
 			return (
 				<div className="col-12">
 					<form method="POST" action="/tweed" className="form-inline my-3">
-						<input type="text" name="content" className="form-control mr-2 col-9 col-sm-10 col-lg-11 mb-1" placeholder="What ya thinking?" required autoComplete="off"/>
+						<input type="text" name="content" className="form-control mr-1 col-9 col-sm-10 col-lg-11 mb-1" placeholder="What ya thinking?" required autoComplete="off"/>
 						<input type="hidden" name="userid" value={cookies.userid} />
 						<input type="submit" value="Submit" className="btn btn-sm btn-primary col"/>
 					</form>
-					<div className="btn-group">
+					<div className="btn-group mb-2">
 						<a className="btn btn-outline-secondary px-3" href="/tweeds/">All Tweeds</a> 
 						<a className="btn btn-outline-secondary px-3" href="/tweeds/?only=following">Following</a> 
 						<a className="btn btn-outline-secondary px-3" href="/tweeds/?only=followers"> Followers</a> 				
@@ -37,8 +36,9 @@ class EditButton extends React.Component {
 	render () {
 
 		let tweed = this.props.tweed;
+		let cookies = this.props.cookies;
 
-		if (parseInt(this.props.cookies.userid) === tweed.userid) {
+		if (parseInt(cookies.userid) === tweed.userid && cookies.loggedin === sha256(cookies.userid + SALT)) {
 
 			return (
 				<form method="GET" action={"/tweed/" + tweed.id + "/edit"} className="form-inline ml-auto btn-group">
@@ -55,8 +55,6 @@ class EditButton extends React.Component {
 
 class Index extends React.Component {
   render() {
-
-		console.log (this.props.tweeds);
     
     let tweeds = this.props.tweeds.map(tweed => {			
 			return (
@@ -74,7 +72,7 @@ class Index extends React.Component {
       
       <Layout title="Tweedr" cookies={this.props.cookies}>
         <div className="col-12">
-          <h1 className="my-4">Tweedr</h1>
+          <h1 className="mt-4 mb-2">Tweedr</h1>
 				</div>
 					<LoggedIn cookies={this.props.cookies} />
           {tweeds}

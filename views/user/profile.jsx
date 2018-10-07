@@ -27,7 +27,7 @@ class FollowButton extends React.Component {
 				
 				return (
 					<div className="col-12">
-						<form method="POST" action="/follow" className="mb-4">
+						<form method="POST" action="/follow" className="mt-2 mb-4">
 							<input type="hidden" name="userid" value={this.props.user.id} />
 							<input type="hidden" name="followerid" value={cookies.userid} />
 							<input type="submit" value="Follow" className="btn btn-primary"/>
@@ -39,7 +39,7 @@ class FollowButton extends React.Component {
 				
 				return (
 					<div className="col-12">
-						<form method="POST" action="/follow?_method=delete" className="mb-4">
+						<form method="POST" action="/follow?_method=delete" className="mt-2 mb-4">
 							<input type="hidden" name="userid" value={this.props.user.id} />
 							<input type="hidden" name="followerid" value={cookies.userid} />
 							<input type="submit" value="Unfollow" className="btn btn-primary"/>
@@ -116,7 +116,7 @@ class Profile extends React.Component {
 			
 			<Layout title={user.name + "'s Profile"} cookies={this.props.cookies}>
         <div className="col-12">
-          <h1 className="my-4">{user.name}</h1>
+          <h1 className="mt-4 mb-2">{user.name}</h1>
         </div>
 					<ErrorMessage errorMessage={this.props.errorMessage} />
 					<FollowButton user={user} cookies={this.props.cookies} followers={this.props.followers} />

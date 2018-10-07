@@ -29,7 +29,7 @@ module.exports = (pool) => {
 		})
 	}
 
-	const getFollows = (query, callback) => {
+	const getFollowing = (query, callback) => {
 
 		const queryString = `SELECT users.id, users.name FROM users INNER JOIN follows ON (users.id = follows.user_id) WHERE follows.follower_id = ${query.id};`;
 
@@ -53,7 +53,7 @@ module.exports = (pool) => {
 		create,
 		get,
 		getFollowers,
-		getFollows,
+		getFollowing,
 		unfollow
 
   }

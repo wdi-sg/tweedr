@@ -1,15 +1,18 @@
 var React = require("react");
 var Layout = require('../layout/layout');
+var ErrorMessage = require('../layout/error');
 
 class NewUser extends React.Component {
   render() {
+
     return (
       <Layout title="Login" cookies={this.props.cookies}>
         <div className="col">
           <h1 className="my-4">Register</h1> 
+					<ErrorMessage errorMessage={this.props.errorMessage}/>
           <form method="POST" action="/users">
             <div className="form-group">
-              <label>Sign Up:</label>
+              <label>Username:</label>
               <input type="text" name="name" className="form-control" placeholder="Username" required autoComplete="off"/>
             </div>
             <div className="form-group">
