@@ -1,18 +1,6 @@
 var React = require("react");
 var Layout = require('../layout/layout');
-
-class ErrorMessage extends React.Component {
-	render () {
-
-		if (this.props.errorMessage) {
-			return (
-				<div className="alert alert-danger">{this.props.errorMessage}</div>
-			)
-		} else {
-			return <div />
-		}
-	}
-}
+var ErrorMessage = require('../layout/error');
 
 class NewUser extends React.Component {
   render() {

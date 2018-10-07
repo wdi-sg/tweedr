@@ -125,6 +125,28 @@ module.exports = (db) => {
 		})
   }
 
+  const profile = (request, response) => {
+
+    let id = request.params.id;
+
+    db.user.getById(id, (error, queryResult) => {
+
+      if (error) {
+        console.error('error getting users:', error);
+        response.sendStatus(500);
+			
+			} else if (queryResult.rowCount === 0) {
+        
+        console.log('User not found!');
+        response.redirect('/users/');
+
+      } else {
+
+				response.render('user/profile', {user:queryResult.rows[0], cookies: request.cookies});
+			}
+		})
+  }
+
 
   return {
     newForm,
@@ -132,6 +154,7 @@ module.exports = (db) => {
     loginPost,
     loginForm,
     logout,
-    index
+    index,
+    profile
   }
 }

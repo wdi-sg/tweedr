@@ -3,8 +3,6 @@ var React = require('react');
 class Login extends React.Component {
 
   render () {
-
-		console.log(this.props.cookies);
     
     if (this.props.cookies.loggedin) {
       return (

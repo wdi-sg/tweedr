@@ -12,7 +12,7 @@ class NewTweed extends React.Component {
 		if (cookies.loggedin === sha256(cookies.userid + SALT)) {
 			
 			return (
-				<form method="POST" action="/tweed" className="form-inline mb-4">
+				<form method="POST" action="/tweed" className="form-inline my-3">
 					<input type="text" name="content" className="form-control mr-2 col-9 col-sm-10 col-lg-11 mb-1" placeholder="What ya thinking?" required autoComplete="off"/>
 					<input type="hidden" name="userid" value={cookies.userid} />
 					<input type="submit" value="Submit" className="btn btn-sm btn-success col"/>
@@ -31,9 +31,9 @@ class Index extends React.Component {
     let tweeds = this.props.tweeds.map(tweed => {			
 			return (
         <div key={tweed.id} className="col-12">
-          <div className="card p-2 my-1 shadow-sm">
-						<h5>{tweed.username} <span className="small"> {tweed.created_at}</span></h5>
-            <p>{tweed.content} </p>  
+          <div className="card p-3 my-2 shadow-sm">
+						<p className="my-1"><strong><a href={"/users/" + tweed.userid} className="text-secondary">{tweed.username}</a></strong> <span className="small ml-1"> {tweed.created_at}</span></p>
+            <p className="mb-2">{tweed.content} </p>  
           </div>
         </div>
       )

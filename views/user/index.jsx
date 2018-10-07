@@ -7,7 +7,7 @@ class Index extends React.Component {
     let users = this.props.users.map(user => {			
 			return (
         <div key={user.id} className="col-12">
-          <div className="card p-2">
+          <div className="card p-3 my-2 shadow-sm">
 						<h4>{user.name}</h4>  
           </div>
         </div>

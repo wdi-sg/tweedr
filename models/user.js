@@ -22,6 +22,16 @@ module.exports = (pool) => {
     })
   }
 
+  const getById = (id, callback) => {
+
+    const queryString = `SELECT * FROM users WHERE id = '${id}'`;
+
+    pool.query(queryString, (error, queryResult) => {
+      callback(error, queryResult);
+    })
+  }
+  
+
   const index = (callback) => {
 
     const queryString = `SELECT * FROM users ORDER BY id ASC;`;
@@ -34,6 +44,7 @@ module.exports = (pool) => {
   return {
     create,
     get,
+    getById,
     index
   }
 }
