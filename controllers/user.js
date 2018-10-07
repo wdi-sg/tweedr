@@ -25,10 +25,10 @@ module.exports = (db) => {
 
         if (queryResult.rowCount >= 1) {
           console.log('User created successfully');
-          console.log("CONTROLLER: ", request.body)
+          console.log("CONTROLLER: ", request.session)
           // drop cookies to indicate user's logged in status and username
-          response.cookie('logged_in', true);
-          response.cookie('username', request.body.name);
+          response.cookie('logged_in', sha256(request.sessionID));
+          response.cookie('username', sha256(request.body.name));
         } else {
           console.log('User could not be created');
         }
@@ -51,9 +51,10 @@ module.exports = (db) => {
       let passwordHash = sha256(request.body.password);
       // console.log("CONTROLLER QUERY: ", queryResult.rows[0]);
       // console.log("CONTROLLER REQUEST: ", request.body)
+      console.log(request.sessionID);
       if (queryResult.rows[0] !== undefined && passwordHash === queryResult.rows[0].password){
-        response.cookie('logged_in', true);
-        response.cookie('username', request.body.name);
+        response.cookie('logged_in', sha256(request.sessionID));
+        response.cookie('username', sha256(request.body.name));
         response.cookie('user_id', queryResult.rows[0].id);
         response.redirect('/');
       } else {

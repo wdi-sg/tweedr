@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const db = require('./db');
 const session = require("express-session");
 const sha256 = require("js-sha256");
+const uuid = require("uuidv4");
 
 /**
  * ===================================
@@ -27,6 +28,9 @@ app.use(
 );
 app.use(
   session({
+    genid: (request) => {
+      return uuid()
+    },
     secret: "colossal banana",
     resave: true,
     saveUninitialized: true
