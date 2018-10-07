@@ -29,8 +29,6 @@ module.exports = dbPool => {
   };
 
   const login = (params, callback) => {
-    const hashedPassword = encrypt(params.password);
-
     const queryString = 'SELECT * FROM users WHERE username = ($1)';
     const values = [params.name];
 
