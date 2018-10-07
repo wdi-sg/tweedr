@@ -22,11 +22,13 @@ module.exports = (pool) => {
   };
 
   const create = (user, callback) => {
+    const avatar = '837a6cf234bcec2755c575c40ecfd93f';
     const hashedValue = sha256(user.password);
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2) RETURNING *';
+    const queryString = 'INSERT INTO users (name, password, avatar) VALUES ($1, $2, $3) RETURNING *';
     const values = [
       user.name,
-      hashedValue
+      hashedValue,
+      avatar
     ];
 
     pool.query(queryString, values, (error, queryResult) => {
@@ -45,15 +47,17 @@ module.exports = (pool) => {
       if (error) {
         console.log('error getting user:', error);
         callback(error, null);
+      } else if (queryResult.rows.length === 0) {
+        callback(null, null);
       } else {
         callback(null, queryResult.rows[0]);
       }
     });
   };
 
-  const update = (username, bio, callback) => {
-    const queryString = `UPDATE users SET bio = ($1) WHERE name = '${username}' RETURNING *`;
-    const values = [bio];
+  const update = (user, callback) => {
+    const queryString = `UPDATE users SET avatar = ($1), bio = ($2) WHERE name = ($3) RETURNING *`;
+    const values = [user.avatar, user.bio, user.username];
     pool.query(queryString, values, (error, queryResult) => {
       if (error) {
         console.log('error updating user bio:', error);

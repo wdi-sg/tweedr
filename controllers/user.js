@@ -1,7 +1,7 @@
 const sha256 = require('js-sha256');
 const SALT = 'fQdkaUjfieowavwEivorutyFvdaljfLoewKdkfj';
 
-module.exports = (db) => {
+module.exports = (upload, db) => {
   /**
    * ===========================================
    * Controller logic
@@ -66,7 +66,9 @@ module.exports = (db) => {
 
   const create = (request, response) => {
     db.user.get(request.body.name, (error, queryResult) => {
-      if (!error) {
+      if (error) {
+        response.sendStatus(500);
+      } else if (queryResult) {
         response.render('user/NewUser', { error: 'Name already exists.' });
       } else {
         db.user.create(request.body, (error, queryResult) => {
@@ -126,7 +128,13 @@ module.exports = (db) => {
   };
 
   const update = (request, response) => {
-    db.user.update(request.params.name, request.body.bio, (error, queryResult) => {
+    const user = {
+      username: request.params.name,
+      avatar: request.file.filename,
+      bio: request.body.bio
+    };
+
+    db.user.update(user, (error, queryResult) => {
       if (error) {
         response.sendStatus(500);
       } else {

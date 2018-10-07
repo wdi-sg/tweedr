@@ -1,6 +1,6 @@
-module.exports = (app, db) => {
+module.exports = (app, upload, db) => {
 
-  const users = require('./controllers/user')(db);
+  const users = require('./controllers/user')(upload, db);
   const tweets = require('./controllers/tweet')(db);
 
   /*
@@ -19,7 +19,7 @@ module.exports = (app, db) => {
   app.get('/users', users.index);
   app.post('/users/followers', users.follow);
   app.post('/users', users.create);
-  app.put('/users/:name', users.update);
+  app.put('/users/:name', upload.single('avatar'), users.update);
   app.delete('/users/followers', users.unfollow);
 
   /*

@@ -49,7 +49,7 @@ class Tweets extends React.Component {
         );
       });
     } else {
-      return <p>No tweet</p>;
+      return <p className="text-center text-secondary my-3">No tweet</p>;
     }
 
     return (

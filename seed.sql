@@ -1,0 +1,6 @@
+UPDATE users SET avatar = '837a6cf234bcec2755c575c40ecfd93f', bio = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s,' WHERE id = 1;
+UPDATE users SET avatar = '837a6cf234bcec2755c575c40ecfd93f', bio = 'The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters' WHERE id = 2;
+UPDATE users SET avatar = '837a6cf234bcec2755c575c40ecfd93f', bio = 'Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text' WHERE id = 3;
+UPDATE users SET avatar = '837a6cf234bcec2755c575c40ecfd93f', bio = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ' WHERE id = 4;
+UPDATE users SET avatar = '837a6cf234bcec2755c575c40ecfd93f', bio = 'Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).' WHERE id = 5;
+UPDATE users SET avatar = '837a6cf234bcec2755c575c40ecfd93f', bio = 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form' WHERE id = 6;

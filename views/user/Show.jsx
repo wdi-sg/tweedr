@@ -5,12 +5,15 @@ const Tweets = require('../tweet/Tweets');
 class Show extends React.Component {
   render() {
     const editUrl = `/users/${this.props.user.name}/edit`;
-
+    const avatarUrl = `/uploads/${this.props.user.avatar}`;
     return (
       <Layout username={this.props.username}>
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-3">
             <div className="card my-3">
+              <div>
+                <img src={avatarUrl} alt="profile photo" className="card-img-top" />
+              </div>
               <div className="card-body">
                 <h5 className="card-title d-flex justify-content-between">
                   <span>{this.props.user.name}</span>
@@ -22,7 +25,7 @@ class Show extends React.Component {
               </div>
             </div>
           </div>
-          <div className="col-md-8">
+          <div className="col-md-9">
             <Tweets
               username={this.props.username}
               tweets={this.props.tweets}
