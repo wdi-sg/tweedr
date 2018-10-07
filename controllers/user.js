@@ -5,6 +5,25 @@ module.exports = (db) => {
    * Controller logic
    * ===========================================
    */
+
+  const login = (request, response) => {
+    response.render('user/login');
+  };
+
+  const loginAuthentication = (request, response) => {
+
+    db.user.authentication (request.body, (error, queryResult, loginValue)=>{
+
+    let redirectUrl = '/userpage/' + request.body.name
+
+        response.cookie('loggedIn', loginValue);
+        response.cookie('username', request.body.name);
+
+    response.redirect(redirectUrl);
+    });
+  };
+
+
   const newForm = (request, response) => {
     response.render('user/NewUser');
   };
@@ -15,6 +34,7 @@ module.exports = (db) => {
         // queryResult of creation is not useful to us, so we ignore it
         // (console log it to see for yourself)
         // (you can choose to omit it completely from the function parameters)
+        console.log(queryResult)
 
         if (error) {
           console.error('error getting user:', error);
@@ -36,6 +56,33 @@ module.exports = (db) => {
       });
   };
 
+  const userPage = (request, response) => {
+
+    let username = request.cookies.username
+
+    db.user.displayTweet(username, (error, queryResult) => {
+
+    let playerPageData = {"username": username, "queryResult": queryResult}
+
+    response.render('user/UserPage' , {"playerdata":playerPageData});
+
+    })
+
+  };
+
+  const storeTweet = (request, response) => {
+
+    db.user.storeTweetInTable(request.body, (error, queryResult) => {
+
+    let username = request.body.username
+    let url = '/userpage/' + username
+
+    response.redirect(url);
+
+    })
+  };
+
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -43,6 +90,10 @@ module.exports = (db) => {
    */
   return {
     newForm,
-    create
+    create,
+    login,
+    loginAuthentication,
+    userPage,
+    storeTweet
   };
 };

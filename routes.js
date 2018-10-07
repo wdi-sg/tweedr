@@ -9,5 +9,12 @@ module.exports = (app, db) => {
    */
   // CRUD users
   app.get('/users/new', users.newForm);
-  app.post('/users', users.create);
+  app.post('/users/create', users.create);
+  app.get('/users/login', users.login);
+  app.post('/users/authentication', users.loginAuthentication)
+
+  // Individual userpage
+    app.get('/userpage/:id', users.userPage);
+    app.post('/userpage/:id/tweet', users.storeTweet);
+
 };
