@@ -1,22 +1,20 @@
 var React = require("react");
+var DefaultLayout = require('../layouts/default');
 
 class NewUser extends React.Component {
   render() {
     return (
-      <html>
-        <head />
-        <body>
+      <DefaultLayout title="Create New User" subtitle="Create New User">
           <form className="user-form" method="POST" action="/users">
             <div className="user-attribute">
-              name<input name="name" type="text" />
+              name: <input name="name" type="text" />
             </div>
             <div className="user-attribute">
-              password:<input name="password" type="text" />
+              password: <input name="password" type="text" />
             </div>
-            <input name="submit" type="submit" />
+            <input value="Submit" type="submit" />
           </form>
-        </body>
-      </html>
+        </DefaultLayout>
     );
   }
 }
