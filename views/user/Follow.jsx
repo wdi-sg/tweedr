@@ -2,7 +2,7 @@ var React = require("react");
 
 class Follow extends React.Component {
   render() {
-        console.log("this.props is: ", this.props.cookie['Username']);
+        //console.log("this.props is: ", this.props.cookie['Username']);
         //const value = this.props.cookie['Username'];
         var DefaultLayout = require('../layout/Default');
 
@@ -13,7 +13,7 @@ class Follow extends React.Component {
             <div className="user-attribute">
             <p>Follower's ID:</p>
             <form className="user-form" method="POST" action="/users/followed">
-                <input type="text" name="name"/>
+                <input type="text" name="follower_id"/>
                 <br/>
                 <input name="submit" type="submit" />
             </form>

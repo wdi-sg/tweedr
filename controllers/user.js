@@ -104,8 +104,10 @@ module.exports = (db) => {
    }
 
 
-   const follow = (request, response) => {
+   const followPost = (request, response) => {
+
     db.user.followUser(request.body, request.cookies, (err, queryResult) => {
+        //console.log("request.body: ", request.body);
           if (err) {
             console.error('error getting user:', err);
             response.sendStatus(500);
@@ -131,6 +133,6 @@ module.exports = (db) => {
     loginStatus,
     userPage,
     followPage,
-    follow
+    followPost
   };
 };

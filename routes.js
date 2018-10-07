@@ -15,11 +15,11 @@ module.exports = (app, db) => {
   //login form
   app.get('/users/login', users.loginForm);
   app.post('/users/status', users.loginStatus);
-  app.get('/users/:id', users.userPage);
+  app.get('/users/profile/:id', users.userPage);
 
   //follow user
   app.get('/users/follow', users.followPage);
-  app.post('/users/followed', users.follow);
+  app.post('/users/followed', users.followPost);
 
   /*
    *  =========================================
