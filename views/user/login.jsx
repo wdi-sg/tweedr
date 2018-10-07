@@ -4,8 +4,6 @@ var Layout = require('../layout/layout');
 class ErrorMessage extends React.Component {
 	render () {
 
-		console.log(this.props);
-
 		if (this.props.errorMessage) {
 			return (
 				<div className="alert alert-danger">{this.props.errorMessage}</div>

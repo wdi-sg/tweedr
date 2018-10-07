@@ -22,8 +22,18 @@ module.exports = (pool) => {
     })
   }
 
+  const index = (callback) => {
+
+    const queryString = `SELECT * FROM users ORDER BY id ASC;`;
+
+    pool.query(queryString, (error, queryResult) => {
+      callback(error, queryResult);
+    })
+  }
+
   return {
     create,
-    get
+    get,
+    index
   }
 }

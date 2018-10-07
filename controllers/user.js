@@ -40,7 +40,7 @@ module.exports = (db) => {
             userid = queryResult.rows[0].id;
     
             response.cookie('loggedin', sha256(userid + SALT));
-            response.id('userid', userid);
+            response.cookie('userid', userid);
             response.cookie('username', request.body.name);
 
             response.redirect('/');
@@ -110,12 +110,28 @@ module.exports = (db) => {
     response.redirect("/");    
   }
 
+  const index = (request, response) => {
+
+    db.user.index((error, queryResult) => {
+
+      if (error) {
+        console.error('error getting users:', error);
+        response.sendStatus(500);
+			
+			} else {
+
+				response.render('user/index', {users:queryResult.rows, cookies: request.cookies});
+			}
+		})
+  }
+
 
   return {
     newForm,
     create,
     loginPost,
     loginForm,
-    logout
+    logout,
+    index
   }
 }

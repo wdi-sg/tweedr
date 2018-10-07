@@ -10,16 +10,16 @@ module.exports = (pool) => {
 		})
 	}
     
-  // const create = (user, callback) => {
+  const create = (newTweed, callback) => {
 
-  //   const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2) RETURNING id';
+    const queryString = 'INSERT INTO tweeds (content, user_id) VALUES ($1, $2) RETURNING id';
 
-  //   const values = [user.name, sha256(user.password)];
+    const values = [newTweed.content, newTweed.userid];
 
-  //   pool.query(queryString, values, (error, queryResult) => {
-  //     callback(error, queryResult);
-  //   })
-  // }
+    pool.query(queryString, values, (error, queryResult) => {
+      callback(error, queryResult);
+    })
+  }
 
   // const get = (user, callback) => {
 
@@ -31,6 +31,7 @@ module.exports = (pool) => {
   // }
 
   return {
-    index
+		index,
+		create
   }
 }
