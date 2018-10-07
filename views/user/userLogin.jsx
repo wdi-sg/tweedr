@@ -4,22 +4,24 @@ var DefaultLayout = require('../layouts/default');
 class Home extends React.Component {
   render() {
     return (
-      <DefaultLayout title="User login" subtitle="User login">
-          <form className="user-form" method="POST" action="/users/login">
-            <div className="user-attribute">
-              name: <input name="name" type="text" />
+      <DefaultLayout title="User login" subtitle="USER LOGIN">
+          <form class="needs-validation" method="POST" action="/users/login">
+            <div class="form-row">
+              <div class="col-md-6 mb-4">
+                <label for="validationCustom01">Name</label>
+                <input class="form-control" id="validationCustom01" name="name" type="text"/>
+              </div>
+              <div class="col-md-6 mb-4">
+                  <label for="validationCustom02">Password</label>
+                <input class="form-control" id="validationCustom02" name="password" type="password"/>
+              </div>
             </div>
-            <div className="user-attribute">
-              password: <input name="password" type="password" />
-            </div>
-            <p/>
-            <input value="Submit" type="submit" />
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
           </form>
           <p/>
           <form method="GET" action='/users/new'>
-            <input type="submit" value="Sign up"/>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
           </form>
-
         </DefaultLayout>
     );
   }

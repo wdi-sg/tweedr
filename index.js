@@ -13,6 +13,7 @@ const db = require('./db');
 const app = express();
 
 // Set up middleware
+app.use(express.static('public'));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 app.use(express.urlencoded({
@@ -36,7 +37,7 @@ require('./routes')(app, db);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+  response.redirect('/users');
 });
 
 /**

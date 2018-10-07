@@ -1,0 +1,38 @@
+.new > div{
+	text-align: center;
+	border: 1px solid black;
+	margin: 5px auto;
+	border-radius: 20px;
+	width: 400px;
+	font-family: 'Inconsolata', monospace;
+}
+
+.tweet {
+	text-align: center;
+	margin: 20px auto;
+}
+
+h1 {
+	text-align: center;
+	margin-top: 20px;
+}
+
+form > a {
+	margin-left: 5px;
+	text-decoration: underline;
+	color: blue;
+	float: right;
+	margin-right: 20px;
+	font-family: 'Inconsolata', monospace;
+}
+
+.delete {
+	background: transparent;
+	border: none;
+	margin: 0;
+	outline: none;
+	text-decoration: underline;
+	color: blue;
+	float: right;
+	font-family: 'Inconsolata', monospace;
+}

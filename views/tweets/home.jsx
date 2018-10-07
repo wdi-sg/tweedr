@@ -11,34 +11,38 @@ class Home extends React.Component {
 
       if(parseInt(this.props.userid) === userId && this.props.loggedin === 'true') {
         return (
-          <li>
+          <div>
             <form method="POST" action={actionUrl}>
               {tweet.tweet} 
               <a href={aTag}>Edit</a> 
-              <button type="submit" class="btn-sm btn-outline-dark">Delete</button>
+              <button type="submit" class="delete">Delete</button>
             </form>
-          </li> 
+          </div> 
         )
       }
       else { 
         return (
-          <li>
+          <div>
             {tweet.tweet}
-          </li> 
+          </div> 
         )
       }
     })
 
     return (
-          <DefaultLayout title="Tweets" subtitle="Tweets">
-            <form method="POST" action='/tweets/new'>
-              <input name="tweet"/>
-              <input name="user_id" value={this.props.userid} type="hidden"/>
-              <input type="submit" value="Submit"/>
-            </form>
-            <ul>
+          <DefaultLayout title="Tweets" subtitle="TWEEDR">
+          <div class="container">
+            <div class="tweet">
+              <form method="POST" action='/tweets/new'>
+                <input name="tweet" placeholder="Enter tweet"/>
+                <input name="user_id" value={this.props.userid} type="hidden"/>
+                <input type="submit" value="Submit"/>
+              </form>
+            </div>
+            <div class="col new">
               {tweets}
-            </ul>
+            </div>
+          </div>
           </DefaultLayout>
     );
   }
