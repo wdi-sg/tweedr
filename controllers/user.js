@@ -1,3 +1,5 @@
+var sha256 = require('js-sha256');
+
 module.exports = (db) => {
 
   /**
@@ -5,6 +7,11 @@ module.exports = (db) => {
    * Controller logic
    * ===========================================
    */
+
+   const login = (request, response) => {
+    response.render('user/login');
+};
+
   const newForm = (request, response) => {
     response.render('user/NewUser');
   };
@@ -25,14 +32,14 @@ module.exports = (db) => {
           console.log('User created successfully');
 
           // drop cookies to indicate user's logged in status and username
-          response.cookie('loggedIn', true);
-          response.cookie('username', request.body.name);
+          // response.cookie('loggedIn', true);
+          // response.cookie('username', request.body.name);
         } else {
           console.log('User could not be created');
         }
 
         // redirect to home page after creation
-        response.redirect('/');
+        response.send('You are logged in');
       });
   };
 
@@ -42,6 +49,7 @@ module.exports = (db) => {
    * ===========================================
    */
   return {
+    login,
     newForm,
     create
   };
