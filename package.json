@@ -15,9 +15,20 @@
     "express-react-views": "^0.10.5",
     "js-sha256": "^0.9.0",
     "method-override": "^2.3.10",
-    "pg": "^7.4.3",
-    "react": "^16.3.2",
+    "pg": "^7.5.0",
+    "react": "^16.5.2",
     "react-dom": "^16.3.2",
-    "sha256": "^0.2.0"
-  }
+    "sha256": "^0.2.0",
+    "url": "^0.11.0"
+  },
+  "description": "Let's make a cool new app called TWEEDR!! Not Twitter, geez...",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claraonmars/tweedr.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/claraonmars/tweedr/issues"
+  },
+  "homepage": "https://github.com/claraonmars/tweedr#readme"
 }
