@@ -20,6 +20,7 @@ app.use(
     extended: true
   })
 );
+app.use(express.static('public'));
 
 // Set react-views to be the default view engine
 const reactEngine = require('express-react-views').createEngine();
@@ -41,7 +42,8 @@ app.get('/', (request, response) => {
   const queryText = 'SELECT * FROM tweeds ORDER BY id DESC';
   db.queryInterface(queryText, null, (error, queryResult) => {
     if (error) console.error(error);
-    response.render('tweeds/All', { tweeds: queryResult.rows });
+    //response.render('tweeds/All', { tweeds: queryResult.rows }
+    response.send(queryResult.rows);
   });
 });
 

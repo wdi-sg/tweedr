@@ -37,9 +37,19 @@ module.exports = dbPool => {
     });
   };
 
+  const followers = (params, callback) => {
+    const queryString = 'SELECT * FROM users WHERE id != ($1)';
+    const values = [params.id];
+
+    dbPool.query(queryString, values, (error, queryResult) => {
+      callback(error, queryResult);
+    });
+  };
+
   return {
     encrypt,
     create,
-    login
+    login,
+    followers
   };
 };

@@ -68,6 +68,22 @@ module.exports = db => {
     response.redirect('/');
   };
 
+  const followers = (request, response) => {
+    const params = {
+      id: request.cookies.id
+    };
+    db.user.followers(params, (error, queryResult) => {
+      if (error) {
+        console.error(error);
+        response.sendStatus(500);
+      }
+    });
+  };
+
+  const ajax = (request, response) => {
+    response.render('something');
+  };
+
   /**
    * ===========================================
    * Export controller functions as a module
@@ -78,6 +94,8 @@ module.exports = db => {
     create,
     loginForm,
     login,
-    logout
+    logout,
+    followers,
+    ajax
   };
 };
