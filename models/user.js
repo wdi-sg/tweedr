@@ -1,4 +1,4 @@
-var sha256 = require('js-sha256');
+var sha256 = require("js-sha256");
 
 
 /**
@@ -13,7 +13,7 @@ module.exports = (dbPoolInstance) => {
       var hashedValue = sha256(user.password);
 
       // set up query
-      const queryString = 'INSERT INTO users (name, password) VALUES ($1, $3)';
+      const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
       const values = [
         user.name,
         hashedValue
@@ -26,7 +26,22 @@ module.exports = (dbPoolInstance) => {
       });
     };
 
+    const login = (user, callback) => {
+      // run user input password through bcrypt to obtain hashed password
+
+      var hashedValue = sha256(user.password);
+
+      // set up query
+      const queryString = "SELECT * FROM users WHERE name = user.name";
+      // execute query
+      dbPoolInstance.query(queryString, valuesv (error, queryResult) => {
+        // invoke callback function with results after query has executed
+        callback(error, queryResult);
+      });
+    };
+
     return {
-      create
+      create,
+      login
     };
 };

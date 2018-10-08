@@ -1,6 +1,8 @@
 const pg = require('pg');
 const user = require('./models/user');
 const url = require('url');
+const users = require('./models/user');
+const tweets  = require('./models/tweet')
 
 
 var configs;
@@ -21,9 +23,9 @@ if( process.env.DATABASE_URL ){
 
 }else{
   configs = {
-    user: 'akira',
+    user: 'pablo101',
     host: '127.0.0.1',
-    database: 'pokemons',
+    database: 'tweedr',
     port: 5432
   };
 }
@@ -35,11 +37,17 @@ pool.on('error', function (err) {
   console.log('idle client error', err.message, err.stack);
 });
 
+
+
+
 module.exports = {
-  /*
-   * ADD APP MODELS HERE
-   */
+    /**
+    * ADD APP MODELS HERE
+    */
   user: user(pool),
+  users: user(pool),
+  tweets: tweets(pool),
+
 
 
   //make queries directly from here
