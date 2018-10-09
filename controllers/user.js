@@ -1,3 +1,4 @@
+
 module.exports = (db) => {
 
   /**
@@ -11,6 +12,7 @@ module.exports = (db) => {
 
   const create = (request, response) => {
       // use user model method `create` to create new user entry in db
+      //REQUEST.BODY RETURNS AN OBJECT
       db.user.create(request.body, (error, queryResult) => {
         // queryResult of creation is not useful to us, so we ignore it
         // (console log it to see for yourself)
@@ -37,6 +39,35 @@ module.exports = (db) => {
   };
 
 
+  const loginForm = (request, response) => {
+    response.render('user/login');
+  };
+
+
+  const login = (request,response) => {
+    db.user.login(request.body, (error, queryResult) => {
+        // console.log(queryResult.rows);
+        if (error) {
+          console.error('error logging in:', error);
+          response.sendStatus(500);
+        } else if (queryResult.rowCount >= 1) {
+            const dbId = queryResult.rows[0].id;
+            const dbUsername = queryResult.rows[0].name;
+            const dbHashedPassword = queryResult.rows[0].password;
+            const enteredPassword = db.user.encrypt(request.body.password);
+
+            if (dbHashedPassword === enteredPassword) {
+                response.cookie('loggedIn', true);
+                response.cookie('username', dbId );
+                response.send(`${dbUsername} is logged in`);
+            } else {
+                console.log('Login details are incorrect');
+            }
+      } else
+      // console.log("Incorrect details, login again!")
+      response.redirect('/users/login')
+    })
+};
 
   /**
    * ===========================================
@@ -45,7 +76,8 @@ module.exports = (db) => {
    */
   return {
     newForm,
-    create
+    create,
+    loginForm,
+    login,
   };
-
 };

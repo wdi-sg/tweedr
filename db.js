@@ -1,7 +1,10 @@
+//BASIC CONFIG FOR THE DATABASE, AND TO EXPORT POOL
+
 const pg = require('pg');
 const user = require('./models/user');
 const url = require('url');
-
+//IF YOU CREATE NEW CONTROLLER, NEED TO REQUIRE IT HERE; DB REQUIRES MODELS
+// const tweets = require('./models/tweets');
 
 var configs;
 
@@ -28,7 +31,6 @@ if( process.env.DATABASE_URL ){
   };
 }
 
-
 const pool = new pg.Pool(configs);
 
 pool.on('error', function (err) {
@@ -36,17 +38,20 @@ pool.on('error', function (err) {
 });
 
 module.exports = {
-  /*
-   * ADD APP MODELS HERE
-   */
+
+//JUST A REFERENCE SO THAT ANYTHINGG THAT REF USER, HAS THE ABILITY TO POOL -> DB.USER
+//CENTRALIZED PLACE TO PROVIDE POOL FN TO ALL MODELS
+//EACH TABLE HAS ONE CONTROLLER, SO NEED TO HAVE ITS OWN POOL (DEALING WITH MODEL ONLY, NOTHING TO DO WITH CONTROLLER)
   user: user(pool),
+  // tweet: tweet(pool),
 
-
-  //make queries directly from here
+  //make queries directly from here //JUST ANOTHER FUNCTION BUT WRITTEN IN A DIFFERENT WAY
   queryInterface: (text, params, callback) => {
     return pool.query(text, params, callback);
   },
 
+
   // get a reference to end the connection pool at server end
   pool:pool
+
 };

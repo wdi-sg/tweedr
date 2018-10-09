@@ -14,6 +14,9 @@ const app = express();
 
 // Set up middleware
 app.use(methodOverride('_method'));
+app.use(express.static('public'));
+app.use(express.json());
+
 app.use(cookieParser());
 app.use(express.urlencoded({
   extended: true
@@ -25,6 +28,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', reactEngine);
 
+
 /**
  * ===================================
  * Routes
@@ -32,7 +36,9 @@ app.engine('jsx', reactEngine);
  */
 
 // Import routes to match incoming requests
-require('./routes')(app, db);
+require('./routes')(app, db); //APP being express, DB REFERS TO DB FILE
+
+//USE THE QUERYRESULT
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
