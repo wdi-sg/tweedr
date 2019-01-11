@@ -11,7 +11,7 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'sean',
   host: '127.0.0.1',
   database: 'testdb',
   port: 5432,

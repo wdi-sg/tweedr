@@ -1,0 +1,18 @@
+INSERT INTO tweets(content, author_id) VALUES('People die when they are killed!', '1');
+INSERT INTO tweets(content, author_id) VALUES('NANI', '1');
+INSERT INTO tweets(content, author_id) VALUES('Sky is so high', '1');
+INSERT INTO tweets(content, author_id) VALUES('Goodday', '2');
+INSERT INTO tweets(content, author_id) VALUES('Have a nice day', '2');
+INSERT INTO tweets(content, author_id) VALUES('Hi there', '3');
+INSERT INTO tweets(content, author_id) VALUES('lol', '3');
+INSERT INTO tweets(content, author_id) VALUES('GOGO POWER RANGER', '3');
+INSERT INTO tweets(content, author_id) VALUES('YOLO', '3');
+INSERT INTO tweets(content, author_id) VALUES('Nothing here move along', '4');
+INSERT INTO tweets(content, author_id) VALUES('MonkaS', '5');
+INSERT INTO tweets(content, author_id) VALUES('MonkaGiga', '5');
+INSERT INTO tweets(content, author_id) VALUES('Frog', '5');
+INSERT INTO tweets(content, author_id) VALUES('Goodnight', '6');
+INSERT INTO tweets(content, author_id) VALUES('Sweet Dreams', '6');
+INSERT INTO tweets(content, author_id) VALUES('REEEEEEE', '7');
+INSERT INTO tweets(content, author_id) VALUES('PMA', '7');
+INSERT INTO tweets(content, author_id) VALUES('ZULUL', '7');

@@ -1,0 +1,7 @@
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Sean chan', 'https://ih1.redbubble.net/image.636118587.3338/flat,550x550,075,f.jpg', 'SG', 'seanc', 'sc123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Bat man', 'https://www.sideshowtoy.com/wp-content/uploads/2017/11/dc-comics-justice-league-batman-statue-prime1-studio-feature-903246-1.jpg', 'USA', 'batm', 'bm123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Bell cranel', 'https://pm1.narvii.com/5820/05733a015822adb7ad626bbc330b3edcd0eb13d0_hq.jpg', 'JPN', 'bellc', 'bc123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Pika chu', 'https://vignette.wikia.nocookie.net/youtubepoop/images/f/f7/5Pikachu.png/revision/latest?cb=20141108062013', 'JPN', 'pikac', 'pc123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Nosaj thing', 'http://wertn.com/wp-content/uploads/2012/04/Nosaj-Thing_Mondrian_CL_High-3487.jpg', 'TW', 'nosajt', 'nt123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Lykke li', 'http://www.chartattack.com/wp-content/uploads/2012/07/lykke-li-newmain1-photo-by-daniel-jackson.jpg', 'Sweeden', 'lykkel', 'll123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Kendrick lamar', 'http://www.xxlmag.com/wp-content/uploads/2013/06/kendricklamar_001-1600.jpg', 'USA', 'kenl', 'kl123');
