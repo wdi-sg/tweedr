@@ -14,13 +14,13 @@ Users can register and/or login in order to create a tweet.
 #### Getting Started
 Create each part of your app step by step.
 
-1. Create a tebles.sql for your app. Don't worry too much about making it complete, since with a seed.sql file you can update your db easily.
+1. Create a tables.sql for your app. Don't worry too much about making it complete, since with a seed.sql file you can update your db easily.
 
-  1.5 The basic tables.sql will have a users table and a tweets table- notice that the starter code provided wants a name and password column in the database.
+  1.5 The basic tables.sql will have a users table and a tweets table.
 
-  1.6 The app provides a basic user creation, so the basic app doesn't nee d anything more for users.
+  1.6 The app provides a basic user creation, so the basic app doesn't need anything more for users.
 
-2. Implement login of the user. ( change the code to a hashed session cookie, instead of just `loggedin=true`.
+2. Implement login of the user.
 
 3. Create the ability to make a tweet.
 
@@ -57,8 +57,6 @@ Add sort by date to each kind of tweet feed you made.
 #### Further
 Add the ability to edit a tweet.
 
-#### Further
-Add the ability to edit.
 
 #### Further
 Add the ability to delete things.
@@ -70,4 +68,4 @@ Add bootstrap to your app.
 Add the ability to add a profile picture- see `input` `type=file` and `form` `enctype=multipart/formdata`
 
 #### Further
-Add the ability to tweet photos.
+Add the ability to tweet photos, also using the same profile pic upload as above.
