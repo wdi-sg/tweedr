@@ -11,10 +11,11 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'andrealmj',
   host: '127.0.0.1',
   database: 'testdb',
   port: 5432,
+  password: 'pg'
 };
 
 const pool = new pg.Pool(configs);
@@ -47,7 +48,10 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+    //display all tweets
+    response.send('Welcome To Tweedr.');
+
+    //allow user to register and/or login to create a tweet
 });
 
 app.get('/users/new', (request, response) => {
