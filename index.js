@@ -50,6 +50,27 @@ app.get('/', (request, response) => {
   response.send('Welcome To Tweedr.');
 });
 
+app.get('/users/new', (request, response) => {
+  response.render('user/new');
+});
+
+app.post('/users', (request, response) => {
+
+    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+    const values = [
+        request.body.name,
+        request.body.password
+    ];
+
+    // execute query
+    pool.query(queryString, values, (error, queryResult) => {
+        //response.redirect('/');
+        response.send('user created');
+    });
+});
+
+
+
 /**
  * ===================================
  * Listen to requests on port 3000
