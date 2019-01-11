@@ -51,7 +51,7 @@ app.get('/', (request, response) => {
 });
 
 app.get('/users/new', (request, response) => {
-  response.render('user/new');
+  response.render('user/newuser');
 });
 
 app.post('/users', (request, response) => {
