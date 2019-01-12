@@ -15,7 +15,7 @@ class Tweets extends React.Component{
                         </button>
                       </div>
                       <div className="modal-body text-danger">
-                        This tweet is created by <strong>{this.props.list.name}</strong>. Do you want to check out his profile? Click <strong>close</strong> to return to main menu or click <strong>view profile</strong> to proceed to user profile.
+                        This tweet is created by <strong>{this.props.list.name}</strong>. Do you want to check out his/her profile? Click <strong>close</strong> to return to main menu or click <strong>view profile</strong> to proceed to user profile.
                       </div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -47,6 +47,9 @@ class Home extends React.Component {
     return (
         <Defaultcss>
             <h1>Welcome To Tweedr {this.props.user[0]}.</h1>
+            <form method="GET" action={"/users/tweet/" + this.props.user[0] + "/new"}>
+                <input type="submit" className="tweet" value="Create Tweet"/>
+            </form>
             <div className="alert alert-danger alert-dismissible fade show text-white" role="alert">
               <strong>Please Read!</strong><br /> Use navbar to navigate to view users, to sign up and to login. In order to see tweets in the home page please login. Check for cookie in chrome console to see if you are logged in or the welcome line above as you will see who you are logged in as. Thanks!
               <button type="button" className="close" data-dismiss="alert" aria-label="Close">
@@ -61,6 +64,9 @@ else{
     return (
         <Defaultcss>
             <h1>Welcome To Tweedr.</h1>
+            <form method="GET" action="/user/signin">
+                <input type="submit" className="tweet" value="Create Tweet"/>
+            </form>
             <div className="alert alert-danger alert-dismissible fade show text-white" role="alert">
               <strong>Please Read!</strong><br /> Use navbar to navigate to view users, to sign up and to login. In order to see tweets in the home page please login. Check for this cookie 'loggedin', 'true' in chrome console to see if you are logged in Thanks!
               <button type="button" className="close" data-dismiss="alert" aria-label="Close">

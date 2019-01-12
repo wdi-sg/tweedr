@@ -137,6 +137,28 @@ app.get('/users', (request, response) => {
     })
 });
 
+app.get('/users/tweet/:name/new', (request, response) => {
+
+    let name = request.params.name;
+
+    pool.query(`SELECT * FROM users WHERE name = '${name}'`, (err, queryResult) =>{
+        console.log(queryResult.rows)
+        response.render('tweetnew', {list:queryResult.rows});
+    })
+});
+
+app.post('/users/tweet/:id/add', (request, response) => {
+
+    let id = request.params.id;
+    let tweet = request.body.tweet;
+
+    let queryText = "INSERT INTO tweets (content, author_id) VALUES ($1, $2)";
+    const values = [tweet, id];
+    pool.query(queryText, values, (err, queryResult) =>{
+        response.redirect("/");
+    })
+});
+
 // app.POST('/users/:id/follows', (request, response) => {
 
 //     pool.query('SELECT * FROM users ORDER BY name ASC', (err, queryResult) =>{
