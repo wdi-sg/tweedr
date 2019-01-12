@@ -50,13 +50,11 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-    if(request.cookies.loggedin === 'true'){
+    if(request.cookies.loggedin !== undefined){
         pool.query('SELECT users.id, name, content FROM users INNER JOIN tweets ON (users.id = author_id) ORDER BY name ASC', (err, queryResult) =>{
             let tweets = queryResult.rows;
-
-            response.render('home',{list:tweets});
+            response.render('home',{list:tweets, user:[request.cookies.loggedin]});
         })
-        console.log('Cookies: if', request.cookies)
     }
     else{
         response.render('home');
@@ -86,7 +84,12 @@ app.post('/users/add', (request, response) => {
 });
 
 app.get('/user/signin', (request, response) => {
-  response.render('signin');
+    if(request.cookies.loggedin !== undefined){
+        response.render('signin', {list:['disabled']});
+    }
+    else{
+        response.render('signin');
+    }
 });
 
 app.post('/user/signin', (request, response) => {
@@ -97,23 +100,22 @@ app.post('/user/signin', (request, response) => {
 
         // if the user doesnt exist
         if(queryResult.rows.length === 0){
-            response.render('signin', {list:queryResult.rows});
-            console.log("user doesnt exist");
+            response.render('signin', {list:['error']});
         }
         else{
-            console.log("user exists!!!!!!");
 
             const user = queryResult.rows[0];
 
             let password = user.password;
 
             if(password == request.body.password){
-
-                response.cookie('loggedin', 'true');
-                response.redirect('/')
+                response.cookie('loggedin', user.name);
+                pool.query('SELECT users.id, name, content FROM users INNER JOIN tweets ON (users.id = author_id) ORDER BY name ASC', (err, queryResult) => {
+                    response.render('home', {list:queryResult.rows, user:[user.name]});
+                })
             }
             else{
-                response.render('signin', {list:queryResult.rows});
+                response.render('signin', {list:['error']});
             }
         }
     })
@@ -124,8 +126,25 @@ app.get('/user/signout', (request, response) => {
   response.clearCookie('loggedin');
 
   response.redirect('/');
-})
+});
 
+app.get('/users', (request, response) => {
+
+    pool.query('SELECT * FROM users ORDER BY name ASC', (err, queryResult) =>{
+        let users = queryResult.rows;
+
+        response.render('users', {list:users});
+    })
+});
+
+// app.POST('/users/:id/follows', (request, response) => {
+
+//     pool.query('SELECT * FROM users ORDER BY name ASC', (err, queryResult) =>{
+//         let users = queryResult.rows;
+
+//         response.render('users', {list:users});
+//     })
+// });
 
 /**
  * ===================================

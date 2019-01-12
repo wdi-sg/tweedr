@@ -3,7 +3,28 @@ var Defaultcss = require('./defaultcss');
 
 class Signin extends React.Component {
   render() {
-    if(this.props.list !== undefined){
+    if(this.props.list === undefined){
+    return (
+      <Defaultcss>
+          <form method="POST" action="/user/signin">
+          <div className="form-group">
+            <label>Username</label>
+            <input name="username" type="text" className="form-control" placeholder="Enter username" required />
+          </div>
+          <div className="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input name="password" type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" required />
+          </div>
+          <div className="form-group form-check">
+            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+            <label className="form-check-label" for="exampleCheck1">Remember me</label>
+            </div>
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </form>
+      </Defaultcss>
+    );
+  }
+    else if(this.props.list[0] === 'error'){
     return (
       <Defaultcss>
       <div className="alert alert-danger alert-dismissible fade show text-white" role="alert">
@@ -30,23 +51,29 @@ class Signin extends React.Component {
       </Defaultcss>
     );
   }
-  else{
+  else if(this.props.list[0] === 'disabled'){
     return (
       <Defaultcss>
+      <div className="alert alert-danger alert-dismissible fade show text-white" role="alert">
+              <strong>Please Read!</strong><br /> System has checked you have already signed in.
+              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           <form method="POST" action="/user/signin">
           <div className="form-group">
             <label>Username</label>
-            <input name="username" type="text" className="form-control" placeholder="Enter username" required />
+            <input name="username" type="text" className="form-control" placeholder="Enter username" readOnly required />
           </div>
           <div className="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input name="password" type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" required />
+            <input name="password" type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" readOnly required />
           </div>
           <div className="form-group form-check">
             <input type="checkbox" className="form-check-input" id="exampleCheck1" />
             <label className="form-check-label" for="exampleCheck1">Remember me</label>
             </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
       </Defaultcss>
     );

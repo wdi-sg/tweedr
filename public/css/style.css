@@ -37,6 +37,10 @@ form{
 	color: teal;
 }
 
+span{
+	font-size: 10px;
+}
+
 input{
 	display: inline;
 	background-color: rgb(150, 55, 60);

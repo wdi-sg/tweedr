@@ -21,7 +21,7 @@ class Defaultcss extends React.Component {
                 <a className="nav-link text-info" href="/">Home</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-info" href="/artists">Users</a>
+                <a className="nav-link text-info" href="/users">Users</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link text-info" href="/user/signin">Sign In</a>
