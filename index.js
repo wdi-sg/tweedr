@@ -26,6 +26,9 @@ pool.on('error', function (err) {
 // Init express app
 const app = express();
 
+// this line sets css files path
+app.use(express.static('public'));
+
 // Set up middleware
 app.use(methodOverride('_method'));
 app.use(cookieParser());
@@ -47,28 +50,81 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+    if(request.cookies.loggedin === 'true'){
+        pool.query('SELECT users.id, name, content FROM users INNER JOIN tweets ON (users.id = author_id) ORDER BY name ASC', (err, queryResult) =>{
+            let tweets = queryResult.rows;
+
+            response.render('home',{list:tweets});
+        })
+        console.log('Cookies: if', request.cookies)
+    }
+    else{
+        response.render('home');
+    }
 });
 
 app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+  response.render('newuser');
 });
 
-app.post('/users', (request, response) => {
+app.post('/users/add', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+    const queryString = 'INSERT INTO users (name, photo_url, nationality, username, password) VALUES ($1, $2, $3, $4, $5)';
     const values = [
         request.body.name,
+        request.body.photo,
+        request.body.nationality,
+        request.body.username,
         request.body.password
     ];
 
     // execute query
     pool.query(queryString, values, (error, queryResult) => {
         //response.redirect('/');
-        response.send('user created');
+        response.render('useradd', {list:values});
     });
 });
 
+app.get('/user/signin', (request, response) => {
+  response.render('signin');
+});
+
+app.post('/user/signin', (request, response) => {
+
+    let queryString = `SELECT * FROM users WHERE username='${request.body.username}'`;
+
+    pool.query(queryString, (err, queryResult) => {
+
+        // if the user doesnt exist
+        if(queryResult.rows.length === 0){
+            response.render('signin', {list:queryResult.rows});
+            console.log("user doesnt exist");
+        }
+        else{
+            console.log("user exists!!!!!!");
+
+            const user = queryResult.rows[0];
+
+            let password = user.password;
+
+            if(password == request.body.password){
+
+                response.cookie('loggedin', 'true');
+                response.redirect('/')
+            }
+            else{
+                response.render('signin', {list:queryResult.rows});
+            }
+        }
+    })
+});
+
+app.get('/user/signout', (request, response) => {
+
+  response.clearCookie('loggedin');
+
+  response.redirect('/');
+})
 
 
 /**

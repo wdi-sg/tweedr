@@ -1,0 +1,145 @@
+body{
+	background-image: url("https://i1.wp.com/images3.alphacoders.com/764/thumb-1920-764967.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	min-height: 900px;
+	font-family: 'ZCOOL KuaiLe', cursive;
+	color: white;
+	text-shadow: 2px 1px black;
+	font-size: 20px;
+}
+
+h1{
+	font-size: 35px;
+}
+
+h3{
+	font-size: 30px;
+}
+
+form{
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.custom-file{
+	display: block;
+	margin-top: 30px;
+	width: 380px;
+	text-shadow: none;
+}
+
+.form-control{
+	width: 380px;
+}
+
+.modal-body strong{
+	color: teal;
+}
+
+input{
+	display: inline;
+	background-color: rgb(150, 55, 60);
+	font-size: 18px;
+	padding: 0 20px;
+}
+
+.container{
+	margin-top: 55px;
+}
+
+.alert.alert-danger {
+  background-color: rgb(150, 55, 60);
+  border-color: #EF5350
+}
+
+.card{
+	margin-top: 10px;
+	color: pink;
+	text-shadow: none;
+}
+
+.modal{
+	text-shadow: none;
+}
+
+.delete{
+	margin-left: 13px;
+}
+
+.nav {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.footer2{
+	text-align: center;
+}
+
+.footer3{
+	float: right;
+}
+
+footer{
+	overflow: hidden;
+	border-top: 2px solid #333;
+	padding: 10px 0;
+	text-align: center;
+	position: relative;
+	margin-top: 10px;
+  width: 100%;
+  color: white;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+
+@media only screen and (max-width: 540px) {
+	.cn{
+		visibility: hidden;
+	}
+	.inghm{
+		visibility: hidden;
+	}
+	.details{
+		padding: 0 50px;
+		min-width: 200px;
+	}
+	.edit{
+		padding: 0 50px;
+		min-width: 200px;
+	}
+	.delete{
+		margin: 0;
+		padding: 0 50px;
+		min-width: 200px;
+	}
+	.homecont{
+		margin-right: 30px;
+	}
+	.container{
+		margin-top: 100px;
+	}
+	#ingcont{
+		margin-top: -50px;
+		margin-left: 30px;
+	}
+	#ing{
+		margin-left: 15px;
+	}
+	#ingrec{
+		margin-left: -48px;
+	}
+	.recbtn{
+		display: block;
+		padding: 0 50px;
+		min-width: 200px;
+	}
+}
