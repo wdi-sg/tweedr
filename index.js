@@ -51,7 +51,21 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr. Please login or register');
+  const queryString = `
+      SELECT tweets.*, users.name 
+      FROM tweets
+      INNER JOIN users
+      ON tweets.user_id = users.id
+      `;
+  
+  pool.query(queryString, (error, queryResult) => {
+      let tweets = {};
+      tweets.list=[];
+      for(let i = 0; i < queryResult.rows.length; i++){
+              tweets.list.push(queryResult.rows[i]);
+          }
+      response.render('Home', tweets);
+    });
 });
 
 app.get('/user/new', (request, response) => {
