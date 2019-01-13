@@ -73,13 +73,18 @@ app.post('/users/login', (request, response) => {
             console.log("User does not exist!")
         } else {
             console.log("User exist!"); //else if exist
-
-            // const user = queryResponse.rows[0];
-            // let password = user.password;
-
-            // if (password === body.password)
+            //queryResponse for current array 0, store in const user
+            const user = queryResponse.rows[0];
+            //let password be qeuryResponse.row[0].password...the ket
+            let password = user.password;
+            // if for password on log in is the same as password in DB
+            if (password === body.password) {
+                console.log("Password is correct!");
+            } else {
+                console.log("Incorrect password try again!");
+            }
         }
-    })
+    });
 
 
     // const values = [
