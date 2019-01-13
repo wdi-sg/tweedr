@@ -50,6 +50,7 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
+
     if(request.cookies.loggedin !== undefined){
         pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
             let queryString = queryResult.rows[0].id;
@@ -72,21 +73,20 @@ app.post('/users/add', (request, response) => {
 
     const queryString = 'INSERT INTO users (name, photo_url, nationality, username, password) VALUES ($1, $2, $3, $4, $5)';
     const values = [
-        request.body.name,
+        request.body.name.charAt(0).toUpperCase() + request.body.name.slice(1),
         request.body.photo,
-        request.body.nationality,
+        request.body.nat,
         request.body.username,
         request.body.password
     ];
 
-    // execute query
     pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
         response.render('useradd', {list:values});
     });
 });
 
 app.get('/user/signin', (request, response) => {
+
     if(request.cookies.loggedin !== undefined){
         response.render('signin', {list:['disabled']});
     }
@@ -136,6 +136,7 @@ app.get('/user/signout', (request, response) => {
 });
 
 app.get('/users', (request, response) => {
+
     if(request.cookies.loggedin !== undefined){
     pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
             let queryString = queryResult.rows[0].id;
@@ -156,6 +157,7 @@ app.get('/users', (request, response) => {
 });
 
 app.get('/users/list', (request, response) => {
+
     pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
         let users = queryResult.rows;
 
@@ -164,24 +166,36 @@ app.get('/users/list', (request, response) => {
 });
 
 app.get('/profile', (request, response) => {
+
     pool.query(`SELECT * FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
         let profile = queryResult.rows;
         pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.name = '${request.cookies.loggedin}')`, (err, queryResult) =>{
             let content = queryResult.rows;
-
-            response.render('profile', {list:profile, contents:content});
+            pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = follows_id) WHERE user_id = '${profile[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                let follows = queryResult.rows;
+                pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = followers_id) WHERE user_id = '${profile[0].id}' AND followers_id is not null`, (err, queryResult) =>{
+                    let followers = queryResult.rows;
+                    response.render('profile', {list:profile, contents:content, user:[request.cookies.loggedin], followsName:follows, followersName:followers});
+                    })
+            })
         })
     })
 });
 
 app.get('/profile/:id', (request, response) => {
+
     let id = request.params.id;
     pool.query(`SELECT * FROM users WHERE id = '${id}'`, (err, queryResult) =>{
         let profile = queryResult.rows;
         pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.id = '${id}')`, (err, queryResult) =>{
             let content = queryResult.rows;
-
-            response.render('profile', {list:profile, contents:content});
+            pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = follows_id) WHERE user_id = '${profile[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                let follows = queryResult.rows;
+                pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = followers_id) WHERE user_id = '${profile[0].id}' AND followers_id is not null`, (err, queryResult) =>{
+                    let followers = queryResult.rows;
+                    response.render('profile', {list:profile, contents:content, followsName:follows, followersName:followers});
+                })
+            })
         })
     })
 });
@@ -206,6 +220,31 @@ app.post('/users/tweet/:id/add', (request, response) => {
     pool.query(queryText, values, (err, queryResult) =>{
         response.redirect("/");
     })
+});
+
+app.post('/user/follow/:id', (request, response) => {
+
+    if(request.cookies.loggedin !== undefined){
+        pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let id = request.params.id;
+            let userId = queryResult.rows;
+            let queryText = "INSERT INTO follows (user_id, follows_id) VALUES ($1, $2)";
+            const values = [userId[0].id, id];
+            pool.query(queryText, values, (err, queryResult) =>{
+                response.redirect(`/profile/${userId[0].id}`);
+            })
+            let queryString = "INSERT INTO follows (user_id, followers_id) VALUES ($1, $2)";
+            const valuesStr = [id, userId[0].id];
+            pool.query(queryString, valuesStr, (err, queryResult) =>{
+                response.redirect(`/profile/${userId[0].id}`);
+            })
+        })
+    }
+    else{
+        pool.query(queryText, values, (err, queryResult) =>{
+            response.redirect("/users");
+        })
+    }
 });
 
 // app.POST('/users/:id/follows', (request, response) => {

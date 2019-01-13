@@ -1,6 +1,26 @@
 var React = require("react");
 var Defaultcss = require('./defaultcss');
 
+class Followers extends React.Component{
+    render(){
+        return(
+            <div>
+                {this.props.list.name}
+            </div>
+            );
+    }
+}
+
+class Follows extends React.Component{
+    render(){
+        return(
+            <div>
+                {this.props.list.name}
+            </div>
+            );
+    }
+}
+
 class Tweets extends React.Component{
     render(){
         return(
@@ -34,16 +54,27 @@ class Profile extends React.Component {
             return <Details list={user}></Details>;
         });
     const contents = this.props.contents.map( cont => {
-                        return <Tweets list={cont}></Tweets>;
-                        });
+            return <Tweets list={cont}></Tweets>;
+            });
+    const follows = this.props.followsName.map( follow => {
+            return <Follows list={follow}></Follows>;
+            });
+    const followers = this.props.followersName.map( follower => {
+            return <Followers list={follower}></Followers>;
+            });
     return (
         <Defaultcss>
             <h1>This is your own profile {this.props.user[0]}</h1>
+            {users}
+            <h4>Tweets made by this user:-</h4>
+            <ul>{contents}</ul>
+            <h4>Users that {this.props.user[0]} is following:-</h4>
+            <ul>{follows}</ul>
+            <h4>Users that is following {this.props.list[0].name}:-</h4>
+            <ul>{followers}</ul>
             <form method="GET" action="/">
                 <input type="submit" className="new" value="Back" />
             </form>
-            {users}
-            <ul>{contents}</ul>
         </Defaultcss>
     );
   }
@@ -52,17 +83,27 @@ class Profile extends React.Component {
             return <Details list={user}></Details>;
         });
     const contents = this.props.contents.map( cont => {
-                        return <Tweets list={cont}></Tweets>;
-                        });
+            return <Tweets list={cont}></Tweets>;
+            });
+    const follows = this.props.followsName.map( follow => {
+            return <Follows list={follow}></Follows>;
+            });
+    const followers = this.props.followersName.map( follower => {
+            return <Followers list={follower}></Followers>;
+            });
     return (
         <Defaultcss>
-            <h1>This is profile</h1>
-            <form method="GET" action="/">
-                <input type="submit" className="new" value="Back" />
-            </form>
+            <h1>This is {this.props.list[0].name}'s profile</h1>
             {users}
             <h4>Tweets made by this user:-</h4>
             <ul>{contents}</ul>
+            <h4>Users that {this.props.list[0].name} is following:-</h4>
+            <ul>{follows}</ul>
+            <h4>Users that is following {this.props.list[0].name}:-</h4>
+            <ul>{followers}</ul>
+            <form method="GET" action="/">
+                <input type="submit" className="new" value="Back" />
+            </form>
         </Defaultcss>
     );
   }
