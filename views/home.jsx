@@ -30,7 +30,6 @@ class Tweets extends React.Component{
                     <ul>
                         Tweet: {this.props.list.content} <br />
                         <input type="submit" className="details" value="Show Details" data-toggle="modal" data-target={"#exampleModal" + this.props.list.id}/>
-
                     </ul>
                 </div>
             </div>
@@ -47,6 +46,7 @@ class Home extends React.Component {
     return (
         <Defaultcss>
             <h1>Welcome To Tweedr {this.props.user[0]}.</h1>
+            <h6>Check your followers and follows in users tab.</h6>
             <form method="GET" action={"/users/tweet/" + this.props.user[0] + "/new"}>
                 <input type="submit" className="tweet" value="Create Tweet"/>
             </form>

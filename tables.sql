@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS tweets (
 
 CREATE TABLE IF NOT EXISTS follows (
     user_id INT,
-    follows_name TEXT,
-    followers_name TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    follows_id INT,
+    followers_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (follows_id) REFERENCES users(id),
+    FOREIGN KEY (followers_id) REFERENCES users(id)
 );

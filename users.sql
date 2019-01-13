@@ -3,5 +3,5 @@ INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Bat 
 INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Bell cranel', 'https://pm1.narvii.com/5820/05733a015822adb7ad626bbc330b3edcd0eb13d0_hq.jpg', 'JPN', 'bellc', 'bc123');
 INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Pika chu', 'https://vignette.wikia.nocookie.net/youtubepoop/images/f/f7/5Pikachu.png/revision/latest?cb=20141108062013', 'JPN', 'pikac', 'pc123');
 INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Nosaj thing', 'http://wertn.com/wp-content/uploads/2012/04/Nosaj-Thing_Mondrian_CL_High-3487.jpg', 'TW', 'nosajt', 'nt123');
-INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Lykke li', 'http://www.chartattack.com/wp-content/uploads/2012/07/lykke-li-newmain1-photo-by-daniel-jackson.jpg', 'Sweeden', 'lykkel', 'll123');
-INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Kendrick lamar', 'http://www.xxlmag.com/wp-content/uploads/2013/06/kendricklamar_001-1600.jpg', 'USA', 'kenl', 'kl123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Lykke li', 'https://cdn-images-1.medium.com/max/1600/1*_dX2OWWrVszjmlH9S8ydWQ.jpeg', 'Sweeden', 'lykkel', 'll123');
+INSERT INTO users(name, photo_url, nationality, username, password) VALUES('Kendrick lamar', 'https://i.ytimg.com/vi/5Qz0bj1qxDE/maxresdefault.jpg', 'USA', 'kenl', 'kl123');

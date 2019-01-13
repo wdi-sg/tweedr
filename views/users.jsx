@@ -19,12 +19,13 @@ class Details extends React.Component{
 
 class Users extends React.Component {
   render() {
+    console.log(this.props.list)
     const users = this.props.list.map( user => {
             return <Details list={user}></Details>;
         });
     return (
         <Defaultcss>
-            <h1>All Users</h1>
+            <h1>{this.props.user[0]} below are a list of your follows and followers.</h1>
             {users}
         </Defaultcss>
     );

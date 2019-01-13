@@ -51,9 +51,12 @@ app.engine('jsx', reactEngine);
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
     if(request.cookies.loggedin !== undefined){
-        pool.query('SELECT users.id, name, content FROM users INNER JOIN tweets ON (users.id = author_id) ORDER BY name ASC', (err, queryResult) =>{
+        pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let queryString = queryResult.rows[0].id;
+            pool.query(`SELECT DISTINCT(users.id), name, content FROM users INNER JOIN tweets ON (users.id = author_id) INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
             let tweets = queryResult.rows;
             response.render('home',{list:tweets, user:[request.cookies.loggedin]});
+            })
         })
     }
     else{
@@ -110,8 +113,12 @@ app.post('/user/signin', (request, response) => {
 
             if(password == request.body.password){
                 response.cookie('loggedin', user.name);
-                pool.query('SELECT users.id, name, content FROM users INNER JOIN tweets ON (users.id = author_id) ORDER BY name ASC', (err, queryResult) => {
-                    response.render('home', {list:queryResult.rows, user:[user.name]});
+                pool.query(`SELECT id FROM users WHERE name = '${user.name}'`, (err, queryResult) =>{
+                    let queryString = queryResult.rows[0].id;
+                    pool.query(`SELECT DISTINCT(users.id), name, content FROM users INNER JOIN tweets ON (users.id = author_id) INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
+                    let tweets = queryResult.rows;
+                    response.render('home',{list:tweets, user:[user.name]});
+                    })
                 })
             }
             else{
@@ -129,12 +136,14 @@ app.get('/user/signout', (request, response) => {
 });
 
 app.get('/users', (request, response) => {
+    pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let queryString = queryResult.rows[0].id;
+            pool.query(`SELECT id, name, photo_url, nationality, user_id, follows_id, followers_id FROM users INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
+                let users = queryResult.rows;
 
-    pool.query('SELECT * FROM users ORDER BY name ASC', (err, queryResult) =>{
-        let users = queryResult.rows;
-
-        response.render('users', {list:users});
-    })
+                response.render('users', {list:users, user:[request.cookies.loggedin]});
+            })
+        })
 });
 
 app.get('/users/tweet/:name/new', (request, response) => {
