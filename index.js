@@ -45,9 +45,12 @@ app.engine('jsx', reactEngine);
 
 /**
  * ===================================
- * Routes
+ * Declarations
  * ===================================
  */
+
+let text = "";
+let followUpText = "";
 
 const home =  ( text, response ) => {
   pool.query(text,(err, res) => {
@@ -62,7 +65,6 @@ const home =  ( text, response ) => {
 
 const authenticate =  ( text, request, response ) => {
   pool.query(text, (error, res) => {
-      //response.redirect('/');
       if (res.rows.length === 0) {
         response.send('User does not exist');
       } else {
@@ -77,6 +79,25 @@ const authenticate =  ( text, request, response ) => {
   });
 }
 
+const followSuccess = (text, followUpText, values, request, response) => {
+  pool.query(text, values, (error, res) => {
+    pool.query(followUpText, (error, res) => {
+      let tweets = {};
+      tweets.list=[];
+      for(let i = 0; i < res.rows.length; i++){
+              tweets.list.push(res.rows[i]);
+          }
+      response.render('user/FollowSuccess', tweets);
+    });
+  });
+}
+
+/**
+ * ===================================
+ * Routes
+ * ===================================
+ */
+
 // homepage which shows all tweets
 app.get('/', (request, response) => {
 
@@ -84,7 +105,7 @@ app.get('/', (request, response) => {
 
     if( loggedin == 'true' ){
 
-      const text = `
+      text = `
           SELECT tweets.*, users.name 
           FROM tweets
           INNER JOIN users
@@ -120,7 +141,7 @@ app.post('/user/registered', (request, response) => {
         request.body.password
     ];
 
-    const text = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+    text = 'INSERT INTO users (name, password) VALUES ($1, $2)';
 
     pool.query(text, values, (error, res) => {
         response.send('user created');
@@ -131,7 +152,7 @@ app.post('/user/registered', (request, response) => {
 app.get('/user/login', (request, response) => {
 
     var loggedin = request.cookies['loggedin'];
-    
+
     if( loggedin == 'true' ){
         response.render('user/LoggedIn');
 
@@ -144,7 +165,7 @@ app.get('/user/login', (request, response) => {
 //user authentication
 app.post('/logging', (request, response) => {
 
-    const text = `
+    text = `
       SELECT * 
       FROM users 
       WHERE name = '${request.body.name}'
@@ -175,7 +196,10 @@ app.post('/user/tweeting', (request, response) => {
         request.cookies['userID']
     ];
 
-    const text = 'INSERT INTO tweets (tweet, user_id) VALUES ($1, $2)';
+    text = `
+    INSERT INTO tweets (tweet, user_id) 
+    VALUES ($1, $2)
+    `;
 
     // execute query
     pool.query(text, values, (error, res) => {
@@ -186,6 +210,37 @@ app.post('/user/tweeting', (request, response) => {
 
 // allows user to follow other users
 // /user/follow/
+
+app.get('/user/follow/:id', (request, response) => {
+
+    var loggedin = request.cookies['loggedin'];
+
+    if( loggedin == 'true' ){
+
+      const values = [
+        request.cookies['userID'],
+        request.params.id
+      ];
+
+      text = `
+        INSERT INTO follows (follower_id, followee_id) 
+        VALUES ($1, $2)
+        `;
+
+      followUpText = `
+        SELECT tweets.*, users.name
+        FROM tweets
+        INNER JOIN users
+        ON tweets.user_id = users.id
+        WHERE users.id = ${request.params.id}
+        `;
+      
+      followSuccess(text, followUpText, values, request, response);
+
+    }else{
+      response.render('Unregistered');
+    }
+});
 
 //user log out
 app.get('/user/logout', (request, response) => {
