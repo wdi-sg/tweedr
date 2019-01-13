@@ -136,6 +136,7 @@ app.get('/user/signout', (request, response) => {
 });
 
 app.get('/users', (request, response) => {
+    if(request.cookies.loggedin !== undefined){
     pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
             let queryString = queryResult.rows[0].id;
             pool.query(`SELECT id, name, photo_url, nationality, user_id, follows_id, followers_id FROM users INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
@@ -144,6 +145,45 @@ app.get('/users', (request, response) => {
                 response.render('users', {list:users, user:[request.cookies.loggedin]});
             })
         })
+    }
+    else{
+        pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
+            let users = queryResult.rows;
+
+            response.render('users', {list:users});
+        })
+    }
+});
+
+app.get('/users/list', (request, response) => {
+    pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
+        let users = queryResult.rows;
+
+        response.render('users', {list:users});
+    })
+});
+
+app.get('/profile', (request, response) => {
+    pool.query(`SELECT * FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+        let profile = queryResult.rows;
+        pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.name = '${request.cookies.loggedin}')`, (err, queryResult) =>{
+            let content = queryResult.rows;
+
+            response.render('profile', {list:profile, contents:content});
+        })
+    })
+});
+
+app.get('/profile/:id', (request, response) => {
+    let id = request.params.id;
+    pool.query(`SELECT * FROM users WHERE id = '${id}'`, (err, queryResult) =>{
+        let profile = queryResult.rows;
+        pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.id = '${id}')`, (err, queryResult) =>{
+            let content = queryResult.rows;
+
+            response.render('profile', {list:profile, contents:content});
+        })
+    })
 });
 
 app.get('/users/tweet/:name/new', (request, response) => {

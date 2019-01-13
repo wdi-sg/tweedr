@@ -19,7 +19,7 @@ class Tweets extends React.Component{
                       </div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <form method="GET" action={"/users" + this.props.list.id}>
+                        <form method="GET" action={"/profile/" + this.props.list.id}>
                             <button type="submit" value="Delete" className="btn btn-primary">View Profile</button>
                         </form>
                       </div>
@@ -51,7 +51,7 @@ class Home extends React.Component {
                 <input type="submit" className="tweet" value="Create Tweet"/>
             </form>
             <div className="alert alert-danger alert-dismissible fade show text-white" role="alert">
-              <strong>Please Read!</strong><br /> Use navbar to navigate to view users, to sign up and to login. In order to see tweets in the home page please login. Check for cookie in chrome console to see if you are logged in or the welcome line above as you will see who you are logged in as. Thanks!
+              <strong>Please Read!</strong><br /> Use navbar to navigate to list of your follows and followers, to sign up and to login. You can check out your profile with you details. In order to see tweets in the home page please login. Check for cookie in chrome console to see if you are logged in or the welcome line above as you will see who you are logged in as. Thanks!
               <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>

@@ -1,6 +1,16 @@
 var React = require("react");
 var Defaultcss = require('./defaultcss');
 
+class Tweets extends React.Component{
+    render(){
+        return(
+            <div>
+                {this.props.list.content}
+            </div>
+            );
+    }
+}
+
 class Details extends React.Component{
     render(){
         return(
@@ -17,37 +27,46 @@ class Details extends React.Component{
     }
 }
 
-class Users extends React.Component {
+class Profile extends React.Component {
   render() {
     if(this.props.user !== undefined){
     const users = this.props.list.map( user => {
             return <Details list={user}></Details>;
         });
+    const contents = this.props.contents.map( cont => {
+                        return <Tweets list={cont}></Tweets>;
+                        });
     return (
         <Defaultcss>
-            <h1>{this.props.user[0]} below are a list of your follows and followers.</h1>
-            <form method="GET" action="/users/list">
-                <input type="submit" className="new" value="List of Users" />
-            </form>
-            {users}
-        </Defaultcss>
-    );
-  }
-    else{
-    const users = this.props.list.map( user => {
-            return <Details list={user}></Details>;
-        });
-    return (
-        <Defaultcss>
-            <h1>Below is the is the whole list of users registered on our website</h1>
-            <form method="GET" action="/users">
+            <h1>This is your own profile {this.props.user[0]}</h1>
+            <form method="GET" action="/">
                 <input type="submit" className="new" value="Back" />
             </form>
             {users}
+            <ul>{contents}</ul>
         </Defaultcss>
     );
-    }
+  }
+  else{
+    const users = this.props.list.map( user => {
+            return <Details list={user}></Details>;
+        });
+    const contents = this.props.contents.map( cont => {
+                        return <Tweets list={cont}></Tweets>;
+                        });
+    return (
+        <Defaultcss>
+            <h1>This is profile</h1>
+            <form method="GET" action="/">
+                <input type="submit" className="new" value="Back" />
+            </form>
+            {users}
+            <h4>Tweets made by user:-</h4>
+            <ul>{contents}</ul>
+        </Defaultcss>
+    );
+  }
 }
 }
 
-module.exports = Users;
+module.exports = Profile;
