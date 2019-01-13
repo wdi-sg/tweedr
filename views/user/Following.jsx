@@ -15,21 +15,21 @@ class Following extends React.Component {
     let tweets = this.props.list.map( tweets => {
       let date = tweets.created_at.toString();
       return (
-        <h1 key={tweets.id}>
+        <p key={tweets.id}>
            {tweets.name} tweeted:"{tweets.tweet}" on {date}.
-        </h1>
+        </p>
       );
     });
 
     return (
       <NavBar>
         <form method="POST" action={"/user/seeFollowing"} id="followeeForm">
-          <select class="custom-select" name="id">
+          <select className="custom-select" name="id">
             <option selected>Choose...</option>
             {followees}
           </select>
-          <div class="input-group-append">
-            <button class="btn btn-outline-info" type="submit">See user's tweets</button>
+          <div className="input-group-append">
+            <button className="btn btn-outline-info" type="submit">See user's tweets</button>
           </div>
         </form>
         {tweets}

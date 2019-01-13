@@ -21,11 +21,6 @@ const configs = {
 // sudo -u postgres createdb tweedr
 // psql -d tweedr -U postgres -f table.sql;
 
-// #### Further
-// Users can see just the tweets of the users that they follow.
-
-// #### Further
-// Users can see just the tweets of the users that follow them.
 
 // #### Further
 // Create user profile pages. `/users/1`
@@ -152,7 +147,7 @@ const following = (text, followUpText, response) => {
 // homepage which shows all tweets
 app.get('/', (request, response) => {
 
-  var loggedin = request.cookies['loggedin'];
+  const loggedin = request.cookies['loggedin'];
 
     if( loggedin == 'true' ){
 
@@ -173,7 +168,7 @@ app.get('/', (request, response) => {
 
 //user registration page
 app.get('/user/new', (request, response) => {
-  var loggedin = request.cookies['loggedin'];
+  const loggedin = request.cookies['loggedin'];
 
     if( loggedin == 'true' ){
         response.render('user/LoggedIn');
@@ -202,7 +197,7 @@ app.post('/user/registered', (request, response) => {
 //user login page
 app.get('/user/login', (request, response) => {
 
-    var loggedin = request.cookies['loggedin'];
+    const loggedin = request.cookies['loggedin'];
 
     if( loggedin == 'true' ){
         response.render('user/LoggedIn');
@@ -229,7 +224,7 @@ app.post('/logging', (request, response) => {
 //verification of cookies to allow user to tweet
 app.get('/user/tweet', (request, response) => {
 
-    var loggedin = request.cookies['loggedin'];
+    const loggedin = request.cookies['loggedin'];
 
     if( loggedin == 'true' ){
         response.render('user/Tweet');
@@ -260,13 +255,13 @@ app.post('/user/tweeting', (request, response) => {
 });
 
 // allows user to follow other users
-// /user/follow/
-
 app.get('/user/follow/:id', (request, response) => {
 
     var loggedin = request.cookies['loggedin'];
 
     if( loggedin == 'true' ){
+
+      console.log("inserting");
 
       const values = [
         request.cookies['userID'],
@@ -296,7 +291,8 @@ app.get('/user/follow/:id', (request, response) => {
 // Allows user to see who they are following
 app.get('/user/following', (request, response) => {
 
-    var loggedin = request.cookies['loggedin'];
+    const loggedin = request.cookies['loggedin'];
+    const userId = request.cookies['userID'];
 
     if( loggedin == 'true' ){
 
@@ -305,6 +301,7 @@ app.get('/user/following', (request, response) => {
         FROM follows
         INNER JOIN users
         ON follows.followee_id = users.id
+        WHERE follower_id = ${userId}
         `;
 
       followUpText = `
@@ -321,9 +318,11 @@ app.get('/user/following', (request, response) => {
     }
 });
 
+// Allows user to see tweets of individual followees
 app.post('/user/seeFollowing', (request, response) => {
 
-    var loggedin = request.cookies['loggedin'];
+    const loggedin = request.cookies['loggedin'];
+    const userId = request.cookies['userID'];
 
     if( loggedin == 'true' ){
 
@@ -332,6 +331,7 @@ app.post('/user/seeFollowing', (request, response) => {
         FROM follows
         INNER JOIN users
         ON follows.followee_id = users.id
+        WHERE follower_id = ${userId}
         `;
 
       followUpText = `
@@ -347,13 +347,73 @@ app.post('/user/seeFollowing', (request, response) => {
     }else{
       response.render('Unregistered');
     }
+});
 
+// Allows user to see who is following them
+app.get('/user/followers', (request, response) => {
+
+    const loggedin = request.cookies['loggedin'];
+    const userId = request.cookies['userID'];
+
+    if( loggedin == 'true' ){
+
+      text = `
+        SELECT DISTINCT follows.*, users.name
+        FROM follows
+        INNER JOIN users
+        ON follows.follower_id = users.id
+        WHERE followee_id = ${userId}
+        `;
+
+      followUpText = `
+        SELECT tweets.*, users.name
+        FROM tweets
+        INNER JOIN users
+        ON tweets.user_id = users.id
+        `;
+      
+      following(text, followUpText, response);
+
+    }else{
+      response.render('Unregistered');
+    }
+});
+
+// Allows user to see tweets of individual followers
+app.post('/user/seeFollower', (request, response) => {
+
+    const loggedin = request.cookies['loggedin'];
+    const userId = request.cookies['userID'];
+
+    if( loggedin == 'true' ){
+
+      text = `
+        SELECT DISTINCT follows.*, users.name
+        FROM follows
+        INNER JOIN users
+        ON follows.follower_id = users.id
+        WHERE followee_id = ${userId}
+        `;
+
+      followUpText = `
+        SELECT tweets.*, users.name
+        FROM tweets
+        INNER JOIN users
+        ON tweets.user_id = users.id
+        WHERE users.id = ${request.body.id}
+        `;
+      
+      following(text, followUpText, response);
+
+    }else{
+      response.render('Unregistered');
+    }
 });
 
 //user log out
 app.get('/user/logout', (request, response) => {
 
-    var loggedin = request.cookies['loggedin'];
+    const loggedin = request.cookies['loggedin'];
 
     if( loggedin == 'true' ){
         response.clearCookie('loggedin');
@@ -364,7 +424,6 @@ app.get('/user/logout', (request, response) => {
     }else{
         response.render('Unregistered');
     }
-
 
 })
 

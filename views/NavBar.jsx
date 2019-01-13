@@ -33,8 +33,11 @@ class NavBar extends React.Component{
                         <a className="nav-link" href="/user/following">Following<span className="sr-only">(current)</span></a>
                       </li>
                       <li className="nav-item active">
+                        <a className="nav-link" href="/user/followers ">Followers<span className="sr-only">(current)</span></a>
+                      </li>   
+                      <li className="nav-item active">
                         <a className="nav-link" href="/user/logout">Logout<span className="sr-only">(current)</span></a>
-                      </li>       
+                      </li>    
                     </ul>
                   </div>
                 </nav>

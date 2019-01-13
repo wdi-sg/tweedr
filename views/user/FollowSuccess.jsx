@@ -9,9 +9,9 @@ class FollowSuccess extends React.Component {
         let date = tweets.created_at.toString();
 
         return (
-            <h1 key={tweets.id}>
+            <p key={tweets.id}>
                {tweets.name} tweeted:"{tweets.tweet}" on {date}.
-            </h1>
+            </p>
             );
         });
 

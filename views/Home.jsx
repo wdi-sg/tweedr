@@ -9,12 +9,12 @@ class Home extends React.Component {
         let date = tweets.created_at.toString();
 
         return (
-            <h1 key={tweets.id}>
+            <p key={tweets.id}>
                {tweets.name} tweeted:"{tweets.tweet}" on {date}.
                <a href={"/user/follow/" + tweets.user_id} className="btn btn-info ml-2" >
                 Follow User
               </a>
-            </h1>
+            </p>
             );
         });
 
