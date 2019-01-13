@@ -94,7 +94,7 @@ const authenticate =  ( text, request, response ) => {
         if (res.rows[0].password == request.body.password) {
           response.cookie('loggedin', 'true');
           response.cookie('userID', res.rows[0].id);
-          response.send('Login Success!');
+          response.render('Success');
         } else {
           response.send('Password incorrect');
         }
@@ -137,7 +137,7 @@ const validate =  ( text, followUpText, values, request, response ) => {
   pool.query(text, (error, res) => {
       if (res.rows.length === 0) {
         pool.query(followUpText, values, (error, res) => {
-          response.send('Successfully registered')
+          response.render('Success');
         })
       } else {
         response.send('Please pick a different username');
@@ -189,6 +189,38 @@ app.get('/', (request, response) => {
           INNER JOIN users
           ON tweets.user_id = users.id
           `;
+      
+      home(text, response);
+
+    }else{
+        response.render('Unregistered');
+    }
+
+});
+
+//allows user to sort tweets by date
+app.post('/sortby', (request, response) => {
+
+  const loggedin = request.cookies['loggedin'];
+
+    if( loggedin == 'true' ){
+      if (request.body.sort == "dateAsc") {
+        text = `
+          SELECT tweets.*, users.name 
+          FROM tweets
+          INNER JOIN users
+          ON tweets.user_id = users.id
+          ORDER BY tweets.created_at ASC
+          `;
+        } else if (request.body.sort == "dateDesc"){
+        text = `
+          SELECT tweets.*, users.name 
+          FROM tweets
+          INNER JOIN users
+          ON tweets.user_id = users.id
+          ORDER BY tweets.created_at DESC
+          `;
+        }
       
       home(text, response);
 
@@ -328,7 +360,7 @@ app.post('/user/tweeting', (request, response) => {
     // execute query
     pool.query(text, values, (error, res) => {
         //response.redirect('/');
-        response.send('tweet created');
+        response.render('Success');
     });
 });
 

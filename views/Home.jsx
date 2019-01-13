@@ -20,7 +20,21 @@ class Home extends React.Component {
 
     return (
       <NavBar>
-          {tweets}
+        <form method="POST" action={"/sortby"} id="followeeForm">
+          <select className="custom-select" name="sort">
+            <option selected>Choose...</option>
+            <option value="dateAsc">
+              Date Ascending
+            </option>
+            <option value="dateDesc">
+              Date Descending
+            </option>
+          </select>
+          <div className="input-group-append">
+            <button className="btn btn-outline-info" type="submit">Sort Tweets</button>
+          </div>
+        </form>
+        {tweets}
       </NavBar>
     );
   }
