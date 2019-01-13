@@ -73,7 +73,52 @@ app.post('/users', (request, response) => {
     });
 });
 
+app.get('/users/login', (request, response) => {
+  response.render('user/LoginPage');
+});
 
+app.post('/logging', (request, response) => {
+
+    const queryString = `
+      SELECT * 
+      FROM users 
+      WHERE name = '${request.body.name}'
+      `;
+
+    // execute query
+    pool.query(queryString, (error, queryResult) => {
+        //response.redirect('/');
+        if (queryResult.rows.length === 0) {
+          response.send('User does not exist');
+        } else {
+          if (queryResult.rows[0].password == request.body.password) {
+            response.cookie('loggedin', 'true');
+            response.send('Login Success!');
+          } else {
+            response.send('Password incorrect');
+          }
+        }
+    });
+});
+
+app.get('/profile', (request, response) => {
+    var loggedin = request.cookies['loggedin'];
+
+    // see if there is a cookie
+    if( loggedin == 'true' ){
+        response.send("heres your secret stuff");
+
+    }else{
+        response.send("please login");
+    }
+});
+
+app.get('/user/logout', (request, response) => {
+
+  response.clearCookie('loggedin');
+
+  response.send('you are logged out');
+})
 
 /**
  * ===================================
