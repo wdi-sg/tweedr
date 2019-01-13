@@ -1,5 +1,6 @@
 const model = require("../../models");
-const sha256 = require("js-sha256");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const { User } = model;
 
 const jwt = require("jsonwebtoken");
@@ -10,14 +11,17 @@ class Users {
     const { name, password, profilePic } = req.body;
     return User.findOne({ where: { name: `${name}` } }).then(user => {
       if (user) {
-        console.log(sha256(password));
         res.status(200).send("username taken");
       } else {
-        return User.create({
-          name,
-          password: sha256(password),
-          profile_pic: profilePic
-        }).then(val => res.status(200).send({ message: "created user", val }));
+        bcrypt.hash(password, saltRounds).then(hash => {
+          return User.create({
+            name,
+            password: hash,
+            profile_pic: profilePic
+          }).then(val =>
+            res.status(200).send({ message: "created user", val })
+          );
+        });
       }
     });
   }
@@ -36,22 +40,23 @@ class Users {
 
     if (username && password) {
       return User.findOne({ where: { name: username } }).then(user => {
-        if (
-          user.dataValues.name === username &&
-          user.dataValues.password === sha256(password)
-        ) {
-          let token = jwt.sign({ username: username }, secret, {
-            expiresIn: "24h"
-          });
-          res.json({
-            success: true,
-            message: "Authentication successful",
-            token: token
-          });
-        } else {
-          res.json({
-            success: false,
-            message: "Incorrect username or password"
+        if (user.dataValues.name === username) {
+          bcrypt.compare(password, user.dataValues.password).then(val => {
+            if (val) {
+              let token = jwt.sign({ username: username }, secret, {
+                expiresIn: "24h"
+              });
+              res.json({
+                success: true,
+                message: "Authentication successful",
+                token: token
+              });
+            } else {
+              res.json({
+                success: false,
+                message: "Incorrect username or password"
+              });
+            }
           });
         }
       });

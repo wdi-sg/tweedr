@@ -1,4 +1,7 @@
-const checkToken = require('./checkToken');
+const checkToken = require("./checkToken");
+const { hash, dehash } = require("./bcrypt");
 module.exports = {
-  checkToken
+  checkToken,
+  hash,
+  dehash
 };

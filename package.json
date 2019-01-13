@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/kauvia/tweedr#readme",
   "dependencies": {
+    "bcrypt": "^3.0.3",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "js-sha256": "^0.9.0",
