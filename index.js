@@ -299,11 +299,11 @@ app.put('/tweet/:id', (request, response) => {
     })
 });
 
-app.delete('/tweet/delete/:id', (req, res) => {
-    let id = req.params.id;
-    let queryText = `DELETE from artists WHERE id = ${id}`;
-    pool.query(queryText, (err, result) =>{
-        res.redirect('/artists');
+app.delete('/user/delete/:id', (request, response) => {
+    let id = request.params.id;
+    let queryText = `ALTER TABLE tweets DROP CONSTRAINT IF EXISTS tweets_author_id_fkey; ALTER TABLE follows DROP CONSTRAINT IF EXISTS follows_user_id_fkey; ALTER TABLE follows DROP CONSTRAINT IF EXISTS follows_follows_id_fkey; ALTER TABLE follows DROP CONSTRAINT IF EXISTS follows_followers_id_fkey; DELETE from users WHERE id = ${id}`;
+    pool.query(queryText, (err, queryResult) =>{
+        response.redirect('/users');
     })
 });
 
