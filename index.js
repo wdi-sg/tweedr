@@ -71,17 +71,32 @@ app.get('/users/new', (request, response) => {
 
 app.post('/users/add', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, photo_url, nationality, username, password) VALUES ($1, $2, $3, $4, $5)';
-    const values = [
-        request.body.name.charAt(0).toUpperCase() + request.body.name.slice(1),
-        request.body.photo,
-        request.body.nat,
-        request.body.username,
-        request.body.password
-    ];
+    pool.query("SELECT name FROM users", (err, queryResult) =>{
+        let validate = true;
+        let queryName = queryResult.rows;
+        let paramName = request.body.name.charAt(0).toUpperCase() + request.body.name.slice(1);
+        for(let i = 0; i < queryName.length; i++){
+            if(paramName == queryName[i].name){
+                validate = false;
+            }
+        }
+        if(validate === false){
+            response.redirect('/users/new');
+        }
+        else if(validate === true){
+            const queryString = 'INSERT INTO users (name, photo_url, nationality, username, password) VALUES ($1, $2, $3, $4, $5)';
+            const values = [
+                request.body.name.charAt(0).toUpperCase() + request.body.name.slice(1),
+                request.body.photo,
+                request.body.nat,
+                request.body.username,
+                request.body.password
+            ];
 
-    pool.query(queryString, values, (error, queryResult) => {
-        response.render('useradd', {list:values});
+            pool.query(queryString, values, (error, queryResult) => {
+                response.render('useradd', {list:values});
+            });
+        }
     });
 });
 
@@ -157,29 +172,34 @@ app.get('/users', (request, response) => {
 });
 
 app.get('/users/list', (request, response) => {
+        pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
+            let users = queryResult.rows;
 
-    pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
-        let users = queryResult.rows;
+            response.render('users', {list:users});
 
-        response.render('users', {list:users});
-    })
+        })
 });
 
 app.get('/profile', (request, response) => {
 
-    pool.query(`SELECT * FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
-        let profile = queryResult.rows;
-        pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.name = '${request.cookies.loggedin}')`, (err, queryResult) =>{
-            let content = queryResult.rows;
-            pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = follows_id) WHERE user_id = '${profile[0].id}' AND follows_id is not null`, (err, queryResult) =>{
-                let follows = queryResult.rows;
-                pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = followers_id) WHERE user_id = '${profile[0].id}' AND followers_id is not null`, (err, queryResult) =>{
-                    let followers = queryResult.rows;
-                    response.render('profile', {list:profile, contents:content, user:[request.cookies.loggedin], followsName:follows, followersName:followers});
-                    })
+    if(request.cookies.loggedin !== undefined){
+        pool.query(`SELECT * FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let profile = queryResult.rows;
+            pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.name = '${request.cookies.loggedin}')`, (err, queryResult) =>{
+                let content = queryResult.rows;
+                pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = follows_id) WHERE user_id = '${profile[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                    let follows = queryResult.rows;
+                    pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = followers_id) WHERE user_id = '${profile[0].id}' AND followers_id is not null`, (err, queryResult) =>{
+                        let followers = queryResult.rows;
+                        response.render('profile', {list:profile, contents:content, user:[request.cookies.loggedin], followsName:follows, followersName:followers});
+                        })
+                })
             })
         })
-    })
+    }
+    else{
+        response.render('profile');
+    }
 });
 
 app.get('/profile/:id', (request, response) => {
@@ -225,25 +245,36 @@ app.post('/users/tweet/:id/add', (request, response) => {
 app.post('/user/follow/:id', (request, response) => {
 
     if(request.cookies.loggedin !== undefined){
+        let validate = true;
         pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
             let id = request.params.id;
             let userId = queryResult.rows;
             let queryText = "INSERT INTO follows (user_id, follows_id) VALUES ($1, $2)";
             const values = [userId[0].id, id];
-            pool.query(queryText, values, (err, queryResult) =>{
-                response.redirect(`/profile/${userId[0].id}`);
-            })
-            let queryString = "INSERT INTO follows (user_id, followers_id) VALUES ($1, $2)";
-            const valuesStr = [id, userId[0].id];
-            pool.query(queryString, valuesStr, (err, queryResult) =>{
-                response.redirect(`/profile/${userId[0].id}`);
-            })
+            pool.query(`SELECT follows_id FROM follows WHERE user_id = '${userId[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                let follows = queryResult.rows;
+                for(let i = 0; i < follows.length; i++){
+                    if(follows[i].follows_id == id){
+                        validate = false
+                    }
+                    }
+                    if(validate == false){
+                        response.redirect('/users');
+                    }
+                    else if(validate == true){
+                        pool.query(queryText, values, (err, queryResult) =>{
+                        })
+                        let queryString = "INSERT INTO follows (user_id, followers_id) VALUES ($1, $2)";
+                        const valuesStr = [id, userId[0].id];
+                        pool.query(queryString, valuesStr, (err, queryResult) =>{
+                        })
+                        response.redirect('/');
+                    }
+                })
         })
     }
     else{
-        pool.query(queryText, values, (err, queryResult) =>{
             response.redirect("/users");
-        })
     }
 });
 

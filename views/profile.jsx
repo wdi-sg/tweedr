@@ -36,8 +36,8 @@ class Details extends React.Component{
         return(
             <div>
                 <ul>{this.props.list.name}
-                    <form method="GET" action={"/user/" + this.props.id}>
-                        <input type="submit" className="new" value="Follow" />
+                    <form method="POST" action={"/user/follow/" + this.props.list.id}>
+                        <input type="submit" value="Follow" />
                     </form>
                 </ul>
                 <ul><img src={this.props.list.photo_url} alt="broken link" height="270" width="270" /><br/><span>{this.props.list.photo_url}</span></ul>
@@ -49,7 +49,17 @@ class Details extends React.Component{
 
 class Profile extends React.Component {
   render() {
-    if(this.props.user !== undefined){
+    if(this.props.list == undefined){
+        return (
+        <Defaultcss>
+            <h1>Please go and sign in before entering this page.</h1>
+            <form method="GET" action="/">
+                <input type="submit" className="new" value="Back" />
+            </form>
+        </Defaultcss>
+    );
+    }
+    else if(this.props.user !== undefined){
     const users = this.props.list.map( user => {
             return <Details list={user}></Details>;
         });
