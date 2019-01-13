@@ -149,7 +149,7 @@ app.get('/user/logout', (request, response) => {
   response.clearCookie('loggedin');
   response.clearCookie('userID');
 
-  response.send('you are logged out');
+  response.render('Logout');
 })
 
 /**
