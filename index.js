@@ -29,9 +29,6 @@ const configs = {
 // Each reference on a page should be a link to that thing - (each tweet should link to a single tweet, each user should link to their profile, etc.)
 
 // #### Further
-// Validate that the user trying to register is using a name unique to the system.
-
-// #### Further
 // Make sure that users cannot "follow" people more than once.
 
 // #### Further
@@ -138,6 +135,18 @@ const following = (text, followUpText, response) => {
   });
 };
 
+const validate =  ( text, followUpText, values, request, response ) => {
+  pool.query(text, (error, res) => {
+      if (res.rows.length === 0) {
+        pool.query(followUpText, values, (error, res) => {
+          response.send('Successfully registered')
+        })
+      } else {
+        response.send('Please pick a different username');
+      }
+  });
+}
+
 /**
  * ===================================
  * Routes
@@ -182,17 +191,24 @@ app.get('/user/new', (request, response) => {
 //user registration successful
 app.post('/user/registered', (request, response) => {
 
-    const values = [
-        request.body.name,
-        request.body.password
-    ];
+  text = `SELECT * 
+      FROM users 
+      WHERE name = '${request.body.name}'
+      `;
 
-    text = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+  const values = [
+    request.body.name,
+    request.body.password
+  ];
 
-    pool.query(text, values, (error, res) => {
-        response.send('user created');
-    });
+  followUpText = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+
+    // Validate that the user trying to register is using a name unique to the system.
+
+  validate(text,followUpText, values, request, response);
+    
 });
+
 
 //user login page
 app.get('/user/login', (request, response) => {
