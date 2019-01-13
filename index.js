@@ -52,15 +52,83 @@ app.engine('jsx', reactEngine);
  */
 
 // Root GET request (it doesn't belong in any controller file)
-app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+app.get('/', (req, res) => {
+    // query database for all pokemon
+    var loggedin = req.cookies['loggedin'];
+
+    // see if there is a cookie
+    if (loggedin === undefined) {
+        res.send("You are not logged in! <a href = '/user/login'>click here</a> to login");
+
+    } else {
+        pool.query('SELECT * FROM tweets JOIN users ON users.id = tweets.author_id', (err, queryResult) => {
+            if (err) {
+                console.log(err);
+            }
+            let tweet = {};
+            tweet.list = [];
+            tweet.list = queryResult.rows;
+
+            res.render('home', tweet);
+        });
+    }
 });
 
-app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+app.get('/user/login', (request, response) => {
+    response.render('login');
+})
+
+
+app.post('/user/login', (request, response) => {
+    // if the user name and password are the same as in the DB, log them in
+
+    let query = "SELECT * FROM users WHERE username= '" + request.body.name + "'";
+
+    pool.query(query, (err, queryResponse) => {
+
+
+        //response.send('hellooooo');
+
+        console.log(queryResponse.rows);
+
+        // if the user doesnt exist
+        if (queryResponse.rows.length === 0) {
+            console.log("user doesnt exist");
+        } else {
+            console.log("user exists!!!!!!");
+
+            const user = queryResponse.rows[0];
+
+            console.log(user);
+            let password = user.password;
+            console.log(user.password);
+            console.log(request.body.password);
+            if (password == request.body.password) {
+                //password is correct
+                console.log('PASS WORD CORRECT TOO');
+                response.cookie('loggedin', 'true');
+                response.redirect('/');
+            } else {
+                // password is incorrect
+                console.log("password incorrect")
+                response.redirect('/user/login')
+            }
+        }
+    })
 });
 
-app.post('/users', (request, response) => {
+app.get('/user/logout', (request, response) => {
+
+  response.clearCookie('loggedin');
+
+  response.send("Successfully logged out! <a href = '/user/login'> click here </a> to login");
+})
+
+app.get('/user/new', (request, response) => {
+    response.render('user/newuser');
+});
+
+app.post('/user', (request, response) => {
 
     const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
     const values = [
@@ -85,12 +153,12 @@ app.post('/users', (request, response) => {
 
 const server = app.listen(3000, () => console.log('~~~ Tuning in to the waves of port 3000 ~~~'));
 
-let onClose = function(){
+let onClose = function() {
 
-  server.close(() => {
-    console.log('Process terminated')
-    pool.end( () => console.log('Shut down db connection pool'));
-  })
+    server.close(() => {
+        console.log('Process terminated')
+        pool.end(() => console.log('Shut down db connection pool'));
+    })
 };
 
 process.on('SIGTERM', onClose);
