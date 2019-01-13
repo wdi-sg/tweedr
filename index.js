@@ -11,11 +11,15 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'postgres',
+  password: 'postgres',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedr',
   port: 5432,
 };
+
+// sudo -u postgres createdb tweedr
+// psql -d tweedr -U postgres -f table.sql;
 
 const pool = new pg.Pool(configs);
 
@@ -51,7 +55,7 @@ app.get('/', (request, response) => {
 });
 
 app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+  response.render('user/NewUser');
 });
 
 app.post('/users', (request, response) => {
