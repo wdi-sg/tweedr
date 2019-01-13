@@ -23,9 +23,17 @@ class Profile extends React.Component {
     let tweets = this.props.list.map( tweets => {
         let date = tweets.created_at.toString();
         return (
-            <p key={tweets.id}>
-               {tweets.name} tweeted:"{tweets.tweet}" on {date}.
-            </p>
+            <div>
+              <p key={tweets.id} className = "d-inline-block">
+                 {tweets.name} tweeted:"{tweets.tweet}" on {date}.
+              </p>
+              <form method="GET" action={"/edit/tweet/" + tweets.id } className = "d-inline-block">
+                  <button type="submit" className="btn btn-secondary mr-3 ml-3">Edit</button>
+              </form>
+              <form method="POST" action={"/delete/tweet/" + tweets.id + "?_method=DELETE"} className = "d-inline-block">
+                  <button type="submit" className="btn btn-danger">Delete</button>
+              </form>
+            </div>
             );
         });
 

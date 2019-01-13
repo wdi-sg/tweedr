@@ -32,12 +32,6 @@ const configs = {
 // Add sort by date to each kind of tweet feed you made.
 
 // #### Further
-// Add the ability to edit a tweet.
-
-// #### Further
-// Add the ability to delete things.
-
-// #### Further
 // Add the ability to add a profile picture - see `input` `type=file` and `form` `enctype=multipart/formdata`
 
 // #### Further
@@ -127,7 +121,6 @@ const following = (text, followUpText, response) => {
       for(let i = 0; i < res.rows.length; i++){
               tweets.list.push(res.rows[i]);
           }
-      // console.log(songs);
       response.render('user/Following', tweets);
     });
   });
@@ -163,12 +156,23 @@ const userProfile = (text, followUpText, additionalText, response) => {
         for(let i = 0; i < res.rows.length; i++){
                 tweets.list.push(res.rows[i]);
             }
-        // console.log(songs);
         response.render('user/Profile', tweets);
       });
     });
   });
 }
+
+const editTweet = (text, response) => {
+  pool.query(text,(err, res) => {
+    let tweets = {};
+    tweets.list=[];
+    for(let i = 0; i < res.rows.length; i++){
+      tweets.list.push(res.rows[i]);
+    }
+    console.log(tweets);
+    response.render('user/EditTweet', tweets);
+  });
+};
 
 /**
  * ===================================
@@ -364,6 +368,40 @@ app.post('/user/tweeting', (request, response) => {
     });
 });
 
+// {"/edit/tweet/" + tweets.id }
+// Allows user to edit his tweets
+app.get('/edit/tweet/:id', (request, response) => {
+
+    text = `SELECT * FROM tweets WHERE id= ${request.params.id}`;
+
+    editTweet(text, response);
+    
+});
+
+app.post('/edited/tweet/:id', (request, response) => {
+
+  text = `
+    UPDATE tweets 
+    SET tweet='${request.body.tweet}'
+    WHERE id= ${request.params.id}`;
+
+  pool.query(text, (error, res) => {
+    response.render('Success');
+  });
+
+});
+
+// Allows use to delete his own tweets
+app.delete('/delete/tweet/:id', (request, response) => {
+
+    text = `DELETE FROM tweets WHERE id= ${request.params.id} RETURNING *`;
+
+    pool.query(text, (error, res) => {
+      response.render('Success');
+    });
+    
+});
+
 // allows user to follow other users
 app.get('/user/follow/:id', (request, response) => {
 
@@ -419,6 +457,7 @@ app.get('/user/following', (request, response) => {
         FROM tweets
         INNER JOIN users
         ON tweets.user_id = users.id
+        WHERE users.id <> ${userId}
         `;
       
       following(text, followUpText, response);
@@ -480,6 +519,7 @@ app.get('/user/followers', (request, response) => {
         FROM tweets
         INNER JOIN users
         ON tweets.user_id = users.id
+        WHERE users.id <> ${userId}
         `;
       
       following(text, followUpText, response);
