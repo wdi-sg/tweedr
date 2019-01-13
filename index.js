@@ -21,6 +21,39 @@ const configs = {
 // sudo -u postgres createdb tweedr
 // psql -d tweedr -U postgres -f table.sql;
 
+// #### Further
+// Users can see just the tweets of the users that they follow.
+
+// #### Further
+// Users can see just the tweets of the users that follow them.
+
+// #### Further
+// Create user profile pages. `/users/1`
+
+// #### Further
+// Each reference on a page should be a link to that thing - (each tweet should link to a single tweet, each user should link to their profile, etc.)
+
+// #### Further
+// Validate that the user trying to register is using a name unique to the system.
+
+// #### Further
+// Make sure that users cannot "follow" people more than once.
+
+// #### Further
+// Add sort by date to each kind of tweet feed you made.
+
+// #### Further
+// Add the ability to edit a tweet.
+
+// #### Further
+// Add the ability to delete things.
+
+// #### Further
+// Add the ability to add a profile picture - see `input` `type=file` and `form` `enctype=multipart/formdata`
+
+// #### Further
+// Add the ability to tweet photos, also using the same profile pic upload as above.
+
 const pool = new pg.Pool(configs);
 
 pool.on('error', function (err) {
@@ -91,6 +124,24 @@ const followSuccess = (text, followUpText, values, request, response) => {
     });
   });
 }
+
+const following = (text, followUpText, response) => {
+  pool.query(text,(err, res) => {
+    let tweets = {};
+    tweets.following=[];
+    for(let i = 0; i < res.rows.length; i++){
+            tweets.following.push(res.rows[i]);
+        }
+    pool.query(followUpText,(err, res) => {
+      tweets.list=[];
+      for(let i = 0; i < res.rows.length; i++){
+              tweets.list.push(res.rows[i]);
+          }
+      // console.log(songs);
+      response.render('user/Following', tweets);
+    });
+  });
+};
 
 /**
  * ===================================
@@ -240,6 +291,63 @@ app.get('/user/follow/:id', (request, response) => {
     }else{
       response.render('Unregistered');
     }
+});
+
+// Allows user to see who they are following
+app.get('/user/following', (request, response) => {
+
+    var loggedin = request.cookies['loggedin'];
+
+    if( loggedin == 'true' ){
+
+      text = `
+        SELECT DISTINCT follows.*, users.name
+        FROM follows
+        INNER JOIN users
+        ON follows.followee_id = users.id
+        `;
+
+      followUpText = `
+        SELECT tweets.*, users.name
+        FROM tweets
+        INNER JOIN users
+        ON tweets.user_id = users.id
+        `;
+      
+      following(text, followUpText, response);
+
+    }else{
+      response.render('Unregistered');
+    }
+});
+
+app.post('/user/seeFollowing', (request, response) => {
+
+    var loggedin = request.cookies['loggedin'];
+
+    if( loggedin == 'true' ){
+
+      text = `
+        SELECT DISTINCT follows.*, users.name
+        FROM follows
+        INNER JOIN users
+        ON follows.followee_id = users.id
+        `;
+
+      followUpText = `
+        SELECT tweets.*, users.name
+        FROM tweets
+        INNER JOIN users
+        ON tweets.user_id = users.id
+        WHERE users.id = ${request.body.id}
+        `;
+      
+      following(text, followUpText, response);
+
+    }else{
+      response.render('Unregistered');
+    }
+
 });
 
 //user log out

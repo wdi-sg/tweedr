@@ -1,7 +1,7 @@
 var React = require("react");
 var NavBar = require('../NavBar');
 
-class Followed extends React.Component {
+class FollowSuccess extends React.Component {
   render() {
 
     let tweets = this.props.list.map( tweets => {
@@ -23,4 +23,4 @@ class Followed extends React.Component {
   }
 }
 
-module.exports = Followed;
+module.exports = FollowSuccess;
