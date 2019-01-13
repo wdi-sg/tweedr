@@ -8,7 +8,8 @@ class Tweeds {
   static createNew(req, res) {
     let username = req.decoded.username;
     let content = req.body.content;
-
+    console.log(req.decoded);
+    console.log(content);
     return User.findOne({ attributes: ["id"], where: { name: username } }).then(
       user => {
         let userId = user.dataValues.id;
@@ -50,7 +51,9 @@ class Tweeds {
           updatedAt: val.dataValues.updatedAt
         });
       });
-      res.status(200).send(tweeds);
+      res
+        .status(200)
+        .json({ tweeds: tweeds, success: true, message: "Token is valid" });
     });
   }
   static updateOne(req, res) {}

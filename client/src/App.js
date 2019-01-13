@@ -15,16 +15,17 @@ class App extends Component {
       fetch("/validate", {
         method: "GET",
         headers: {
-          "X-Access-Token": `Bearer ${this.state.token}`
+          "X-Access-Token": `Bearer ${this.state.token}`,
+          "validate-only": true
         }
       }).then(res =>
         res.json().then(res => {
-          console.log(res)
+          console.log(res);
           console.log(res.success);
 
           if (!res.success) {
             console.log(res.success);
-               localStorage.clear();
+            localStorage.clear();
           }
         })
       );
