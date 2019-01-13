@@ -23,9 +23,6 @@ const configs = {
 
 
 // #### Further
-// Create user profile pages. `/users/1`
-
-// #### Further
 // Each reference on a page should be a link to that thing - (each tweet should link to a single tweet, each user should link to their profile, etc.)
 
 // #### Further
@@ -76,6 +73,7 @@ app.engine('jsx', reactEngine);
 
 let text = "";
 let followUpText = "";
+let additionalText = "";
 
 const home =  ( text, response ) => {
   pool.query(text,(err, res) => {
@@ -144,6 +142,31 @@ const validate =  ( text, followUpText, values, request, response ) => {
       } else {
         response.send('Please pick a different username');
       }
+  });
+}
+
+const userProfile = (text, followUpText, additionalText, response) => {
+  pool.query(text,(err, res) => {
+    let tweets = {};
+    tweets.following=[];
+    for(let i = 0; i < res.rows.length; i++){
+            tweets.following.push(res.rows[i]);
+        }
+    pool.query(followUpText,(err, res) => {
+      tweets.followers=[];
+      for(let i = 0; i < res.rows.length; i++){
+              tweets.followers.push(res.rows[i]);
+          }
+      pool.query(additionalText,(err, res) => {
+        tweets.list=[];
+        console.log(tweets);
+        for(let i = 0; i < res.rows.length; i++){
+                tweets.list.push(res.rows[i]);
+            }
+        // console.log(songs);
+        response.render('user/Profile', tweets);
+      });
+    });
   });
 }
 
@@ -235,6 +258,45 @@ app.post('/logging', (request, response) => {
 
     authenticate(text, request, response);
     
+});
+
+//See user profile
+app.get('/user/profile', (request, response) => {
+
+    const loggedin = request.cookies['loggedin'];
+    const userId = request.cookies['userID'];
+
+    if( loggedin == 'true' ){
+
+      text = `
+        SELECT DISTINCT follows.*, users.name
+        FROM follows
+        INNER JOIN users
+        ON follows.followee_id = users.id
+        WHERE follower_id = ${userId}
+        `;
+
+      followUpText = `
+        SELECT DISTINCT follows.*, users.name
+        FROM follows
+        INNER JOIN users
+        ON follows.follower_id = users.id
+        WHERE followee_id = ${userId}
+        `;
+
+      additionalText = `
+        SELECT tweets.*, users.name 
+        FROM tweets
+        INNER JOIN users
+        ON tweets.user_id = users.id
+        WHERE users.id = ${userId}
+      `;
+
+      userProfile(text, followUpText, additionalText, response);
+
+    }else{
+      response.render('Unregistered');
+    }
 });
 
 //verification of cookies to allow user to tweet
