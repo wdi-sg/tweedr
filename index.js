@@ -48,29 +48,45 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-    //display all tweets
-    pool.query('SELECT * FROM tweets', (err, result) => {
-        if (err) {
-            console.error('query error: ', err.stack);
-            response.send('query error');
-        } else {
-            response.render('home', {tweets: result.rows});
-        }
-    })
+
+    var loggedin = request.cookies['loggedin'];
+
+    //see if user is logged in (i.e. loggedin cookie exists)
+    if ( loggedin === undefined ) {
+        //display all tweets as a user who is NOT logged in
+        pool.query('SELECT * FROM tweets', (err, result) => {
+            if (err) {
+                console.error('query error: ', err.stack);
+                response.send('query error');
+            } else {
+                response.render('home', {tweets: result.rows});
+            }
+        })
+    } else {
+        // response.send("you're logged in man");
+        pool.query("SELECT * FROM tweets", (err, result) => {
+            if (err) {
+                console.error('query error: ', err.stack);
+                response.send('query error');
+            } else {
+                response.render('user/LoggedInUser', {tweets: result.rows});
+            }
+        })
+    }
+
 
     //allow user to register a new account
     app.get('/users/new', (request, response) => {
         response.render('user/NewUser');
     });
 
-    //allow user to login to create a tweet
+
+    //allow user to login to then create a tweet
     app.get('/login', (request, response) => {
         response.render('loginPage');
     });
 
     app.post('/login',  (request, response) => {
-
-        // response.send("mmmm");
 
         //if the username and password match those in the database, log them in
         let query = "SELECT * FROM users WHERE username='"+request.body.username+"'";
@@ -81,7 +97,7 @@ app.get('/', (request, response) => {
             //if the user doesn't exist
             if (queryResponse.rows.length === 0) {
                 console.log("user doesn't exist");
-                response.send("User does not exist.");
+                response.send("<html><body><h3>User does not exist!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Back to Login Page</a></button>");
             } else {
                 //if the user exists, check for correct password
                 console.log("user exists");
@@ -92,30 +108,63 @@ app.get('/', (request, response) => {
                 if (password == request.body.password) {
                     //correct password
                     console.log('correct password');
+                    //set user cookie as LOGGED IN = TRUE
                     response.cookie('loggedin', 'true');
-                    response.send("logged in");
+
+                    pool.query('SELECT * FROM tweets', (err, result) => {
+                        if (err) {
+                            console.error('query error: ', err.stack);
+                            response.send('query error');
+                        } else {
+                            //since user has logged in successfully, user can now create a tweet on the home page
+                            response.render('user/LoggedInUser', {tweets: result.rows});
+                        }
+                    });
                 } else {
                     //incorrect password
                     console.log("incorrect password");
-                    response.send("password is incorrect");
+                    response.send("<html><body><h3>Incorrect password!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Back to Login Page</a></button>");
                 }
             }
         })
-    })
+    });
+
+    app.get('/logout', (request, response) => {
+        response.clearCookie('loggedin');
+        // response.send("You have logged out!");
+        response.redirect('/');
+    });
 });
 
+//accept newly-registered user data
 app.post('/users', (request, response) => {
 
     const queryString = 'INSERT INTO users (username, password) VALUES ($1, $2)';
-    const values = [
+    let values = [
         request.body.username,
         request.body.password
     ];
 
     pool.query(queryString, values, (error, result) => {
         //response.redirect('/');
-        response.cookie('loggedin', 'true');
+        //response.cookie('loggedin', 'true');
         response.send("<html><body><h3>User created!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Login</a></button>")
+    });
+});
+
+//create new tweet
+app.get('/tweets/new', (request, response) => {
+    response.render('newTweet');
+});
+
+//accepts and posts new tweet
+app.post('/tweets/new', (request, response) => {
+    const newTweet = 'INSERT INTO tweets (content) VALUES ($1)';
+    let values = [request.body.content];
+
+    pool.query(newTweet, values, (error, result) => {
+        console.log(result.rows);
+        response.redirect('/');
     });
 });
 
