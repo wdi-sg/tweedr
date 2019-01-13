@@ -44,7 +44,7 @@ app.engine('jsx', reactEngine);
 // SHOW ALL TWEETS
 //==============================================================
 app.get('/', (req, res) => {
-    let query = "SELECT * FROM tweets INNER JOIN users ON (tweets.author_id = users.id);";
+    let query = "SELECT * FROM tweets INNER JOIN users ON (tweets.author_id = users.id) ORDER BY tweeted_on DESC;";
 
     pool.query(query, (err, result) => {
         if (err) {
@@ -55,59 +55,98 @@ app.get('/', (req, res) => {
             resultArr.push(req.cookies['loggedIn']);
 
             if (req.cookies['loggedIn']) {
-                query = `SELECT * FROM users WHERE name='${req.cookies['name']}'`;
+                query = `SELECT * FROM users WHERE name='${req.cookies['name']}';`;
                 pool.query(query, (err, result) => {
                     if (err) {
                         console.error('query error:', err.stack);
                         res.send( 'query error' );
                     } else {
                         resultArr.push(result.rows);
-                        console.log(resultArr);
                         res.render('home', resultArr);
                     }
                 })
             } else {
-                console.log(resultArr);
                 res.render('home', resultArr);
             }
         }
     });
 });
 
-//
+//SIGN UP SIGN IN SIGN OUT
 //==============================================================
 app.post('/users/new', (req, res) => {
-    const values = [req.body.name, req.body.password];
-    let query = "INSERT INTO users (name, password) VALUES ($1, $2)";
+    switch (req.body.func) {
+        case 'signin':
+            let query = `SELECT * FROM users WHERE name='${req.body.name}'`;
+            pool.query(query, (err, result) => {
+                if (err) {
+                    console.error('query error:', err.stack);
+                    res.send( 'query error' );
+                } else {
+                    if ( result.rows.length === 0 ) {
+                        res.redirect('/');
+                    } else {
+                        const user = result.rows[0];
+                        let password = user.password;
+                        if (password == req.body.password) {
+                            res.cookie('loggedIn', true);
+                            res.cookie('name', req.body.name);
+                            res.redirect('/');
+                        } else {
+                            res.redirect('/');
+                        }
+                    }
+                }
+            });
+            break;
 
-    pool.query(query, values, (err, result) => {
+        case 'signout':
+            res.clearCookie('loggedIn');
+            res.clearCookie('name');
+            res.redirect('/');
+            break;
+
+        case 'signup':
+            const values = [req.body.name, req.body.password];
+            let text = "INSERT INTO users (name, password) VALUES ($1, $2)";
+
+            pool.query(text, values, (err, result) => {
+                if (err) {
+                    console.error('query error:', err.stack);
+                    res.send( 'query error' );
+                } else {
+                    res.cookie('loggedIn', true);
+                    res.cookie('name', req.body.name);
+                    res.redirect('/');
+                }
+            });
+            break;
+    }
+});
+
+//CREATE TWEET
+//==============================================================
+app.post('/', (req, res) => {
+    let query = `SELECT * FROM users WHERE name='${req.cookies['name']}';`;
+
+    pool.query(query, (err, result) => {
         if (err) {
             console.error('query error:', err.stack);
             res.send( 'query error' );
         } else {
-            res.cookie('loggedIn', true);
-            res.cookie('name', req.body.name);
-            res.redirect('/');
+            let query =`INSERT INTO tweets (content, author_id) VALUES ('${req.body.tweet}', ${result.rows[0].id})`;
+
+            pool.query(query, (err, result) => {
+                if (err) {
+                    console.error('query error:', err.stack);
+                    res.send( 'query error' );
+                } else {
+                    res.redirect('/');
+                }
+            });
         }
     });
 });
-
-app.post('/users', (req, res) => {
-
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
-    const values = [
-        req.body.name,
-        req.body.password
-    ];
-
-    // execute query
-    pool.query(queryString, values, (error, queryResult) => {
-        //res.redirect('/');
-        res.send('user created');
-    });
-});
-
-
 
 
 

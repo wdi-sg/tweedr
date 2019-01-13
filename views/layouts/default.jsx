@@ -28,10 +28,11 @@ class DefaultLayout extends React.Component {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <form>
+                  <form action="/users/new" method="POST">
                       <div class="modal-body">
                         <input name="name" placeholder="name"/><br/>
-                        <input password="password" placeholder="password"/>
+                        <input name="password" placeholder="password"/>
+                        <input type="hidden" name="func" value="signin"/>
                       </div>
                       <div class="modal-footer d-flex w-100 justify-content-between">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -53,7 +54,8 @@ class DefaultLayout extends React.Component {
                   <form action="/users/new" method="POST">
                       <div class="modal-body">
                         <input name="name" placeholder="name"/><br/>
-                        <input password="password" placeholder="password"/>
+                        <input name="password" placeholder="password"/>
+                        <input type="hidden" name="func" value="signup"/>
                       </div>
                       <div class="modal-footer d-flex w-100 justify-content-between">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

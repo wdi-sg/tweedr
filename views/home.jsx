@@ -18,11 +18,10 @@ class Home extends React.Component {
     };
     const buttonsTrue = () => {
         return (
-            <div>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signInModal">
-                  Sign Out
-                </button>
-            </div>
+            <form action="/users/new" method="POST">
+                <input type="hidden" name="func" value="signout"/>
+                <input type="submit" class="btn btn-primary" value="Sign Out"/>
+            </form>
             );
     };
 
@@ -31,10 +30,12 @@ class Home extends React.Component {
                 <div>
                     <h2>{this.props[2][0].name}</h2>
                     <hr class="my-4"/>
-                    <div class="d-flex w-100 justify-content-between">
-                        <input class="w-100" type="text" placeholder="Tweet!"/>
-                        <a class="btn btn-primary btn-md ml-4" href="#" role="button">Learn more</a>
-                    </div>
+                    <form action="/" method="POST">
+                        <div class="d-flex w-100 justify-content-between">
+                            <input class="w-100 mr-4" type="text" name="tweet"placeholder="Tweet!"/>
+                            <input type="submit" class="btn btn-primary" value="Tweet"/>
+                        </div>
+                    </form>
                 </div>
             );
     };
