@@ -278,6 +278,35 @@ app.post('/user/follow/:id', (request, response) => {
     }
 });
 
+app.get('/tweet/edit/:id', (request, response) => {
+    let id = request.params.id;
+    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE author_id = '${id}'`, (err, queryResult) =>{
+        let tweet =  queryResult.rows;
+        console.log(tweet)
+
+        response.render('tweetedit', {list:tweet});
+    })
+});
+
+app.put('/tweet/:id', (request, response) => {
+    let id = request.params.id;
+    let content = request.body.tweet
+    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE users.id = ${id}`, (err, queryResult) =>{
+        let queryString = `UPDATE tweets SET content = '${content}' WHERE id = '${id}'`;
+        pool.query(queryString, (err, queryResult) =>{
+            response.redirect('/');
+        })
+    })
+});
+
+app.delete('/tweet/delete/:id', (req, res) => {
+    let id = req.params.id;
+    let queryText = `DELETE from artists WHERE id = ${id}`;
+    pool.query(queryText, (err, result) =>{
+        res.redirect('/artists');
+    })
+});
+
 // app.POST('/users/:id/follows', (request, response) => {
 
 //     pool.query('SELECT * FROM users ORDER BY name ASC', (err, queryResult) =>{

@@ -30,6 +30,9 @@ class Tweets extends React.Component{
                     <ul>
                         Tweet: {this.props.list.content} <br />
                         <input type="submit" className="details" value="Show Details" data-toggle="modal" data-target={"#exampleModal" + this.props.list.id}/>
+                        <form method="GET" action={"/tweet/edit/" + this.props.list.id}>
+                            <input type="submit" className="edit" value="Edit tweet" />
+                        </form>
                     </ul>
                 </div>
             </div>
