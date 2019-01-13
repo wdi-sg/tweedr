@@ -51,14 +51,14 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+  response.send('Welcome To Tweedr. Please login or register');
 });
 
-app.get('/users/new', (request, response) => {
+app.get('/user/new', (request, response) => {
   response.render('user/NewUser');
 });
 
-app.post('/users', (request, response) => {
+app.post('/user/registered', (request, response) => {
 
     const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
     const values = [
@@ -73,7 +73,7 @@ app.post('/users', (request, response) => {
     });
 });
 
-app.get('/users/login', (request, response) => {
+app.get('/user/login', (request, response) => {
   response.render('user/LoginPage');
 });
 
@@ -93,6 +93,7 @@ app.post('/logging', (request, response) => {
         } else {
           if (queryResult.rows[0].password == request.body.password) {
             response.cookie('loggedin', 'true');
+            response.cookie('userID', queryResult.rows[0].id);
             response.send('Login Success!');
           } else {
             response.send('Password incorrect');
@@ -101,21 +102,38 @@ app.post('/logging', (request, response) => {
     });
 });
 
-app.get('/profile', (request, response) => {
+app.get('/user/profile', (request, response) => {
     var loggedin = request.cookies['loggedin'];
 
     // see if there is a cookie
     if( loggedin == 'true' ){
-        response.send("heres your secret stuff");
+        response.render('user/Profile');
 
     }else{
         response.send("please login");
     }
 });
 
+app.post('/user/tweet', (request, response) => {
+
+    const values = [
+        request.body.tweet,
+        request.cookies['userID']
+    ];
+
+    const queryString = 'INSERT INTO tweets (tweet, user_id) VALUES ($1, $2)';
+
+    // execute query
+    pool.query(queryString, values, (error, queryResult) => {
+        //response.redirect('/');
+        response.send('tweet created');
+    });
+});
+
 app.get('/user/logout', (request, response) => {
 
   response.clearCookie('loggedin');
+  response.clearCookie('userID');
 
   response.send('you are logged out');
 })

@@ -6,7 +6,7 @@ class NewUser extends React.Component {
       <html>
         <head />
         <body>
-          <form className="user-form" method="POST" action="/users">
+          <form className="user-form" method="POST" action="/users/registered">
             <div className="user-attribute">
               name<input name="name" type="text" />
             </div>
