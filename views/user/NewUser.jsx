@@ -5,7 +5,7 @@ class NewUser extends React.Component {
   render() {
     return (
       <NavBar>
-        <form className="user-form col-6" method="POST" action="/users/registered">
+        <form className="user-form col-6" method="POST" action="/user/registered">
           <div className="form-group user-attribute">
             <label htmlFor="inputUsername">Username</label>
             <input type="text" className="form-control" name="name" id="name" placeholder="Enter desired username"/>

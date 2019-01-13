@@ -10,7 +10,10 @@ class Home extends React.Component {
 
         return (
             <h1 key={tweets.id}>
-              {tweets.name} has tweeted:"{tweets.tweet}" at {date}.
+               {tweets.name} tweeted:"{tweets.tweet}" on {date}.
+               <a href={"/user/follow/" + tweets.user_id} className="btn btn-info ml-2" >
+                Follow User
+              </a>
             </h1>
             );
         });

@@ -1,17 +1,23 @@
 var React = require("react");
-var NavBar = require('../NavBar');
+var NavBar = require('./NavBar');
 
 class Profile extends React.Component {
   render() {
+
+    let tweets = this.props.list.map( tweets => {
+
+        let date = tweets.created_at.toString();
+
+        return (
+            <h1 key={tweets.id}>
+               {tweets.name} tweeted:"{tweets.tweet}" on {date}.
+            </h1>
+            );
+        });
+
     return (
       <NavBar>
-        <form className="user-form col-6 tweet-form" method="POST" action="http://localhost:3000/user/tweet">
-            <div className="form-group tweet-attribute">
-              <label htmlFor="inputTweet">What do you wish to tweet?</label>
-              <input type="text" className="form-control" name="tweet" id="tweet" placeholder="tweeting..."/>
-            </div>
-            <button name="submit" type="submit" className="btn btn-primary">Tweet!</button>
-          </form>
+          {tweets}
       </NavBar>
     );
   }

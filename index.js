@@ -49,107 +49,160 @@ app.engine('jsx', reactEngine);
  * ===================================
  */
 
-// Root GET request (it doesn't belong in any controller file)
-app.get('/', (request, response) => {
-  const queryString = `
-      SELECT tweets.*, users.name 
-      FROM tweets
-      INNER JOIN users
-      ON tweets.user_id = users.id
-      `;
-  
-  pool.query(queryString, (error, queryResult) => {
-      let tweets = {};
+const home =  ( text, response ) => {
+  pool.query(text,(err, res) => {
+    let tweets = {};
       tweets.list=[];
-      for(let i = 0; i < queryResult.rows.length; i++){
-              tweets.list.push(queryResult.rows[i]);
+      for(let i = 0; i < res.rows.length; i++){
+              tweets.list.push(res.rows[i]);
           }
       response.render('Home', tweets);
-    });
+  });
+}
+
+const authenticate =  ( text, request, response ) => {
+  pool.query(text, (error, res) => {
+      //response.redirect('/');
+      if (res.rows.length === 0) {
+        response.send('User does not exist');
+      } else {
+        if (res.rows[0].password == request.body.password) {
+          response.cookie('loggedin', 'true');
+          response.cookie('userID', res.rows[0].id);
+          response.send('Login Success!');
+        } else {
+          response.send('Password incorrect');
+        }
+      }
+  });
+}
+
+// homepage which shows all tweets
+app.get('/', (request, response) => {
+
+  var loggedin = request.cookies['loggedin'];
+
+    if( loggedin == 'true' ){
+
+      const text = `
+          SELECT tweets.*, users.name 
+          FROM tweets
+          INNER JOIN users
+          ON tweets.user_id = users.id
+          `;
+      
+      home(text, response);
+
+    }else{
+        response.render('Unregistered');
+    }
+
 });
 
+//user registration page
 app.get('/user/new', (request, response) => {
-  response.render('user/NewUser');
+  var loggedin = request.cookies['loggedin'];
+
+    if( loggedin == 'true' ){
+        response.render('user/LoggedIn');
+
+    }else{
+        response.render('user/NewUser');
+    }
+
 });
 
+//user registration successful
 app.post('/user/registered', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
     const values = [
         request.body.name,
         request.body.password
     ];
 
-    // execute query
-    pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
+    const text = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+
+    pool.query(text, values, (error, res) => {
         response.send('user created');
     });
 });
 
+//user login page
 app.get('/user/login', (request, response) => {
-  response.render('user/LoginPage');
+
+    var loggedin = request.cookies['loggedin'];
+    
+    if( loggedin == 'true' ){
+        response.render('user/LoggedIn');
+
+    }else{
+        response.render('user/LoginPage');
+    }
+
 });
 
+//user authentication
 app.post('/logging', (request, response) => {
 
-    const queryString = `
+    const text = `
       SELECT * 
       FROM users 
       WHERE name = '${request.body.name}'
       `;
 
-    // execute query
-    pool.query(queryString, (error, queryResult) => {
-        //response.redirect('/');
-        if (queryResult.rows.length === 0) {
-          response.send('User does not exist');
-        } else {
-          if (queryResult.rows[0].password == request.body.password) {
-            response.cookie('loggedin', 'true');
-            response.cookie('userID', queryResult.rows[0].id);
-            response.send('Login Success!');
-          } else {
-            response.send('Password incorrect');
-          }
-        }
-    });
+    authenticate(text, request, response);
+    
 });
 
-app.get('/user/profile', (request, response) => {
+//verification of cookies to allow user to tweet
+app.get('/user/tweet', (request, response) => {
+
     var loggedin = request.cookies['loggedin'];
 
-    // see if there is a cookie
     if( loggedin == 'true' ){
-        response.render('user/Profile');
+        response.render('user/Tweet');
 
     }else{
-        response.send("please login");
+        response.render('Unregistered');
     }
 });
 
-app.post('/user/tweet', (request, response) => {
+//insertion of tweet
+app.post('/user/tweeting', (request, response) => {
 
     const values = [
         request.body.tweet,
         request.cookies['userID']
     ];
 
-    const queryString = 'INSERT INTO tweets (tweet, user_id) VALUES ($1, $2)';
+    const text = 'INSERT INTO tweets (tweet, user_id) VALUES ($1, $2)';
 
     // execute query
-    pool.query(queryString, values, (error, queryResult) => {
+    pool.query(text, values, (error, res) => {
         //response.redirect('/');
         response.send('tweet created');
     });
 });
 
+// allows user to follow other users
+// /user/follow/
+
+//user log out
 app.get('/user/logout', (request, response) => {
 
-  response.clearCookie('loggedin');
-  response.clearCookie('userID');
+    var loggedin = request.cookies['loggedin'];
 
-  response.render('Logout');
+    if( loggedin == 'true' ){
+        response.clearCookie('loggedin');
+        response.clearCookie('userID');
+
+        response.render('Logout');
+
+    }else{
+        response.render('Unregistered');
+    }
+
+
 })
 
 /**
