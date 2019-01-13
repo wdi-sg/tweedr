@@ -11,9 +11,9 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'ishak',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedr_db',
   port: 5432,
 };
 
@@ -47,26 +47,51 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+
+    response.send('Welcome To Tweedr.');
 });
 
-app.get('/users/new', (request, response) => {
+app.get('/users/login', (request, response) => {
   response.render('user/newuser');
 });
 
-app.post('/users', (request, response) => {
+app.post('/users/login', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
-    const values = [
-        request.body.name,
-        request.body.password
-    ];
+    //if username and password are the same as in the DB, log them in
+    const body = request.body;
+    const queryString = `SELECT * FROM users WHERE name = '${body.name}' `;
+
+    pool.query (queryString, (err, queryResponse) => {
+        if (err) {
+            console.log("Got error " + err);
+        } else {
+            console.log(queryResponse.rows);
+        }
+
+        //if user does not exist
+        if (queryResponse.rows.length === 0) {
+            console.log("User does not exist!")
+        } else {
+            console.log("User exist!"); //else if exist
+
+            // const user = queryResponse.rows[0];
+            // let password = user.password;
+
+            // if (password === body.password)
+        }
+    })
+
+
+    // const values = [
+    //     request.body.name,
+    //     request.body.password
+    // ];
 
     // execute query
-    pool.query(queryString, values, (error, queryResult) => {
+    // pool.query(queryString, values, (error, queryResult) => {
         //response.redirect('/');
-        response.send('user created');
-    });
+        // response.send('user created');
+    // });
 });
 
 
