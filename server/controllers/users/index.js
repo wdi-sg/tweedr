@@ -8,19 +8,28 @@ const { secret } = require("../../config/config");
 
 class Users {
   static createNew(req, res) {
-    const { name, password, profilePic } = req.body;
-    return User.findOne({ where: { name: `${name}` } }).then(user => {
+    console.log(req.body);
+    const { username, password, profilePic } = req.body;
+    return User.findOne({ where: { name: username } }).then(user => {
       if (user) {
-        res.status(200).send("username taken");
+        //     res.setHeader("Content-Type", "application/json");
+        res
+          .status(200)
+          .send({ success: false, message: "Username already taken." });
       } else {
         bcrypt.hash(password, saltRounds).then(hash => {
           return User.create({
-            name,
+            name: username,
             password: hash,
             profile_pic: profilePic
-          }).then(val =>
-            res.status(200).send({ message: "created user", val })
-          );
+          }).then(val => {
+            let token = jwt.sign({ username: username }, secret, {
+              expiresIn: "24h"
+            });
+            res
+              .status(200)
+              .send({ success: true, message: "created user", token: token });
+          });
         });
       }
     });
@@ -54,7 +63,7 @@ class Users {
             } else {
               res.json({
                 success: false,
-                message: "Incorrect username or password"
+                message: "Incorrect username or password."
               });
             }
           });

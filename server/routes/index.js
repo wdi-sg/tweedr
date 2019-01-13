@@ -6,6 +6,7 @@ const {  checkToken } = require("../authentications");
 module.exports = app => {
   app.post("/users/new", Users.createNew);
   app.post("/login", Users.login);
+  app.get("/validate",checkToken)
 
   app.get("/", Tweeds.listAll);
   app.get("/users/:id/tweeds",checkToken,Tweeds.listAllFromOneUser) 
