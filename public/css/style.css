@@ -1,0 +1,31 @@
+body{
+	background-color: white;
+	color: black;
+}
+
+a{
+	color: #1dcaff;
+}
+
+img{
+border-radius: 50%;
+border : 10px solid #1dcaff;
+width:250px;
+height:250px;
+	}
+
+	li{
+		margin: 10px 0px;
+	}
+
+	footer{
+		color: #1dcaff;
+	}
+
+	footer a{
+		color: #1dcaff;
+	}
+
+	.nav-link{
+		color: #1dcaff;
+	}

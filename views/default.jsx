@@ -8,7 +8,7 @@ class DefaultLayout extends React.Component {
         <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossOrigin="anonymous" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
-        <title>Recipe List</title>
+        <title>Tweedr</title>
         </head>
         <header>
 
@@ -17,19 +17,19 @@ class DefaultLayout extends React.Component {
         <nav>
             <ul className="navbar relative-top">
               <li className="nav-item">
-                <a className="nav-link text-info" href="/">Tweets</a>
+                <a className="nav-link" href="/">Tweets</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-info" href="/tweet/new">Create New Tweet</a>
+                <a className="nav-link" href="/tweet/new">Create New Tweet</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-info" href="#">Users</a>
+                <a className="nav-link" href="#">Users</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-info" href="user/login">Login</a>
+                <a className="nav-link" href="/user/login">Login</a>
               </li>
                 <li className="nav-item">
-                <a className="nav-link text-info" href="user/logout">Logout</a>
+                <a className="nav-link" href="/user/logout">Logout</a>
               </li>
 
             </ul>
@@ -41,7 +41,7 @@ class DefaultLayout extends React.Component {
                 </div>
               </div>
             </div>
-        <footer className="navbar fixed-bottom">
+        <footer className="navbar">
             Copyright 2019 <span> </span>
             Created with &hearts; by Ronnie Chua<span> </span>
             Github: <a href = "https://github.com/rchuaml">@https://github.com/rchuaml </a>

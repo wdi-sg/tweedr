@@ -75,7 +75,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/user/login', (request, response) => {
+     var loggedin = request.cookies['loggedin'];
+    if (loggedin === undefined){
     response.render('login');
+}else{
+response.redirect('/');
+};
 })
 
 
@@ -89,24 +94,23 @@ app.post('/user/login', (request, response) => {
 
         //response.send('hellooooo');
 
-        console.log(queryResponse.rows);
 
         // if the user doesnt exist
         if (queryResponse.rows.length === 0) {
-            console.log("user doesnt exist");
-        } else {
-            console.log("user exists!!!!!!");
+  response.send("User does not exist! <a href = '/user/login'> click here </a> to try again!");
+          } else {
 
             const user = queryResponse.rows[0];
 
-            console.log(user);
-            let password = user.password;
-            console.log(user.password);
-            console.log(request.body.password);
+            var password = user.password;
+            var username = user.username;
+            var userid = user.id;
+
             if (password == request.body.password) {
                 //password is correct
-                console.log('PASS WORD CORRECT TOO');
                 response.cookie('loggedin', 'true');
+                response.cookie('username', username);
+                response.cookie('author_id',userid);
                 response.redirect('/');
             } else {
                 // password is incorrect
@@ -120,6 +124,8 @@ app.post('/user/login', (request, response) => {
 app.get('/user/logout', (request, response) => {
 
   response.clearCookie('loggedin');
+  response.clearCookie('username');
+  response.clearCookie('author_id');
 
   response.send("Successfully logged out! <a href = '/user/login'> click here </a> to login");
 })
@@ -143,6 +149,40 @@ app.post('/user', (request, response) => {
     });
 });
 
+//see profile of user
+app.get('/user/:id', (req, res) => {
+    // console.log("inside id");
+    let id = req.params.id;
+    // console.log("inside the id req:", req.params.id);
+    pool.query('SELECT * FROM users WHERE ID =' + id, (err, queryResult) => {
+        // console.log("inside pool query of :id");
+        // console.log(artistId.rows);
+        let user = {};
+        user.list = [];
+        user.list = queryResult.rows;
+        res.render('display', user);
+
+    });
+});
+
+app.get("/tweet/new", (req,res) => {
+        res.render('newtweet');
+});
+
+app.post("/tweet", (req,res) => {
+// console.log(req.body);
+// console.log(req.cookies);
+let content = req.body.content;
+let author_id = parseInt(req.cookies.author_id);
+const queryText = `INSERT INTO tweets (content, author_id) VALUES ('${content}', '${author_id}')`;
+pool.query(queryText, (err, response) => {
+        if (err) {
+            console.log("query error", err.message);
+        } else {
+            res.send("Successfully created tweet! <a href = '/'>Click here</a> to reload the tweets!");
+        }
+    });
+});
 
 
 /**
