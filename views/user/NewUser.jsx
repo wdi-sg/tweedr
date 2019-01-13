@@ -1,22 +1,21 @@
 var React = require("react");
+var Default = require("../Default");
 
 class NewUser extends React.Component {
   render() {
     return (
-      <html>
-        <head />
-        <body>
-          <form className="user-form" method="POST" action="/users">
-            <div className="user-attribute">
-              name<input name="name" type="text" />
-            </div>
-            <div className="user-attribute">
-              password:<input name="password" type="text" />
-            </div>
-            <input name="submit" type="submit" />
-          </form>
-        </body>
-      </html>
+      <Default>
+        <h2>Create a New Account</h2><br/>
+        <form className="user-form" method="POST" action="/users">
+          <div className="user-attribute">
+            Username: <input name="name" type="text" />
+          </div>
+          <div className="user-attribute">
+            Password: <input name="password" type="text" />
+          </div>
+          <input name="submit" type="submit" />
+        </form>
+      </Default>
     );
   }
 }
