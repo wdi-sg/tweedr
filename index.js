@@ -44,7 +44,7 @@ app.engine('jsx', reactEngine);
 // SHOW ALL TWEETS
 //==============================================================
 app.get('/', (req, res) => {
-    let query = "SELECT * FROM tweets;";
+    let query = "SELECT * FROM tweets INNER JOIN users ON (tweets.author_id = users.id);";
 
     pool.query(query, (err, result) => {
         if (err) {
@@ -52,16 +52,44 @@ app.get('/', (req, res) => {
             res.send( 'query error' );
         } else {
             let resultArr = [result.rows];
-            res.render('home', resultArr);
-            // res.send(resultArr);
+            resultArr.push(req.cookies['loggedIn']);
+
+            if (req.cookies['loggedIn']) {
+                query = `SELECT * FROM users WHERE name='${req.cookies['name']}'`;
+                pool.query(query, (err, result) => {
+                    if (err) {
+                        console.error('query error:', err.stack);
+                        res.send( 'query error' );
+                    } else {
+                        resultArr.push(result.rows);
+                        console.log(resultArr);
+                        res.render('home', resultArr);
+                    }
+                })
+            } else {
+                console.log(resultArr);
+                res.render('home', resultArr);
+            }
         }
     });
 });
 
-
+//
 //==============================================================
-app.get('/users/new', (req, res) => {
-  res.render('user/newuser');
+app.post('/users/new', (req, res) => {
+    const values = [req.body.name, req.body.password];
+    let query = "INSERT INTO users (name, password) VALUES ($1, $2)";
+
+    pool.query(query, values, (err, result) => {
+        if (err) {
+            console.error('query error:', err.stack);
+            res.send( 'query error' );
+        } else {
+            res.cookie('loggedIn', true);
+            res.cookie('name', req.body.name);
+            res.redirect('/');
+        }
+    });
 });
 
 app.post('/users', (req, res) => {
