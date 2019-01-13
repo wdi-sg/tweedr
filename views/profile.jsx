@@ -61,7 +61,7 @@ class Profile extends React.Component {
                 <input type="submit" className="new" value="Back" />
             </form>
             {users}
-            <h4>Tweets made by user:-</h4>
+            <h4>Tweets made by this user:-</h4>
             <ul>{contents}</ul>
         </Defaultcss>
     );
