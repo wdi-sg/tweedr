@@ -13,7 +13,7 @@ const pg = require('pg');
 const configs = {
   user: 'andrealmj',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedrdb',
   port: 5432,
   password: 'pg'
 };
@@ -49,31 +49,77 @@ app.engine('jsx', reactEngine);
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
     //display all tweets
-    response.send('Welcome To Tweedr.');
+    pool.query('SELECT * FROM tweets', (err, result) => {
+        if (err) {
+            console.error('query error: ', err.stack);
+            response.send('query error');
+        } else {
+            response.render('home', {tweets: result.rows});
+        }
+    })
 
-    //allow user to register and/or login to create a tweet
-});
+    //allow user to register a new account
+    app.get('/users/new', (request, response) => {
+        response.render('user/NewUser');
+    });
 
-app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+    //allow user to login to create a tweet
+    app.get('/login', (request, response) => {
+        response.render('loginPage');
+    });
+
+    app.post('/login',  (request, response) => {
+
+        // response.send("mmmm");
+
+        //if the username and password match those in the database, log them in
+        let query = "SELECT * FROM users WHERE name='"+request.body.name+"'";
+
+        pool.query(query, (err, queryResponse) => {
+            console.log( queryResponse );
+
+            //if the user doesn't exist
+            if (queryResponse.rows.length === 0) {
+                console.log("user doesn't exist");
+                response.send("User does not exist.");
+            } else {
+                console.log("user exists");
+
+                const user = queryResponse.rows[0];
+                let password = user.password;
+
+                if (password == request.body.password) {
+                    //correct password
+                    console.log('correct password');
+                    response.cookie('loggedin', 'true');
+                    // response.send("logged in");
+                } else {
+                    //incorrect password
+                    console.log("incorrect password");
+                    // response.send("password is incorrect");
+                }
+            }
+
+            response.send("hi hi hi hi hi 5");
+
+        })
+    })
 });
 
 app.post('/users', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+    const queryString = 'INSERT INTO users (username, password) VALUES ($1, $2)';
     const values = [
-        request.body.name,
+        request.body.username,
         request.body.password
     ];
 
-    // execute query
-    pool.query(queryString, values, (error, queryResult) => {
+    pool.query(queryString, values, (error, result) => {
         //response.redirect('/');
-        response.send('user created');
+        response.cookie('loggedin', 'true');
+        response.send("<html><body><h3>User created!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Login</a></button>")
     });
 });
-
-
 
 /**
  * ===================================
