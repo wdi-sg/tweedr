@@ -51,7 +51,9 @@ app.get('/', (request, response) => {
 
     var loggedin = request.cookies['loggedin'];
 
-    //see if user is logged in (i.e. loggedin cookie exists)
+    //check if user is logged in (i.e. loggedin cookie exists)
+
+    //if user is NOT logged in (i.e. loggedin cookie is not defined)
     if ( loggedin === undefined ) {
         //display all tweets as a user who is NOT logged in
         pool.query('SELECT * FROM tweets', (err, result) => {
@@ -63,7 +65,7 @@ app.get('/', (request, response) => {
             }
         })
     } else {
-        // response.send("you're logged in man");
+        //else, display home page as a user who is logged in (and can therefore create tweets)
         pool.query("SELECT * FROM tweets", (err, result) => {
             if (err) {
                 console.error('query error: ', err.stack);
