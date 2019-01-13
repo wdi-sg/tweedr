@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    "User",
+  const Tweed = sequelize.define(
+    "Tweed",
     {
       id: {
         allowNull: false,
@@ -9,16 +9,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4
       },
-      name: DataTypes.STRING,
-      password: DataTypes.STRING,
-      profile_pic: DataTypes.STRING
+      content: DataTypes.STRING
     },
     {}
   );
-  User.associate = function(models) {
-    User.hasMany(models.Tweed, {
+  Tweed.associate = function(models) {
+    Tweed.belongsTo(models.User, {
       foreignKey: "user_id"
     });
   };
-  return User;
+  return Tweed;
 };

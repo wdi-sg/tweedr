@@ -7,7 +7,6 @@ const routes = require('./server/routes')
 const hostname = '127.0.0.1';
 const port = 3001;
 
-
 // Parse incoming requests data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
