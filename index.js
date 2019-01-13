@@ -73,16 +73,17 @@ app.get('/', (request, response) => {
         // response.send("mmmm");
 
         //if the username and password match those in the database, log them in
-        let query = "SELECT * FROM users WHERE name='"+request.body.name+"'";
+        let query = "SELECT * FROM users WHERE username='"+request.body.username+"'";
 
         pool.query(query, (err, queryResponse) => {
-            console.log( queryResponse );
+            console.log( "query response:", queryResponse.rows );
 
             //if the user doesn't exist
             if (queryResponse.rows.length === 0) {
                 console.log("user doesn't exist");
                 response.send("User does not exist.");
             } else {
+                //if the user exists, check for correct password
                 console.log("user exists");
 
                 const user = queryResponse.rows[0];
@@ -92,16 +93,13 @@ app.get('/', (request, response) => {
                     //correct password
                     console.log('correct password');
                     response.cookie('loggedin', 'true');
-                    // response.send("logged in");
+                    response.send("logged in");
                 } else {
                     //incorrect password
                     console.log("incorrect password");
-                    // response.send("password is incorrect");
+                    response.send("password is incorrect");
                 }
             }
-
-            response.send("hi hi hi hi hi 5");
-
         })
     })
 });
