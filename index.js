@@ -1,7 +1,7 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
-
+const sha256 = require('js-sha256');
 const pg = require('pg');
 
 /**
@@ -90,7 +90,7 @@ app.post('/users/add', (request, response) => {
                 request.body.photo,
                 request.body.nat,
                 request.body.username,
-                request.body.password
+                sha256(request.body.password)
             ];
 
             pool.query(queryString, values, (error, queryResult) => {
@@ -125,9 +125,12 @@ app.post('/user/signin', (request, response) => {
             const user = queryResult.rows[0];
 
             let password = user.password;
+            let inputPass = sha256(request.body.password)
 
-            if(password == request.body.password){
-                response.cookie('loggedin', user.name);
+            if(password == inputPass){
+                let hashCookie = sha256(user.name);
+                response.cookie('loggedin', hashCookie);
+
                 pool.query(`SELECT id FROM users WHERE name = '${user.name}'`, (err, queryResult) =>{
                     let queryString = queryResult.rows[0].id;
                     pool.query(`SELECT DISTINCT(users.id), name, content FROM users INNER JOIN tweets ON (users.id = author_id) INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
