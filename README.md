@@ -15,10 +15,8 @@ Users can register and/or login in order to create a tweet.
 Create each part of your app step by step.
 
 1. Create a tables.sql for your app. Don't worry too much about making it complete, since with a seed.sql file you can update your db easily.
-
-  1.5 The basic tables.sql will have a users table and a tweets table.
-
-  1.6 The app provides a basic user creation, so the basic app doesn't need anything more for users.
+     - The basic tables.sql will have a users table and a tweets table.
+     - The app provides a basic user creation, so the basic app doesn't need anything more for users.
 
 2. Implement login of the user.
 
@@ -40,7 +38,7 @@ Users can see just the tweets of the users that follow them.
 Create user profile pages. `/users/1`
 
 #### Further
-Each reference on a page should be a link to that thing- (each tweet should link to a single tweet, each user should link to their profile, etc.)
+Each reference on a page should be a link to that thing - (each tweet should link to a single tweet, each user should link to their profile, etc.)
 
 #### Further
 Validate that the user trying to register is using a name unique to the system.
@@ -65,7 +63,7 @@ Add the ability to delete things.
 Add bootstrap to your app.
 
 #### Further
-Add the ability to add a profile picture- see `input` `type=file` and `form` `enctype=multipart/formdata`
+Add the ability to add a profile picture - see `input` `type=file` and `form` `enctype=multipart/formdata`
 
 #### Further
 Add the ability to tweet photos, also using the same profile pic upload as above.
