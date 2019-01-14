@@ -6,15 +6,19 @@ class NewUser extends React.Component {
       <html>
         <head />
         <body>
+
+        <h3>Register as a new user:</h3>
           <form className="user-form" method="POST" action="/users">
             <div className="user-attribute">
-              name<input name="name" type="text" />
+              Username:<input name="username" type="text" />
             </div>
             <div className="user-attribute">
-              password:<input name="password" type="text" />
+              Password:<input name="password" type="text" />
             </div>
             <input name="submit" type="submit" />
           </form>
+
+          <button><a href="/">Back to Home</a></button>
         </body>
       </html>
     );
