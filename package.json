@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.3",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "express-react-views": "^0.10.5",
     "js-sha256": "^0.9.0",
     "method-override": "^2.3.10",
@@ -19,5 +19,15 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "sha256": "^0.2.0"
-  }
+  },
+  "description": "Let's make a cool new app called TWEEDR!! Not Twitter, geez...",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the574th/tweedr.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/the574th/tweedr/issues"
+  },
+  "homepage": "https://github.com/the574th/tweedr#readme"
 }
