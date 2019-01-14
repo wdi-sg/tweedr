@@ -1,7 +1,7 @@
-INSERT INTO users (name, password) VALUES ('Jason', 'Nosaj');
-INSERT INTO users (name, password) VALUES ('Jolly', 'Ylloj');
-INSERT INTO users (name, password) VALUES ('Josh', 'Hsoj');
-INSERT INTO users (name, password) VALUES ('Jobs', 'Sboj');
+INSERT INTO users (name, password) VALUES ('Jason', 'e888ace9c427b14fcfa6c335967c90d82133edfcf47791bac3f2402eed29a944');
+INSERT INTO users (name, password) VALUES ('Jolly', '505851ab1c4e6450b36866479072b74dc122ffdd24b143a5edfb3854a9d944e3');
+INSERT INTO users (name, password) VALUES ('Josh', 'cdb2f1695ec29be77f154e490d093e512cff27f2c48ad389433fc384af9bf8cd');
+INSERT INTO users (name, password) VALUES ('Jobs', '93c5736b4a59e16d8fd6f55be9c5a3d6bafbeb01bf566edc975f0665694a93e2');
 
 INSERT INTO tweets (content, author_id) VALUES ('Hungry Sia', 2);
 INSERT INTO tweets (content, author_id) VALUES ('I wanna go home', 1);

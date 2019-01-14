@@ -28,7 +28,7 @@ class Home extends React.Component {
     const tweetForm = () => {
         return (
                 <div>
-                    <h2>{this.props[2][0].name}</h2>
+                    <h2>{(this.props[2]) ? this.props[2][0].name : null}</h2>
                     <hr class="my-4"/>
                     <form action="/" method="POST">
                         <div class="d-flex w-100 justify-content-between">

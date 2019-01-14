@@ -88,7 +88,7 @@ app.post('/users/new', (req, res) => {
                     } else {
                         const user = result.rows[0];
                         let password = user.password;
-                        if (password == req.body.password) {
+                        if (password == sha256(req.body.password)) {
                             res.cookie('loggedIn', true);
                             res.cookie('name', req.body.name);
                             res.redirect('/');
@@ -107,7 +107,7 @@ app.post('/users/new', (req, res) => {
             break;
 
         case 'signup':
-            const values = [req.body.name, req.body.password];
+            const values = [req.body.name, sha256(req.body.password)];
             let text = "INSERT INTO users (name, password) VALUES ($1, $2)";
 
             pool.query(text, values, (err, result) => {
