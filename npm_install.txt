@@ -1,0 +1,9 @@
+npm install
+npm install express
+npm install jsonfile
+npm install method-override
+npm install express-react-views
+npm install react
+npm install react-dom
+npm install cookie-parser
+npm install js-sha256
