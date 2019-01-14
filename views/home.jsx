@@ -6,7 +6,7 @@ class Home extends React.Component {
         return(
             <DefaultLayout>
                 <h1> Welcome to Tweedr! </h1>
-                    <a href='tweedr/users/login'> Log In </a>
+                    <a href='/users/login'> Log In </a>
             </DefaultLayout>
         )
     }

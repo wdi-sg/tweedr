@@ -46,16 +46,16 @@ app.engine('jsx', reactEngine);
  */
 
 // Root GET request (it doesn't belong in any controller file)
-app.get('/tweedr/', (request, response) => {
+app.get('/', (request, response) => {
 
     response.render('home');
 });
 
-app.get('/tweedr/users/login', (request, response) => {
+app.get('/users/login', (request, response) => {
   response.render('login');
 });
 
-app.post('/tweedr/users/login', (request, response) => {
+app.post('/users/login', (request, response) => {
 
     //if username and password are the same as in the DB, log them in
     const body = request.body;
@@ -79,8 +79,9 @@ app.post('/tweedr/users/login', (request, response) => {
             // if for password on log in is the same as password in DB
             if (password === body.password) {
                 console.log("Password is correct!");
+                response.cookie('loggedin', 'true');
 
-                let link = `/tweedr/user/${user.id}`;
+                let link = `/user/${user.id}`;
                 response.redirect(link);
             } else {
                 console.log("Incorrect password try again!");
@@ -88,36 +89,49 @@ app.post('/tweedr/users/login', (request, response) => {
         }
     });
 
-app.get ('/tweedr/user/:id', (request,response)=> {
+app.get ('/user/:id', (request,response)=> {
+    let loggedin = request.cookies['loggedin'];
 
-    const userId = request.params.id;
-    const queryText = `SELECT * FROM tweets WHERE users_id = ${userId}`;
+    if (loggedin !== undefined) {
+        const userId = request.params.id;
+        const queryText = `SELECT * FROM tweets WHERE users_id = ${userId}`;
 
         pool.query (queryText, (err, queryResponse) => {
             if (err) {
                 console.log("Got error " + err);
             } else {
                 console.log ({user:queryResponse.rows});
-                response.render('user', {user:queryResponse.rows});
+                response.render('user', {user:queryResponse.rows,id:userId});
             }
+        });
+    } else {
+        response.send("you are not logged in!")
+    }
+});
 
-        })
-})
-
-app.post ('/tweedr/user/:id/tweets/new', (request,response)=> {
+app.post ('/user/:id/tweets/new', (request,response)=> {
 
     const body = request.body;
     const queryText = `INSERT INTO tweets (post, users_id) VALUES ($1,$2)`;
-    const value = [request.body.post, request.params.id];
+    const value = [body.tweet, request.params.id];
+    console.log(request.params.id);
 
         pool.query (queryText, value, (err, queryResponse) => {
             if (err) {
                 console.log("Got error " + err);
             } else {
-                response.render("Okay posted!");
+                let link = `/user/${request.params.id}`;
+                response.redirect(link);
             }
 
         })
+})
+
+app.get('/user/:id/logout', (request, response) => {
+
+  response.clearCookie('loggedin');
+
+  response.send('you are logged out');
 })
 
 

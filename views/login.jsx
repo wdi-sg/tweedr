@@ -7,7 +7,7 @@ class Login extends React.Component {
             <DefaultLayout>
                 <fieldset>
                     <legend> Log in </legend>
-                        <form method="POST" action="/tweedr/users/login">
+                        <form method="POST" action="/users/login">
                             <div> name: <input name="name" type="text" />
                             </div>
                             <div >password: <input name="password" type="text" />
