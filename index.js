@@ -54,7 +54,14 @@ app.get('/', (request, response) => {
     if (loggedIn === undefined) {
         response.cookie('loggedIn', false);
     }
-    response.render('default');
+
+    // INNER JOIN users ON user_id=user.id
+    const queryString = 'SELECT tweeds.id, tweeds.tweed, tweeds.user_id, users.id FROM tweeds JOIN users ON tweeds.user_id=users.id'
+
+    pool.query(queryString, (error, queryResult) => {
+        error ? console.error(error.stack) : null;
+        response.render('user/allTweeds', {'tweeds':queryResult.rows});
+    });
 });
 
 app.get('/users/new', (request, response) => {
@@ -72,13 +79,15 @@ app.post('/users/login', (request, response) => {
         request.body.password
     ];
     pool.query(queryString, values, (error, queryResult) => {
+        error ? console.error(error.stack) : null;
 
         let accountFound = queryResult.rows.find(result => {
             return result.username === values[0] && result.password === values[1];
         })
         if (accountFound) {
             response.cookie('loggedIn', true);
-            response.cookie('account', accountFound.username);
+            response.cookie('username', accountFound.username);
+            response.cookie('id', accountFound.id);
             response.render('default');
         } else if (!accountFound && queryResult.rows.find(result => {
                 return result.username === values[0];
@@ -105,7 +114,6 @@ app.post('/users', (request, response) => {
 });
 
 app.get('/users/tweed', (request, response) => {
-    console.log(request.cookies);
     if (request.cookies.loggedIn === 'true'){
         response.render('user/tweed', request.cookies);
     } else {
@@ -113,13 +121,15 @@ app.get('/users/tweed', (request, response) => {
     }
 });
 
-app.get('/users/tweed', (request, response) => {
-    console.log(request.cookies);
-    if (request.cookies.loggedIn === 'true'){
-        response.render('user/tweed', request.cookies);
-    } else {
-        response.render('user/noTweed');
-    }
+app.post('/users/tweed', (request, response) => {
+    const queryString = 'INSERT INTO tweeds (tweed, user_id) VALUES ($1, $2)';
+    const values = [
+        request.body.tweed,
+        parseInt(request.cookies.id)
+    ];
+    pool.query(queryString, values, (error, queryResult) => {
+        response.redirect('/');
+    });
 });
 
 /**

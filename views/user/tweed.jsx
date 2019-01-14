@@ -5,7 +5,7 @@ class Tweed extends React.Component {
   render() {
     return (
       <Default>
-        <h2>{this.props.account}</h2>
+        <h2>{this.props.username}</h2>
         <form className="user-form" method="POST" action="/users/tweed">
             <div className="user-attribute">
               tweed<input name="tweed" placeholder="Tweed something" type="text" />

@@ -4,9 +4,9 @@ CREATE TABLE users (
     password TEXT
 );
 
-CREATE TABLE tweets (
+CREATE TABLE tweeds (
     id SERIAL PRIMARY KEY,
-    tweet TEXT,
+    tweed TEXT,
     user_id INTEGER
 );
 
