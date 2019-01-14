@@ -1,9 +1,10 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const pg = require('pg');
 const sha256 = require('js-sha256');
 
-const pg = require('pg');
+const SALT = "tweedr is the best";
 
 /**
  * ===================================
@@ -116,8 +117,12 @@ app.get('/', (request, response) => {
                 if (formHashedPassword === hashedPassword) {
                     //correct password
                     console.log('correct password');
-                    //set user cookie as LOGGED IN = TRUE
+
+                    //set up hashed cookie
+                    let hashedCookie = sha256( user.id + SALT);
+                    response.cookie('hashedLoginCookie', hashedCookie);
                     response.cookie('loggedin', 'true');
+                    response.cookie('user_id', user.id);
 
                     pool.query('SELECT * FROM tweets', (err, result) => {
                         if (err) {
@@ -125,7 +130,12 @@ app.get('/', (request, response) => {
                             response.send('query error');
                         } else {
                             //since user has logged in successfully, user can now create a tweet on the home page
-                            response.render('user/LoggedInUser', {tweets: result.rows});
+                            results = {}
+                            results.tweets = result.rows;
+                            results.user = request.body.username;
+                            console.log(results);
+
+                            response.render('user/LoggedInUser', results);
                         }
                     });
                 } else {
