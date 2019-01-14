@@ -11,7 +11,7 @@ class Login extends React.Component {
               Username: <input name="name" type="text" />
             </div>
             <div className="user-attribute">
-              Password: <input name="password" type="text" />
+              Password: <input name="password" type="password" aria-describedby="passwordHelpBlock"/>
             </div>
             <input name="submit" type="submit" />
 
