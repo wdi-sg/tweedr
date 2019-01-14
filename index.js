@@ -1,6 +1,7 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const sha256 = require('js-sha256');
 
 const pg = require('pg');
 
@@ -105,9 +106,14 @@ app.get('/', (request, response) => {
                 console.log("user exists");
 
                 const user = queryResponse.rows[0];
-                let password = user.password;
+                let hashedPassword = user.password;
+                let formHashedPassword = sha256(request.body.password);
 
-                if (password == request.body.password) {
+                console.log("we are comparing 2 hashed values -");
+                console.log("one from the DB: " + hashedPassword);
+                console.log("and one from the login form: " + formHashedPassword);
+
+                if (formHashedPassword === hashedPassword) {
                     //correct password
                     console.log('correct password');
                     //set user cookie as LOGGED IN = TRUE
@@ -141,10 +147,15 @@ app.get('/', (request, response) => {
 //accept newly-registered user data
 app.post('/users', (request, response) => {
 
+    console.log(request.body);
+
+    let hashedPassword = sha256(request.body.password);
+    console.log("hashed password: ", hashedPassword);
+
     const queryString = 'INSERT INTO users (username, password) VALUES ($1, $2)';
     let values = [
         request.body.username,
-        request.body.password
+        hashedPassword
     ];
 
     pool.query(queryString, values, (error, result) => {
