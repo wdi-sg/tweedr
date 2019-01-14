@@ -87,14 +87,14 @@ app.post('/login', (req, res) => {
                 let getusers = `select * from users;`
                 let gettweets = `select * from tweets;`
                 let getfollows = `select * from getfollows;`
-                pool.query(getusers, (err, result1) => {
+                pool.query(getusers, (err1, result1) => {
                     tempArr.push(result1.rows);
-                })
-                pool.query(gettweets, (err, result2) => {
-                    tempArr.push(result2.rows);
-                })
-                pool.query(getfollows, (err, result3) => {
-                    tempArr.push(result3.rows);
+                    pool.query(gettweets, (err2, result2) => {
+                        tempArr.push(result2.rows);
+                        pool.query(getfollows, (err3, result3) => {
+                            tempArr.push(result3.rows);
+                        })
+                    })
                 })
                 let passObj = {
                     tempArr
