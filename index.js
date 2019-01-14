@@ -11,9 +11,9 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'tengchoonhong',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedr',
   port: 5432,
 };
 
@@ -46,30 +46,21 @@ app.engine('jsx', reactEngine);
  */
 
 // Root GET request (it doesn't belong in any controller file)
-app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
-});
+// app.get('/', (request, response) => {
+//   response.send('Welcome To Tweedr.');
+// });
 
-app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
-});
+const routes = require('./routes');
 
-app.post('/users', (request, response) => {
+app.get('/', routes);
+app.get('/users/new', routes);
+app.get('/users/login', routes);
+app.get('/users/profile', routes);
+app.get('/users/logout', routes)
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
-    const values = [
-        request.body.name,
-        request.body.password
-    ];
-
-    // execute query
-    pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
-        response.send('user created');
-    });
-});
-
-
+app.post('/users', routes);
+app.post('/users/login', routes);
+app.post('/users/profile', routes);
 
 /**
  * ===================================
