@@ -12,7 +12,7 @@ class Tweetedit extends React.Component{
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <form method="POST" action={"/tweet/" + this.props.list[0].id + "?_method=PUT"}>
+                    <form method="POST" action={"/tweet/" + this.props.list[0].content + "?_method=PUT"}>
                     <h3>Edit tweet ID {this.props.list[0].id}: </h3><br />
                     Tweet content:
                     <textarea class="form-control" id="exampleFormControlTextarea1" name="tweet"rows="3" defaultValue={this.props.list[0].content} required></textarea>

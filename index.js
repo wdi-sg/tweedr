@@ -225,7 +225,6 @@ app.get('/users/tweet/:name/new', (request, response) => {
     let name = request.params.name;
 
     pool.query(`SELECT * FROM users WHERE name = '${name}'`, (err, queryResult) =>{
-        console.log(queryResult.rows)
         response.render('tweetnew', {list:queryResult.rows});
     })
 });
@@ -278,21 +277,20 @@ app.post('/user/follow/:id', (request, response) => {
     }
 });
 
-app.get('/tweet/edit/:id', (request, response) => {
-    let id = request.params.id;
-    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE author_id = '${id}'`, (err, queryResult) =>{
+app.get('/tweet/edit/:content', (request, response) => {
+    let content = request.params.content;
+    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE content = '${content}'`, (err, queryResult) =>{
         let tweet =  queryResult.rows;
-        console.log(tweet)
 
         response.render('tweetedit', {list:tweet});
     })
 });
 
-app.put('/tweet/:id', (request, response) => {
-    let id = request.params.id;
-    let content = request.body.tweet
-    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE users.id = ${id}`, (err, queryResult) =>{
-        let queryString = `UPDATE tweets SET content = '${content}' WHERE id = '${id}'`;
+app.put('/tweet/:content', (request, response) => {
+    let content = request.params.content;
+    let tweet = request.body.tweet
+    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE users.id = ${content}`, (err, queryResult) =>{
+        let queryString = `UPDATE tweets SET content = '${tweet}' WHERE content = '${content}'`;
         pool.query(queryString, (err, queryResult) =>{
             response.redirect('/');
         })
