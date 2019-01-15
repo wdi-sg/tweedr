@@ -1,6 +1,7 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const db = require('./db')
 
 const pg = require('pg');
 
@@ -16,12 +17,6 @@ const configs = {
   database: 'tweedr',
   port: 5432,
 };
-
-const pool = new pg.Pool(configs);
-
-pool.on('error', function (err) {
-  console.log('idle client error', err.message, err.stack);
-});
 
 // Init express app
 const app = express();
@@ -50,17 +45,11 @@ app.engine('jsx', reactEngine);
 //   response.send('Welcome To Tweedr.');
 // });
 
-const routes = require('./routes');
+require('./routes')(app, db);
 
-app.get('/', routes);
-app.get('/users/new', routes);
-app.get('/users/login', routes);
-app.get('/users/profile', routes);
-app.get('/users/logout', routes)
-
-app.post('/users', routes);
-app.post('/users/login', routes);
-app.post('/users/profile', routes);
+app.get('/', (request, response) => {
+  response.send('Welcome To Tweedr.')
+})
 
 /**
  * ===================================
