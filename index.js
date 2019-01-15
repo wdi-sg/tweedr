@@ -11,10 +11,11 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'postgres',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedr',
   port: 5432,
+  password: 'postgres'
 };
 
 const pool = new pg.Pool(configs);
@@ -51,25 +52,47 @@ app.get('/', (request, response) => {
 });
 
 app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+  response.render('user/NewUser');
 });
 
 app.post('/users', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+    const queryString = 'INSERT INTO users (name,email,password,photo) VALUES ($1, $2,$3,$4)';
     const values = [
         request.body.name,
-        request.body.password
+        request.body.email,
+        request.body.password,
+        request.body.photo
+
     ];
 
     // execute query
     pool.query(queryString, values, (error, queryResult) => {
         //response.redirect('/');
-        response.send('user created');
+        //response.send('user created');
+        response.send(request.body);
     });
 });
 
+app.get('/tweets/new', (request, response) => {
+  response.render('user/NewTweet');
+});
 
+app.post('/tweets', (request, response) => {
+
+    const queryString = 'INSERT INTO tweets (content, created_at,users_id) VALUES ($1, $2,$3)';
+    const values = [
+        request.body.content,
+        request.body.created_at,
+        request.body.users_id
+    ];
+
+    // execute query
+    pool.query(queryString, values, (error, queryResult) => {
+        response.redirect('/');
+        //response.send('user created');
+    });
+});
 
 /**
  * ===================================
