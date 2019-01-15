@@ -1,21 +1,19 @@
 var React = require("react");
+var Default = requuire("default");
 // this form creates a new user account and sends to the Database
 class NewUser extends React.Component {
   render() {
     return (
       <html>
-        <head />
+        <head>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/>
+        </head>
         <body>
-            <h1> Create New User Page </h1>
-          <form className="user-form" method="POST" action="/users">
-            <div className="user-attribute">
-              name<input name="name" type="text" />
-            </div>
-            <div className="user-attribute">
-              password:<input name="password" type="text" /> <br />
-            </div>
-            <input name="submit" type="submit" />
-          </form>
+
+            <Default>
+                <h3>Welcome!</h3>
+                <a className="btn btn-primary" href="/tweets" role="button">Get started!</a>
+            </Default>
         </body>
       </html>
     );

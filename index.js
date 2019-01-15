@@ -47,15 +47,15 @@ app.engine('jsx', reactEngine);
  */
 
 //Get the login form for user to login
-app.get('/user/login', (request, response) => {
+app.get('/', (request, response) => {
   response.render('login');
 });
 
-app.post('/user/login', (request, response) => {
+app.post('/', (request, response) => {
 
     // if the user name and password are the same as in the DB, log them in
-    let query = "SELECT * FROM users WHERE name='"+request.body.name+"'";
-    pool.query(query, (err, queryResponse) => {
+    let queryString = "SELECT * FROM usersInfo WHERE name='"+request.body.name+"'";
+    pool.query(queryString, (err, queryResponse) => {
         //response.send('hellooooo');
 
         console.log( queryResponse.rows );
@@ -70,13 +70,14 @@ app.post('/user/login', (request, response) => {
                 //password is correct
                 console.log('PASSWORD CORRECT TOO');
                 response.cookie('loggedin', 'true');
+                res
             }else{
                 // password is incorrect
                 console.log('PASSWORD not correct');
+                response.send("Password is incorrect");
             }
         }
 
-        response.send('hellooooo')
     })
 });
 
@@ -89,15 +90,13 @@ app.get('/user/logout', (request, response) => {
 
 
 // Root GET request (it doesn't belong in any controller file)
-// Home Page after successful login?
-app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
-});
+// Get Form for login page
+
 
 //Creates a form to create a new user
-app.get('/users/new', (request, response) => {
+/*app.get('/users/new', (request, response) => {
   response.render('user/newuser');
-});
+});*/
 
 
 //Create a user and store in database
@@ -111,8 +110,8 @@ app.post('/users', (request, response) => {
 
     // execute query
     pool.query(queryString, values, (error, queryResult) => {
-        response.redirect('/user/login');
-        response.send('user created');
+        response.redirect('/user/newuser', {usersInfo: queryResult.rows});
+        //response.send('user created');
     });
 });
 
@@ -124,11 +123,26 @@ app.get('/tweets', (req, res) => {
         if (err) {
             console.log('Error', error);
         } else {
-            console.log(" Result ", queryResult.rows);
-            res.render()
+            //console.log(" Result ", queryResult.rows);
+            res.render("tweets", {tweets: queryResult.rows});
         }
     })
 })
+
+// Adding tweets
+app.post('/tweets', (request, response) => {
+    let queryString = 'INSERT INTO tweets (userTweet, usersInfo_Id, name) VALES ($1,$2,$3)';
+
+    const values = [request.body.text, request.body.body.usersInfo_Id,request.body.name];
+
+    pool.query(queryString, values, (err,queryResult) => {
+        if (err) {
+            console.log("Error", err);
+        }
+        console.log("tweets", {tweets: queryResult.rows});
+        //response.redirect('/home');
+    });
+});
 
 
 /**
