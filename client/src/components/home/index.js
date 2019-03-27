@@ -12,10 +12,16 @@ class Home extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
-
   }
   componentDidMount() {
-    this.getTweeds();
+    if (localStorage.getItem("isLoggedIn")) {
+      this.getTweeds();
+      // const video = document.querySelector("video");
+      // var constraints = { audio: true, video: { width: 1280, height: 720 } };
+      // navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      //   video.srcObject = stream;
+      // });
+    }
   }
   handleChange(e) {
     let target = e.target;
@@ -31,7 +37,7 @@ class Home extends Component {
   handleLogout() {
     console.log("logging out");
     localStorage.clear();
-    console.log(this.state.redirect)
+    console.log(this.state.redirect);
     this.setState({ redirect: true });
   }
   getTweeds() {
@@ -46,6 +52,9 @@ class Home extends Component {
           this.setState(prevState => ({
             tweeds: [...prevState.tweeds, val]
           }));
+          for (let item in this.state.tweeds) {
+            console.log(this.state.tweeds[item] === val);
+          }
         });
       })
     );
@@ -61,7 +70,7 @@ class Home extends Component {
       body: JSON.stringify({ content: this.state.tweedContent })
     }).then(res =>
       res.json().then(res => {
-        console.log(res);
+        //      console.log(res);
       })
     );
   }
@@ -84,6 +93,7 @@ class Home extends Component {
             </div>
             <div className="row">
               <div className="col">
+                {/* <video width="320" height="240" controls /> */}
                 <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
                   <div className="form-group">
                     <input
@@ -105,7 +115,7 @@ class Home extends Component {
               </div>
             </div>
             {this.state.tweeds.map((val, idx) => {
-              console.log(val);
+              //      console.log(val);
               return (
                 <div className="row" key={idx}>
                   {val.user}:{val.content} at {val.updatedAt}
