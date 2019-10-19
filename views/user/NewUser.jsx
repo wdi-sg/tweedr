@@ -6,12 +6,13 @@ class NewUser extends React.Component {
       <html>
         <head />
         <body>
+        <h1> Welcome to Tweedr. PLEASE REGISTER! </h1>
           <form className="user-form" method="POST" action="/users">
             <div className="user-attribute">
-              name<input name="name" type="text" />
+              Username<br/><input name="username" type="text" />
             </div>
             <div className="user-attribute">
-              password:<input name="password" type="text" />
+              Password:<br/><input name="password" type="password" />
             </div>
             <input name="submit" type="submit" />
           </form>
