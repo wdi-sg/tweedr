@@ -56,8 +56,19 @@ app.use(cookieParser());
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+    const queryString = `SELECT tweets.*, users.username FROM tweets INNER JOIN users ON tweets.user_id = users.id`;
+
+  pool.query(queryString, (err, result) => {
+      let tweets = {};
+      tweets.list=[];
+      for(let i = 0; i < result.rows.length; i++){
+              tweets.list.push(result.rows[i]);
+          }
+      response.render('Home', tweets);
+    });
 });
+//   response.send('Welcome To Tweedr.');
+// });
 
 app.get('/users/new', (request, response) => {
   response.render('user/newuser');
@@ -95,8 +106,8 @@ app.post('/users', (request, response) => {
         } else {
           console.log('query result:', result);
 
-
-          response.send( result.rows );
+          response.redirect('/login');
+          // response.send( result.rows );
         }
     });
 });
@@ -136,7 +147,7 @@ if (result.rows.length > 0) {
         response.cookie('user_id', user_id);
         response.cookie('hasLoggedIn', hashedCookie);
 
-        response.send('LOGGING IN.....');
+        response.redirect('/');
     } else {
         response.status(403).send('wrong password');
     }
@@ -169,6 +180,23 @@ if (request.cookies['hasLoggedIn'] === hashedValue) {
 
 
 });
+
+// ======== User Profile ========
+
+// app.get('/user/profile', (request, response) => {
+//  let user_id = request.cookies['user_id'];
+
+//   const queryString = 'SELECT users.username, tweets.content  FROM tweets INNER JOIN users ON users.id=tweets';
+
+//   // execute query
+//   pool.query(queryString, (err, result) => {
+//     console.log(result.rows);
+//         response.render('/user/profile', {tweets: result.rows});
+//   });
+// });
+
+
+
 
 /**
  * ===================================
