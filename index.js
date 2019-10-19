@@ -86,18 +86,7 @@ app.post('/users', (request, response) => {
         hashedPassword,
     ];
 
-    // execute query
-    // pool.query(queryString, values, (err, result) => {
-
-    //     if (err) {
-    //         console.error('query error: ', err.stack);
-    //         response.send('query error');
-    //     } else {
-    //         console.log('query result: ', result);
-    //     //response.redirect('/');
-    //     response.send('user created');
-    //     console.log(result.rows, "JAJAJAJA");
-    //     }
+      // execute query
       pool.query(queryString, values, (err,result) =>{
 
         if (err) {
@@ -154,9 +143,9 @@ if (result.rows.length > 0) {
 
 }
 
-else {
-    response.status(403).send('NO USERNAME!');
-}
+    else {
+        response.status(403).send('NO USERNAME!');
+    }
         }
 
     });
@@ -180,6 +169,39 @@ if (request.cookies['hasLoggedIn'] === hashedValue) {
 
 
 });
+
+// ========== Tweeting =============
+
+app.get('/tweets/new', (request, response) => {
+    // let text = "SELECT * FROM tweets";
+
+    // pool.query(text, (err, result) => {
+    //     response.render("tweet", {tweets: result.rows});
+    // })
+     response.render('tweet');
+});
+
+app.post('/tweets/new', (request, response) => {
+    const newTweet = 'INSERT INTO tweets (content) VALUES ($1)';
+    console.log(request.body);
+    let values = [request.body.tweets];
+    console.log(values);
+
+    pool.query(newTweet, values, (err, result) => {
+
+      let tweets =[];
+
+      for(let i = 0; i < result.rows.length; i++){
+              tweets.push(result.rows[i]);
+          }
+        console.log(result.rows);
+        response.redirect('/');
+    });
+});
+
+
+
+
 
 // ======== User Profile ========
 
