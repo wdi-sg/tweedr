@@ -13,6 +13,12 @@ A payment is a join table between two users.
 
 You will split the work between two people. One person will write model methods, the other will write controllers and views. **DO NOT WORK ON THE SAME FILE** we have not covered the git conflicts that will arise if two people work on the same file.
 
+### How to start
+
+Decide on **one** of the apps you will work on.
+
+Add the above functionality.
+
 
 ##### 1. the DB model methods
 
