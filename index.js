@@ -11,9 +11,10 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'kennethyeong',
+  password: '11111',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedr',
   port: 5432,
 };
 
@@ -47,27 +48,71 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+  console.log('in tweedr express get / page')
+  // get the currently set cookie
+  var visits = request.cookies['visits'];
+
+  // see if there is a cookie
+  if( visits === undefined ){
+
+    // set the cookie
+    visits = 1;
+    response.cookie('visits', visits);
+    // respond by redirecting to new user creation 
+    response.render('user/NewUser.jsx');
+    
+  }else{
+
+    // if a cookie exists, make a value thats 1 bigger
+    visits = parseInt( visits ) + 1;
+    response.cookie('visits', visits);
+    response.send('Welcome To Tweedr.');   
+  }
 });
 
-app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+app.get('/users', (request, response) => {
+  
+  var visits = request.cookies['visits'];
+  // see if there is a cookie
+  if( visits === undefined ){
+
+    // set the cookie
+    visits = 1;
+    response.cookie('visits', visits);
+    // respond by redirecting to new user creation 
+    response.render('user/NewUser.jsx');
+    
+  }else{
+
+    // if a cookie exists, make a value thats 1 bigger
+    visits = parseInt( visits ) + 1;
+    response.cookie('visits', visits);
+    response.send('Welcome To Tweedr.');   
+  }
 });
 
-app.post('/users', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+app.post('users/NewUser', (request, response) => {
+
+    const queryString = 'INSERT INTO users (name, passwrd) VALUES ($1, $2)';
     const values = [
         request.body.name,
         request.body.password
     ];
-
     // execute query
     pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
-        response.send('user created');
+      if (err){
+        console.log(err);
+      }
+      console.log(queryResult)
+      //response.redirect('/');
+      console.log('Post Request: ', values);
+      response.send('user created');
+      console.log(pool.query('SELECT * FROM users'))
     });
 });
+
+
 
 
 

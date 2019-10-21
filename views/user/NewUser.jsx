@@ -6,6 +6,7 @@ class NewUser extends React.Component {
       <html>
         <head />
         <body>
+          <h2>Welcome to Tweedr</h2>
           <form className="user-form" method="POST" action="/users">
             <div className="user-attribute">
               name<input name="name" type="text" />
@@ -13,7 +14,7 @@ class NewUser extends React.Component {
             <div className="user-attribute">
               password:<input name="password" type="text" />
             </div>
-            <input name="submit" type="submit" />
+            <input name="submit" id="newusercre8" type="submit" />
           </form>
         </body>
       </html>
