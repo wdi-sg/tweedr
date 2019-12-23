@@ -1,0 +1,26 @@
+INSERT INTO users (name, username, password) VALUES ('Babara', 'babas','pwhottiebabe');
+INSERT INTO users (name, username, password) VALUES ('Titus', 'coolguy','pwtomato');
+INSERT INTO users (name, username, password) VALUES ('Terry', 'supersonic', 'pwsonic');
+INSERT INTO users (name, username, password) VALUES ('Jeremy', 'silentfame', 'pwpassword');
+INSERT INTO users (name, username, password) VALUES ('Ignatius', 'iggy', 'pwiggy');
+INSERT INTO users (name, username, password) VALUES ('Jason', 'madskills','pwjassie');
+INSERT INTO users (name, username, password) VALUES ('Benjamin', 'bennie','pwbarker');
+INSERT INTO users (name, username, password) VALUES ('Rahman', 'hotwheels','pwrahman');
+INSERT INTO users (name, username, password) VALUES ('Jonathan', 'jonnie','pwjona');
+INSERT INTO users (name, username, password) VALUES ('Sonia', 'thesonia', 'pwsonia');
+
+INSERT INTO tweets (content, user_id) VALUES ('My first tweet!', 1);
+INSERT INTO tweets (content, user_id) VALUES ('What a hot day!', 2);
+INSERT INTO tweets (content, user_id) VALUES ('First time cooking', 2);
+INSERT INTO tweets (content, user_id) VALUES ('Lol what a day', 3);
+INSERT INTO tweets (content, user_id) VALUES ('Really want my holiday', 4);
+INSERT INTO tweets (content, user_id) VALUES ('Kindness all over', 5);
+INSERT INTO tweets (content, user_id) VALUES ('Be gracious and nice', 5);
+INSERT INTO tweets (content, user_id) VALUES ('I cannot wait for this sunday!', 5);
+INSERT INTO tweets (content, user_id) VALUES ('This is exciting', 6);
+INSERT INTO tweets (content, user_id) VALUES ('first day at work', 6);
+INSERT INTO tweets (content, user_id) VALUES ('happiness and gratefulness', 7);
+INSERT INTO tweets (content, user_id) VALUES ('why is everyone so nice', 8);
+INSERT INTO tweets (content, user_id) VALUES ('first time cycling', 8);
+INSERT INTO tweets (content, user_id) VALUES ('nice day at a park', 9);
+INSERT INTO tweets (content, user_id) VALUES ('picnic at botanic gardens', 10);
