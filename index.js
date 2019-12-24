@@ -4,16 +4,10 @@ const cookieParser = require('cookie-parser');
 
 const pg = require('pg');
 
-/**
- * ===================================
- * Configurations and set up
- * ===================================
- */
-
 const configs = {
-  user: 'akira',
+  user: 'Serene',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweets',
   port: 5432,
 };
 
@@ -23,10 +17,8 @@ pool.on('error', function (err) {
   console.log('idle client error', err.message, err.stack);
 });
 
-// Init express app
 const app = express();
 
-// Set up middleware
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 app.use(express.urlencoded({
@@ -39,24 +31,32 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', reactEngine);
 
-/**
- * ===================================
- * Routes
- * ===================================
- */
+
+
+////////////////////// MAIN CODE //////////////////////
+
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+  let loggedin = request.cookies['loggedin'];
+  let user = request.cookies['user'];
+
+  if (loggedin === undefined){
+    response.redirect('/login')
+  } else {
+    response.redirect("/user/profile");
+  }
 });
 
+
+// GET request for new user creation
 app.get('/users/new', (request, response) => {
   response.render('user/newuser');
 });
 
+// POST request for new user creation
 app.post('/users', (request, response) => {
-
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
+    const queryString = 'INSERT INTO users (username, password) VALUES ($1, $2)';
     const values = [
         request.body.name,
         request.body.password
@@ -64,18 +64,63 @@ app.post('/users', (request, response) => {
 
     // execute query
     pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
-        response.send('user created');
+      // response.send('User created!');
+        response.redirect('/login')
     });
 });
 
 
+// GET request for user login
+app.get('/login', (request, response) => {
+  response.render('user/login');
+});
 
-/**
- * ===================================
- * Listen to requests on port 3000
- * ===================================
- */
+
+// POST request for user login
+app.post('/login', (request, response) => {
+
+  const queryString = 'SELECT * FROM users WHERE username=$1 AND password=$2';
+  const values = [
+      request.body.name,
+      request.body.password
+  ];
+
+  // execute query
+  pool.query(queryString, values, (error, queryResult) => {
+    console.log(queryResult.rows);
+      if (queryResult.rows.length === 0) {
+        response.send("Wrong username or password. Please try again.")
+      } else {
+          response.cookie('loggedin', 'true');
+          response.cookie('user', queryResult.rows[0].username);
+          response.redirect("/user/profile");
+      }
+  });
+});
+
+// GET request for user logout
+app.get('/logout', (request, response) => {
+  response.clearCookie('loggedin');
+  response.clearCookie('user');
+  response.redirect('/login');
+});
+
+// GET request for user profile
+app.get('/user/profile', (request, response) => {
+  let user = request.cookies['user'];
+
+  const queryString = 'SELECT users.username, tweets.content  FROM tweets INNER JOIN users ON users.id=tweet';
+ 
+  // execute query
+  pool.query(queryString, (error, queryResult) => {
+    console.log(queryResult.rows);
+        response.render('/user/profile', {tweets: queryResult.rows});
+  });
+});
+
+
+
+/////////////////////////////////////////////////////
 
 const server = app.listen(3000, () => console.log('~~~ Tuning in to the waves of port 3000 ~~~'));
 
