@@ -19,5 +19,16 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "sha256": "^0.2.0"
-  }
+  },
+  "description": "Let's make a cool new app called TWEEDR!! Not Twitter, geez...",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonwongys/tweedr.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/jasonwongys/tweedr/issues"
+  },
+  "homepage": "https://github.com/jasonwongys/tweedr#readme"
 }
