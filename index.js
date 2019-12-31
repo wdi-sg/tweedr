@@ -1,8 +1,8 @@
-const express = require('express');
-const methodOverride = require('method-override');
-const cookieParser = require('cookie-parser');
+const express = require("express");
+const methodOverride = require("method-override");
+const cookieParser = require("cookie-parser");
 
-const pg = require('pg');
+const pg = require("pg");
 
 /**
  * ===================================
@@ -11,33 +11,35 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
-  host: '127.0.0.1',
-  database: 'testdb',
-  port: 5432,
+  user: "lydiacheung",
+  host: "127.0.0.1",
+  database: "tweedrdb",
+  port: 5432
 };
 
 const pool = new pg.Pool(configs);
 
-pool.on('error', function (err) {
-  console.log('idle client error', err.message, err.stack);
+pool.on("error", function(err) {
+  console.log("idle client error", err.message, err.stack);
 });
 
 // Init express app
 const app = express();
 
 // Set up middleware
-app.use(methodOverride('_method'));
+app.use(methodOverride("_method"));
 app.use(cookieParser());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
 // Set react-views to be the default view engine
-const reactEngine = require('express-react-views').createEngine();
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jsx');
-app.engine('jsx', reactEngine);
+const reactEngine = require("express-react-views").createEngine();
+app.set("views", __dirname + "/views");
+app.set("view engine", "jsx");
+app.engine("jsx", reactEngine);
 
 /**
  * ===================================
@@ -46,30 +48,69 @@ app.engine('jsx', reactEngine);
  */
 
 // Root GET request (it doesn't belong in any controller file)
-app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+app.get("/login", (request, response) => {
+  response.render("user/login");
 });
 
-app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+app.post("/", (request, response) => {
+  pool.query(
+    "SELECT * FROM users WHERE name = $1 AND password = $2",
+    [request.body.name, request.body.password],
+    (error, queryResult) => {
+      if (queryResult.rowCount > 0) {
+        pool.query(
+          "SELECT content FROM tweeds WHERE user_id = $1",
+          [queryResult.rows[0].name],
+          (e, q) => {
+            console.log(q.rows);
+            response.render("tweeds", {
+              userName: queryResult.rows[0].name,
+              tweedsContent: q.rows
+            });
+          }
+        );
+      } else {
+        response.send("Log in Failed!");
+      }
+    }
+  );
 });
 
-app.post('/users', (request, response) => {
-
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
-    const values = [
-        request.body.name,
-        request.body.password
-    ];
-
-    // execute query
-    pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
-        response.send('user created');
-    });
+app.post("/tweeds", (request, response) => {
+  pool.query(
+    "INSERT INTO tweeds (content,user_id) VALUES ($1,$2)",
+    [request.body.tweed, request.body.name],
+    (error, queryResult) => {
+      pool.query(
+        "SELECT content FROM tweeds WHERE user_id = $1",
+        [request.body.name],
+        (e, q) => {
+          console.log(q.rows);
+          response.render("tweeds", {
+            userName: request.body.name,
+            tweedsContent: q.rows
+          });
+        }
+      );
+    }
+  );
 });
 
+app.get("/users/new", (request, response) => {
+  response.render("user/newuser");
+});
 
+app.post("/users", (request, response) => {
+  const queryString = "INSERT INTO users (name, password) VALUES ($1, $2)";
+  const values = [request.body.name, request.body.password];
+
+  // execute query
+  pool.query(queryString, values, (error, queryResult) => {
+    console.log(request.body.name);
+    //response.redirect('/');
+    response.send("user created");
+  });
+});
 
 /**
  * ===================================
@@ -77,15 +118,16 @@ app.post('/users', (request, response) => {
  * ===================================
  */
 
-const server = app.listen(3000, () => console.log('~~~ Tuning in to the waves of port 3000 ~~~'));
+const server = app.listen(8000, () =>
+  console.log("~~~ Tuning in to the waves of port 8000 ~~~")
+);
 
-let onClose = function(){
-
+let onClose = function() {
   server.close(() => {
-    console.log('Process terminated')
-    pool.end( () => console.log('Shut down db connection pool'));
-  })
+    console.log("Process terminated");
+    pool.end(() => console.log("Shut down db connection pool"));
+  });
 };
 
-process.on('SIGTERM', onClose);
-process.on('SIGINT', onClose);
+process.on("SIGTERM", onClose);
+process.on("SIGINT", onClose);
