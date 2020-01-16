@@ -1,7 +1,7 @@
 var React = require("react");
 var Default = require("././default");
 
-class NewUser extends React.Component {
+class Profile extends React.Component {
   render() {
     return (
       <html>
@@ -10,8 +10,7 @@ class NewUser extends React.Component {
         </head>
         <body>
             <Default>
-                <h3>Welcome!</h3>
-                <a className="btn btn-primary" href="/tweets" role="button">Get started!</a>
+                <a className="btn btn-primary" href="/tweets" role="button">Follow</a>
             </Default>
         </body>
       </html>
@@ -19,4 +18,4 @@ class NewUser extends React.Component {
   }
 }
 
-module.exports = NewUser;
+module.exports = Profile;
