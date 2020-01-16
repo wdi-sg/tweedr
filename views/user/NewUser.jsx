@@ -11,9 +11,17 @@ class NewUser extends React.Component {
               name<input name="name" type="text" />
             </div>
             <div className="user-attribute">
-              password:<input name="password" type="text" />
+              email<input name="email" type="text" />
+            </div>            
+            <div className="user-attribute">
+              password<input name="password" type="text" />
             </div>
-            <input name="submit" type="submit" />
+            <div className="user-attribute">
+              photo<input name="photo" type="text" />
+            </div>
+            <div>
+            <button type="submit"/>SUBMIT</button>
+            </div>
           </form>
         </body>
       </html>
