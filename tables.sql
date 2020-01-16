@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE IF NOT EXISTS users (
+	id SERIAL PRIMARY KEY,
+	name TEXT,
+	password TEXT
+);
+
+DROP TABLE IF EXISTS tweets;
+
+CREATE TABLE IF NOT EXISTS tweets (
+	id SERIAL PRIMARY KEY,
+	content TEXT,
+	user_id INTEGER,
+	date_col DATE DEFAULT now()
+);
