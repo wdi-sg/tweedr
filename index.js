@@ -1,7 +1,7 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
-
+const sha256 = require('js-sha256');
 const pg = require('pg');
 
 /**
@@ -11,7 +11,7 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'sean',
   host: '127.0.0.1',
   database: 'testdb',
   port: 5432,
@@ -25,6 +25,9 @@ pool.on('error', function (err) {
 
 // Init express app
 const app = express();
+
+// this line sets css files path
+app.use(express.static('public'));
 
 // Set up middleware
 app.use(methodOverride('_method'));
@@ -47,29 +50,272 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+
+    if(request.cookies.loggedin !== undefined){
+        pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let queryString = queryResult.rows[0].id;
+            pool.query(`SELECT DISTINCT(users.id), name, content FROM users INNER JOIN tweets ON (users.id = author_id) INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
+            let tweets = queryResult.rows;
+            response.render('home',{list:tweets, user:[request.cookies.loggedin]});
+            })
+        })
+    }
+    else{
+        response.render('home');
+    }
 });
 
 app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+  response.render('newuser');
 });
 
-app.post('/users', (request, response) => {
+app.post('/users/add', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
-    const values = [
-        request.body.name,
-        request.body.password
-    ];
+    pool.query("SELECT name FROM users", (err, queryResult) =>{
+        let validate = true;
+        let queryName = queryResult.rows;
+        let paramName = request.body.name.charAt(0).toUpperCase() + request.body.name.slice(1);
+        for(let i = 0; i < queryName.length; i++){
+            if(paramName == queryName[i].name){
+                validate = false;
+            }
+        }
+        if(validate === false){
+            response.redirect('/users/new');
+        }
+        else if(validate === true){
+            const queryString = 'INSERT INTO users (name, photo_url, nationality, username, password) VALUES ($1, $2, $3, $4, $5)';
+            const values = [
+                request.body.name.charAt(0).toUpperCase() + request.body.name.slice(1),
+                request.body.photo,
+                request.body.nat,
+                request.body.username,
+                sha256(request.body.password)
+            ];
 
-    // execute query
-    pool.query(queryString, values, (error, queryResult) => {
-        //response.redirect('/');
-        response.send('user created');
+            pool.query(queryString, values, (error, queryResult) => {
+                response.render('useradd', {list:values});
+            });
+        }
     });
 });
 
+app.get('/user/signin', (request, response) => {
 
+    if(request.cookies.loggedin !== undefined){
+        response.render('signin', {list:['disabled']});
+    }
+    else{
+        response.render('signin');
+    }
+});
+
+app.post('/user/signin', (request, response) => {
+
+    let queryString = `SELECT * FROM users WHERE username='${request.body.username}'`;
+
+    pool.query(queryString, (err, queryResult) => {
+
+        // if the user doesnt exist
+        if(queryResult.rows.length === 0){
+            response.render('signin', {list:['error']});
+        }
+        else{
+
+            const user = queryResult.rows[0];
+
+            let password = user.password;
+            let inputPass = sha256(request.body.password)
+
+            if(password == inputPass){
+                let hashCookie = sha256(user.name);
+                response.cookie('loggedin', hashCookie);
+
+                pool.query(`SELECT id FROM users WHERE name = '${user.name}'`, (err, queryResult) =>{
+                    let queryString = queryResult.rows[0].id;
+                    pool.query(`SELECT DISTINCT(users.id), name, content FROM users INNER JOIN tweets ON (users.id = author_id) INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
+                    let tweets = queryResult.rows;
+                    response.render('home',{list:tweets, user:[user.name]});
+                    })
+                })
+            }
+            else{
+                response.render('signin', {list:['error']});
+            }
+        }
+    })
+});
+
+app.get('/user/signout', (request, response) => {
+
+  response.clearCookie('loggedin');
+
+  response.redirect('/');
+});
+
+app.get('/users', (request, response) => {
+
+    if(request.cookies.loggedin !== undefined){
+    pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let queryString = queryResult.rows[0].id;
+            pool.query(`SELECT id, name, photo_url, nationality, user_id, follows_id, followers_id FROM users INNER JOIN follows ON (follows.user_id = ${queryString}) WHERE follows_id = users.id OR followers_id = users.id ORDER BY name ASC`, (err, queryResult) =>{
+                let users = queryResult.rows;
+
+                response.render('users', {list:users, user:[request.cookies.loggedin]});
+            })
+        })
+    }
+    else{
+        pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
+            let users = queryResult.rows;
+
+            response.render('users', {list:users});
+        })
+    }
+});
+
+app.get('/users/list', (request, response) => {
+        pool.query("SELECT * FROM users ORDER BY name ASC", (err, queryResult) =>{
+            let users = queryResult.rows;
+
+            response.render('users', {list:users});
+
+        })
+});
+
+app.get('/profile', (request, response) => {
+
+    if(request.cookies.loggedin !== undefined){
+        pool.query(`SELECT * FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let profile = queryResult.rows;
+            pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.name = '${request.cookies.loggedin}')`, (err, queryResult) =>{
+                let content = queryResult.rows;
+                pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = follows_id) WHERE user_id = '${profile[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                    let follows = queryResult.rows;
+                    pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = followers_id) WHERE user_id = '${profile[0].id}' AND followers_id is not null`, (err, queryResult) =>{
+                        let followers = queryResult.rows;
+                        response.render('profile', {list:profile, contents:content, user:[request.cookies.loggedin], followsName:follows, followersName:followers});
+                        })
+                })
+            })
+        })
+    }
+    else{
+        response.render('profile');
+    }
+});
+
+app.get('/profile/:id', (request, response) => {
+
+    let id = request.params.id;
+    pool.query(`SELECT * FROM users WHERE id = '${id}'`, (err, queryResult) =>{
+        let profile = queryResult.rows;
+        pool.query(`SELECT content FROM users INNER JOIN tweets ON (users.id = author_id AND users.id = '${id}')`, (err, queryResult) =>{
+            let content = queryResult.rows;
+            pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = follows_id) WHERE user_id = '${profile[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                let follows = queryResult.rows;
+                pool.query(`SELECT name FROM users INNER JOIN follows ON (users.id = followers_id) WHERE user_id = '${profile[0].id}' AND followers_id is not null`, (err, queryResult) =>{
+                    let followers = queryResult.rows;
+                    response.render('profile', {list:profile, contents:content, followsName:follows, followersName:followers});
+                })
+            })
+        })
+    })
+});
+
+app.get('/users/tweet/:name/new', (request, response) => {
+
+    let name = request.params.name;
+
+    pool.query(`SELECT * FROM users WHERE name = '${name}'`, (err, queryResult) =>{
+        response.render('tweetnew', {list:queryResult.rows});
+    })
+});
+
+app.post('/users/tweet/:id/add', (request, response) => {
+
+    let id = request.params.id;
+    let tweet = request.body.tweet;
+
+    let queryText = "INSERT INTO tweets (content, author_id) VALUES ($1, $2)";
+    const values = [tweet, id];
+    pool.query(queryText, values, (err, queryResult) =>{
+        response.redirect("/");
+    })
+});
+
+app.post('/user/follow/:id', (request, response) => {
+
+    if(request.cookies.loggedin !== undefined){
+        let validate = true;
+        pool.query(`SELECT id FROM users WHERE name = '${request.cookies.loggedin}'`, (err, queryResult) =>{
+            let id = request.params.id;
+            let userId = queryResult.rows;
+            let queryText = "INSERT INTO follows (user_id, follows_id) VALUES ($1, $2)";
+            const values = [userId[0].id, id];
+            pool.query(`SELECT follows_id FROM follows WHERE user_id = '${userId[0].id}' AND follows_id is not null`, (err, queryResult) =>{
+                let follows = queryResult.rows;
+                for(let i = 0; i < follows.length; i++){
+                    if(follows[i].follows_id == id){
+                        validate = false
+                    }
+                    }
+                    if(validate == false){
+                        response.redirect('/users');
+                    }
+                    else if(validate == true){
+                        pool.query(queryText, values, (err, queryResult) =>{
+                        })
+                        let queryString = "INSERT INTO follows (user_id, followers_id) VALUES ($1, $2)";
+                        const valuesStr = [id, userId[0].id];
+                        pool.query(queryString, valuesStr, (err, queryResult) =>{
+                        })
+                        response.redirect('/');
+                    }
+                })
+        })
+    }
+    else{
+            response.redirect("/users");
+    }
+});
+
+app.get('/tweet/edit/:content', (request, response) => {
+    let content = request.params.content;
+    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE content = '${content}'`, (err, queryResult) =>{
+        let tweet =  queryResult.rows;
+
+        response.render('tweetedit', {list:tweet});
+    })
+});
+
+app.put('/tweet/:content', (request, response) => {
+    let content = request.params.content;
+    let tweet = request.body.tweet
+    pool.query(`SELECT tweets.id, content FROM tweets INNER JOIN users ON (author_id = users.id) WHERE users.id = ${content}`, (err, queryResult) =>{
+        let queryString = `UPDATE tweets SET content = '${tweet}' WHERE content = '${content}'`;
+        pool.query(queryString, (err, queryResult) =>{
+            response.redirect('/');
+        })
+    })
+});
+
+app.delete('/user/delete/:id', (request, response) => {
+    let id = request.params.id;
+    let queryText = `ALTER TABLE tweets DROP CONSTRAINT IF EXISTS tweets_author_id_fkey; ALTER TABLE follows DROP CONSTRAINT IF EXISTS follows_user_id_fkey; ALTER TABLE follows DROP CONSTRAINT IF EXISTS follows_follows_id_fkey; ALTER TABLE follows DROP CONSTRAINT IF EXISTS follows_followers_id_fkey; DELETE from users WHERE id = ${id}`;
+    pool.query(queryText, (err, queryResult) =>{
+        response.redirect('/users');
+    })
+});
+
+// app.POST('/users/:id/follows', (request, response) => {
+
+//     pool.query('SELECT * FROM users ORDER BY name ASC', (err, queryResult) =>{
+//         let users = queryResult.rows;
+
+//         response.render('users', {list:users});
+//     })
+// });
 
 /**
  * ===================================
