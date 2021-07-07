@@ -11,9 +11,9 @@ const pg = require('pg');
  */
 
 const configs = {
-  user: 'akira',
+  user: 'ishak',
   host: '127.0.0.1',
-  database: 'testdb',
+  database: 'tweedr_db',
   port: 5432,
 };
 
@@ -47,26 +47,104 @@ app.engine('jsx', reactEngine);
 
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
-  response.send('Welcome To Tweedr.');
+
+    response.render('home');
 });
 
-app.get('/users/new', (request, response) => {
-  response.render('user/newuser');
+app.get('/users/login', (request, response) => {
+  response.render('login');
 });
 
-app.post('/users', (request, response) => {
+app.post('/users/login', (request, response) => {
 
-    const queryString = 'INSERT INTO users (name, password) VALUES ($1, $2)';
-    const values = [
-        request.body.name,
-        request.body.password
-    ];
+    //if username and password are the same as in the DB, log them in
+    const body = request.body;
+    const queryString = `SELECT * FROM users WHERE name = '${body.name}' `;
+
+    pool.query (queryString, (err, queryResponse) => {
+        if (err) {
+            console.log("Got error " + err);
+        } else {
+        }
+
+        //if user does not exist
+        if (queryResponse.rows.length === 0) {
+            console.log("User does not exist!")
+        } else {
+            console.log("User exist!"); //else if exist
+            //queryResponse for current array 0, store in const user
+            const user = queryResponse.rows[0];
+            //let password be qeuryResponse.row[0].password...the ket
+            let password = user.password;
+            // if for password on log in is the same as password in DB
+            if (password === body.password) {
+                console.log("Password is correct!");
+                response.cookie('loggedin', 'true');
+
+                let link = `/user/${user.id}`;
+                response.redirect(link);
+            } else {
+                console.log("Incorrect password try again!");
+            }
+        }
+    });
+
+app.get ('/user/:id', (request,response)=> {
+    let loggedin = request.cookies['loggedin'];
+
+    if (loggedin !== undefined) {
+        const userId = request.params.id;
+        const queryText = `SELECT * FROM tweets WHERE users_id = ${userId}`;
+
+        pool.query (queryText, (err, queryResponse) => {
+            if (err) {
+                console.log("Got error " + err);
+            } else {
+                console.log ({user:queryResponse.rows});
+                response.render('user', {user:queryResponse.rows,id:userId});
+            }
+        });
+    } else {
+        response.send("you are not logged in!")
+    }
+});
+
+app.post ('/user/:id/tweets/new', (request,response)=> {
+
+    const body = request.body;
+    const queryText = `INSERT INTO tweets (post, users_id) VALUES ($1,$2)`;
+    const value = [body.tweet, request.params.id];
+    console.log(request.params.id);
+
+        pool.query (queryText, value, (err, queryResponse) => {
+            if (err) {
+                console.log("Got error " + err);
+            } else {
+                let link = `/user/${request.params.id}`;
+                response.redirect(link);
+            }
+
+        })
+})
+
+app.get('/user/:id/logout', (request, response) => {
+
+  response.clearCookie('loggedin');
+
+  response.send('you are logged out');
+})
+
+
+    // const values = [
+    //     request.body.name,
+    //     request.body.password
+    // ];
 
     // execute query
-    pool.query(queryString, values, (error, queryResult) => {
+    // pool.query(queryString, values, (error, queryResult) => {
         //response.redirect('/');
-        response.send('user created');
-    });
+        // response.send('user created');
+    // });
 });
 
 
